@@ -1,0 +1,177 @@
+#' Classify Edge Artifacts into Hierarchical Categories
+#'
+#' Classifies detected artifacts based on their location (edge vs. interior) 
+#' and size (large vs. small). This function works downstream of \code{detectEdgeArtifacts()}.
+#'
+#' @param spe A SpatialExperiment object that has been processed with \code{detectEdgeArtifacts()}.
+#' @param qc_metric Character string specifying the QC metric column used for validation (default: "sum_umi").
+#'   Note: This column must exist, but is not directly used for classification logic.
+#' @param samples Character string specifying the sample ID column name (default: "sample_id").
+#' @param min_spots Minimum number of spots for an artifact to be classified as "large" (default: 20).
+#' @param name Character string matching the \code{name} argument used in \code{detectEdgeArtifacts()} (default: "edge_artifact").
+#' @param exclude_slides Character vector of slide IDs to exclude from edge detection (default: NULL). 
+#'   Spots on these slides will be forced to FALSE for edge artifacts.
+#'
+#' @return A SpatialExperiment object with additional classification columns in \code{colData}:
+#'   \itemize{
+#'     \item \code{[name]_true_edges}: Logical, indicating edge artifacts after applying slide exclusions.
+#'     \item \code{[name]_classification}: Character, containing hierarchical categories:
+#'       \itemize{
+#'         \item \code{"not_artifact"}: Normal, high-quality spots.
+#'         \item \code{"large_edge_artifact"}: Clusters > min_spots touching the slide boundary.
+#'         \item \code{"small_edge_artifact"}: Clusters <= min_spots touching the slide boundary.
+#'         \item \code{"large_interior_artifact"}: Clusters > min_spots in the tissue interior.
+#'         \item \code{"small_interior_artifact"}: Clusters <= min_spots in the tissue interior.
+#'       }
+#'   }
+#'
+#' @details
+#' \strong{Parameter Recommendations:}
+#' 
+#' The \code{min_spots} threshold should scale with platform resolution to 
+#' represent similar physical artifact sizes:
+#' 
+#' \itemize{
+#'   \item \strong{Standard Visium (55µm bins):} \code{min_spots = 20-40}
+#'     \itemize{
+#'       \item Physical area: ~0.06-0.12 mm²
+#'       \item Rationale: Artifacts <20 spots likely represent isolated noise
+#'       \item Typical edge artifacts: 50-200 spots
+#'     }
+#'   
+#'   \item \strong{VisiumHD 16µm bins:} \code{min_spots = 100-200}
+#'     \itemize{
+#'       \item Physical area: ~0.026-0.051 mm² (comparable to Visium)
+#'       \item Rationale: Higher density requires proportionally higher threshold
+#'       \item Typical edge artifacts: 500-2000 bins
+#'     }
+#'   
+#'   \item \strong{VisiumHD 8µm bins:} \code{min_spots = 400-800}
+#'     \itemize{
+#'       \item Physical area: ~0.026-0.051 mm² (comparable to Visium)
+#'       \item Rationale: 4× density of 16µm bins requires 4× threshold
+#'       \item Typical edge artifacts: 2000-8000 bins
+#'     }
+#' }
+#' 
+#' \strong{Practical Guideline:} For VisiumHD data, start with:
+#' \code{min_spots = 20 × (55µm / bin_size)²}
+#' 
+#' This formula maintains constant physical area thresholds across resolutions.
+#' 
+#' \strong{Context-Specific Tuning:}
+#' \itemize{
+#'   \item Increase \code{min_spots} for noisy data (prevents over-flagging small clusters)
+#'   \item Decrease \code{min_spots} for high-quality data (captures smaller genuine artifacts)
+#'   \item Visualize intermediate results to validate threshold appropriateness
+#' }
+#'
+#' @examples
+#' library(SpatialExperiment)
+#' library(S4Vectors)
+#' 
+#' # --- Create a Mock SPE with "Detected" Results ---
+#' # We simulate the output that detectEdgeArtifacts() would produce
+#' n_spots <- 5
+#' spe <- SpatialExperiment(
+#'     colData = DataFrame(
+#'         sample_id = "sample01",
+#'         sum_umi = rep(100, n_spots), 
+#'         edge_artifact_edge = c(TRUE, TRUE, FALSE, FALSE, FALSE),
+#'         edge_artifact_problem_id = c("Cluster1", "Cluster1", "Cluster2", "Cluster3", NA),
+#'         edge_artifact_problem_size = c(50, 50, 10, 30, 0)
+#'     )
+#' )
+#' 
+#' # Review the mock scenarios:
+#' # Spot 1: Edge=TRUE, Size=50 -> Expect "large_edge_artifact"
+#' # Spot 2: Edge=TRUE, Size=50 -> Expect "large_edge_artifact"
+#' # Spot 3: Edge=FALSE, Size=10 -> Expect "small_interior_artifact"
+#' # Spot 4: Edge=FALSE, Size=30 -> Expect "large_interior_artifact"
+#' # Spot 5: Edge=FALSE, Size=0  -> Expect "not_artifact"
+#' 
+#' # --- Run Classification ---
+#' # Set threshold to 20 to separate large/small
+#' spe <- classifyEdgeArtifacts(spe, min_spots = 20, name = "edge_artifact")
+#' table(spe$edge_artifact_classification)
+#' colData(spe)[, c("edge_artifact_problem_size", "edge_artifact_classification")]
+#'
+#' @seealso \code{\link{detectEdgeArtifacts}}
+#' 
+#' @importFrom SummarizedExperiment colData colData<-
+#' @importFrom methods is
+#' 
+#' @export
+classifyEdgeArtifacts <- function(
+    spe,
+    qc_metric = "sum_umi",
+    samples = "sample_id",
+    min_spots = 20,
+    name = "edge_artifact",
+    exclude_slides = NULL) {
+  
+  if (!inherits(spe, "SpatialExperiment")) {
+    stop("'spe' must be a SpatialExperiment object. ", "Found class: ", class(spe)[1])
+  }
+
+  required_cols <- c(qc_metric, paste0(name, "_edge"), paste0(name, "_problem_id"))
+  missing_cols <- required_cols[!required_cols %in% colnames(colData(spe))]
+  if (length(missing_cols) > 0) {
+    stop(paste("Missing required columns:", paste(missing_cols, collapse = ", "),
+               "\nRun detectEdgeArtifacts() first."))
+  }
+  
+  message("Classifying artifacts spots...")
+  
+  colData(spe)[[paste0(name, "_true_edges")]] <- colData(spe)[[paste0(name, "_edge")]]
+  
+  # Exclude specified slides if provided
+  if (!is.null(exclude_slides) && "slide" %in% colnames(colData(spe))) {
+    colData(spe)[[paste0(name, "_true_edges")]] <- 
+      ifelse(colData(spe)$slide %in% exclude_slides, FALSE, 
+             colData(spe)[[paste0(name, "_edge")]])
+    message("Excluding edges from slides: ", paste(exclude_slides, collapse = ", "))
+  }
+  
+  # Define column names
+  edge_col <- paste0(name, "_true_edges") 
+  problem_id_col <- paste0(name, "_problem_id")
+  problem_size_col <- paste0(name, "_problem_size")
+  
+  # Get core data vectors
+  is_edge_artifact <- colData(spe)[[edge_col]] == TRUE
+  is_problem_area <- !is.na(colData(spe)[[problem_id_col]])
+  artifact_size <- colData(spe)[[problem_size_col]]
+
+  # Initialize classification
+  new_classification_col <- paste0(name, "_classification") 
+  colData(spe)[[new_classification_col]] <- "not_artifact"
+  
+  # Step 1: Classify interior artifacts (problem areas NOT touching edges)
+  is_interior_artifact <- is_problem_area & !is_edge_artifact
+  
+  if(any(is_interior_artifact)) {
+    colData(spe)[[new_classification_col]][is_interior_artifact] <- ifelse(
+      artifact_size[is_interior_artifact] > min_spots,
+      "large_interior_artifact",
+      "small_interior_artifact"
+    )
+  }
+  
+  # Step 2: Classify edge artifacts (higher priority, overwrites interior)
+  if(any(is_edge_artifact)) {
+    colData(spe)[[new_classification_col]][is_edge_artifact] <- ifelse(
+      artifact_size[is_edge_artifact] > min_spots,
+      "large_edge_artifact",
+      "small_edge_artifact"
+    )
+  }
+  message("Classification added: ", new_classification_col)
+  class_table <- table(colData(spe)[[new_classification_col]])
+  message("\nClassification summary:")
+  for(class_name in names(class_table)) {
+    message(sprintf("  %s: %d spots", class_name, class_table[class_name]))
+  }
+  
+  return(spe)
+}
