@@ -52,9 +52,19 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
+  <main id="main" class="col-md-9"><div class="section level2">
+<h2 id="id_-spatial-artifacts-"># Spatial Artifacts <img src="reference/figures/logo.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#id_-spatial-artifacts-"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="output-github_document">output: github_document<a class="anchor" aria-label="anchor" href="#output-github_document"></a>
+</h2>
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<p><code>{r, include = FALSE} knitr::opts_chunk$set(   collapse = TRUE,   comment = "#&gt;",   fig.path = "man/figures/README-",   out.width = "100%" )</code></p>
+</div>
+<div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="spatialartifacts">SpatialArtifacts<a class="anchor" aria-label="anchor" href="#spatialartifacts"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="spatial-artifacts-">Spatial Artifacts <a class="anchor" aria-label="anchor" href="#spatial-artifacts-"></a>
 </h1>
 </div>
 <!-- badges: start -->
@@ -80,23 +90,20 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the latest version of <code>SpatialArtifacts</code> from Bioconductor with the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"SpatialArtifacts"</span><span class="op">)</span></span></code></pre></div>
-<p>You can install the development version of SpatialArtifacts from <a href="https://github.com/CambridgeCat13/SpatialArtifacts" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"CambridgeCat13/SpatialArtifacts"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the latest version of <code>SpatialArtifacts</code> from Bioconductor with the following code: ```{r ‘install’, eval = FALSE} if (!requireNamespace(“BiocManager”, quietly = TRUE)) { install.packages(“BiocManager”) }</p>
+<p>BiocManager::install(“SpatialArtifacts”)</p>
+<pre><code>
+You can install the development version of SpatialArtifacts from [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
+
+``` r
+# install.packages("pak")
+pak::pak("CambridgeCat13/SpatialArtifacts")</code></pre>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>This is a basic example which shows you how to solve a common problem:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://cambridgecat13.github.io/SpatialArtifacts/">SpatialArtifacts</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/drighelli/SpatialExperiment" class="external-link">SpatialExperiment</a></span><span class="op">)</span></span>
 <span></span>
@@ -142,6 +149,7 @@
 </ul>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">

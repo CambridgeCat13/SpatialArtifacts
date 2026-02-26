@@ -1,4 +1,10 @@
-# SpatialArtifacts
+# Spatial Artifacts
+
+## \# Spatial Artifacts ![](reference/figures/logo.png)
+
+## output: github_document
+
+`{r, include = FALSE} knitr::opts_chunk$set( collapse = TRUE, comment = "#>", fig.path = "man/figures/README-", out.width = "100%" )`
 
 The goal of `SpatialArtifacts` is to detect interior and edge artifacts,
 such as dry spots caused by incomplete reagent coverage or tissue
@@ -28,23 +34,17 @@ website](https://cambridgecat13.github.io/SpatialArtifacts).
 ## Installation
 
 You can install the latest version of `SpatialArtifacts` from
-Bioconductor with the following code:
+Bioconductor with the following code: \`\`\`{r ‘install’, eval = FALSE}
+if (!requireNamespace(“BiocManager”, quietly = TRUE)) {
+install.packages(“BiocManager”) }
 
-``` r
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
-}
+BiocManager::install(“SpatialArtifacts”)
 
-BiocManager::install("SpatialArtifacts")
-```
+    You can install the development version of SpatialArtifacts from [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
 
-You can install the development version of SpatialArtifacts from
-[GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
-
-``` r
-# install.packages("pak")
-pak::pak("CambridgeCat13/SpatialArtifacts")
-```
+    ``` r
+    # install.packages("pak")
+    pak::pak("CambridgeCat13/SpatialArtifacts")
 
 ## Example
 
