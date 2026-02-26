@@ -1,0 +1,741 @@
+---
+title: "Spatial Edge Artifacts Detection in Hippocampus Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial Edge Artifacts Detection in Hippocampus Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(SummarizedExperiment)
+library(SpatialExperiment)
+library(SpatialDryArtifacts)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+```
+
+# Introduction
+
+The **SpatialDryArtifacts** R package provides a robust, two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including **10x Visium** (standard and HD).  
+
+These artifacts, often appearing as areas of low gene/UMI counts or high mitochondrial ratio at tissue edges (edge artifacts) or in the interior (interior artifacts), can negatively impact downstream analyses. This guide demonstrates how to use the package on real-world datasets across different spatial transcriptomics platforms.
+
+## Platform Support
+
+**SpatialDryArtifacts** is designed to work across multiple spatial transcriptomics platforms:
+
+- **Standard Visium** (55µm bins, hexagonal grid): ~5,000 spots per capture area
+- **VisiumHD 16µm** (16µm bins, square grid): ~480,000 bins per capture area  
+- **VisiumHD 8µm** (8µm bins, square grid): ~1,920,000 bins per capture area
+
+The morphological detection framework automatically adapts to different grid arrangements, but **parameter scaling is critical** for optimal performance across platforms.
+
+
+## The SpatialDryArtifacts Workflow
+
+The core philosophy is a two-step process: **Detect, then Classify**.  
+This separates the sensitive task of identifying all potential problem spots from the more nuanced task of deciding what to do with them.
+
+
+### **Step 1: `detectEdgeArtifacts()` — The Detection Phase**
+
+**Goal**: Cast a wide net and identify all spots that could potentially be part of an artifact.  
+
+**How does it work**:
+
+- **Outlier Identification**: Finds spots with abnormally low QC metrics (e.g., `sum_gene`) using a Median Absolute Deviation (MAD) threshold.  
+- **Morphological Cleaning**: Applies sequential raster-based focal operations 
+  through `focal_transformations()`:
+  1. **3×3 fill** (`my_fill`): Fills spots completely surrounded by outliers
+  2. **5×5 outline** (`my_outline`): Fills spots outlined by outliers in a larger 16-pixel perimeter
+  3. **Star pattern** (`my_fill_star`): Fills spots with outliers in all four cardinal directions (N, S, E, W)
+  4. **Small cluster removal**: Removes isolated normal regions below `min_cluster_size` threshold (default: 40 spots)
+  - Uses 8-directional connectivity for connected component analysis
+- **Cluster Detection**: Groups these outliers into contiguous "problem areas" (`problemAreas`).  
+- **Edge Identification**: Evaluates whether clusters touch tissue boundaries using `clumpEdges()`. For each of the four borders (north, south, east, west), calculates the proportion of boundary spots belonging to each cluster. A cluster is classified as an edge artifact if this proportion meets or exceeds `edge_threshold` (default: 0.75, meaning ≥75% border coverage) on any single border direction.
+- **Key Outputs**: Adds three *raw* columns to your `spe` object: `_edge`, `_problem_id`, and `_problem_size`.
+
+
+### **Step 2: `classifyEdgeArtifacts()` — The Decision Phase**
+
+**Goal**: Take the raw detections from Step 1 and apply a clear, hierarchical logic to assign final labels.
+
+**How does it work**:
+- **Input**: Requires the `spe` object processed by `detectEdgeArtifacts()`.  
+- **Hierarchical Classification**: Applies a 2×2 logic system based on **Location** and **Size**:
+  1. **Location**: Is the artifact an `_edge_artifact` (`TRUE` or `FALSE`) based on the detection step?  
+  2. **Size**: Is the artifact's `_problem_size` larger than `min_spots` (default: `20`)?  
+- **Label Assignment**: This logic produces five intuitive categories:
+  - `"not_artifact"` — High-quality spots  
+  - `"large_edge_artifact"` — Large artifact cluster (`> min_spots`) touching the tissue edge  
+  - `"small_edge_artifact"` — Small artifact cluster (`≤ min_spots`) touching the tissue edge  
+  - `"large_interior_artifact"` — Large artifact cluster (`> min_spots`) located inside the tissue  
+  - `"small_interior_artifact"` — Small artifact cluster (`≤ min_spots`) located inside the tissue  
+- **Key Outputs**: Adds one final, intuitive classification column: `_classification`.
+
+
+## Parameter Guide
+
+Tuning parameters lets you adapt the workflow to different tissue types, data quality, **and spatial transcriptomics platforms**. The package uses a **wrapper function** that routes to platform-specific implementations.
+
+### **Platform Selection**
+
+**CRITICAL FIRST STEP:** Specify your platform using the `platform` parameter in `detectEdgeArtifacts()`:
+
+| Platform | Function Call | Required Parameters |
+|----------|--------------|---------------------|
+| **Standard Visium** | `detectEdgeArtifacts(spe, platform="visium", ...)` | `shifted` (usually `TRUE`) |
+| **VisiumHD** | `detectEdgeArtifacts(spe, platform="visiumhd", resolution="16um", ...)` | `resolution` ("8um" or "16um") |
+
+**Example calls:**
+```r
+# Standard Visium (55µm hexagonal grid)
+spe <- detectEdgeArtifacts(spe, platform = "visium", shifted = TRUE, ...)
+
+# VisiumHD 16µm (square grid)
+spe <- detectEdgeArtifacts(spe, platform = "visiumhd", resolution = "16um", ...)
+
+# VisiumHD 8µm (square grid)
+spe <- detectEdgeArtifacts(spe, platform = "visiumhd", resolution = "8um", ...)
+```
+
+---
+
+### **`detectEdgeArtifacts()` Parameters**
+
+The wrapper function accepts platform-specific parameters that are routed to the appropriate implementation.
+
+#### **Universal Parameters (All Platforms)**
+
+- *`platform`* (**REQUIRED**) – Character string: `"visium"` or `"visiumhd"` (case insensitive)
+  - Determines which platform-specific function to use
+  - No default value; must be explicitly specified for clarity
+
+- *`qc_metric`* (Default: `"sum_gene"`) – Column name for QC metric used in outlier detection
+  - Common alternatives: `"sum_umi"`, `"detected"`, `"nFeature"`
+  - The function will auto-detect some common variants
+
+- *`samples`* (Default: `"sample_id"`) – Column name for sample identifiers
+  - Each sample is processed independently
+
+- *`mad_threshold`* (Default: 3) – Sensitivity for detecting outliers
+  - Lower values (1.5–2) are more sensitive
+  - Higher values (3–4) are more conservative
+
+- *`name`* (Default: `"edge_artifact"`) – Prefix for output column names
+  - Outputs: `[name]_edge`, `[name]_problem_id`, `[name]_problem_size`
+
+- *`verbose`* (Default: `TRUE`) – Print progress messages
+
+- *`keep_intermediate`* (Default: `FALSE`) – Retain intermediate outlier detection columns
+
+---
+
+#### **Standard Visium-Specific Parameters** 
+*(Used when `platform = "visium"`)*
+
+- *`edge_threshold`* (Default: 0.75) – Minimum proportion of a tissue boundary that must be occupied by outlier clusters (collectively) for those clusters to be classified as edge artifacts.
+
+  **Important Behavior:** The threshold is applied to the **total coverage** of all outlier clusters on each boundary direction (North, South, East, West). If multiple clusters collectively cover ≥ `edge_threshold` of a boundary, **all clusters touching that boundary** are classified as edge artifacts, even if no single cluster meets the threshold individually.
+  
+  **Example Scenario:**
+  - North boundary contains 100 spots total
+  - Cluster A occupies 30 boundary spots (30% coverage)
+  - Cluster B occupies 50 boundary spots (50% coverage)
+  - Combined coverage: 80% ≥ 75% threshold
+  - **Result:** Both Cluster A and Cluster B are classified as edge artifacts
+  
+  **Rationale:** Edge drying artifacts typically affect large, continuous regions along tissue boundaries. Multiple clusters on the same boundary often result from a single underlying technical failure (incomplete permeabilization) and should be treated as a unified artifact rather than independent events.
+  
+  **Tuning Guidance:**
+  - Higher values (0.75–0.90): More conservative, captures only large-scale boundary failures
+  - Lower values (0.40–0.60): More sensitive, may flag smaller boundary-adjacent regions
+  - Very low values (<0.30): Aggressive, may misclassify biological low-expression zones as artifacts
+
+- *`min_cluster_size`* (Default: 40) – Minimum cluster size (in spots) for morphological cleaning during focal transformation steps
+  - Isolated "normal" regions smaller than this threshold within outlier areas will be filled in to create contiguous artifact regions
+  - **For Standard Visium:** 40 spots ≈ 0.12 mm² physical area
+
+- *`shifted`* (Default: `FALSE`) – Apply coordinate adjustment for hexagonal grid alignment
+  - **Standard Visium typically requires `shifted = TRUE`** when using array coordinates from Space Ranger. 
+  - Set to `FALSE` if using pre-transformed pixel coordinates or for VisiumHD square grids.
+  - This corrects for the staggered arrangement of hexagonal spots
+  
+  
+- *`batch_var`* (Default: `"both"`) – Determines grouping for MAD calculation
+  - Options: `"sample_id"`, `"slide"`, or `"both"`
+  - `"both"`: Spots flagged as outliers if below threshold in either sample or slide grouping
+
+---
+
+#### **VisiumHD-Specific Parameters**
+*(Used when `platform = "visiumhd"`)*
+
+- *`resolution`* (**REQUIRED**) – Character string: `"8um"` or `"16um"`
+  - Specifies the bin size of your VisiumHD data
+  - This is **mandatory** for VisiumHD; the function will error if not provided
+  - Determines conversion from physical units (µm) to bins
+
+- *`buffer_width_um`* (Default: 80) – Buffer zone width in micrometers (physical units)
+  - Defines the edge region where artifacts are expected
+  - Automatically converted to bins based on `resolution`:
+    - At 16µm resolution: 80 µm → 5 bins
+    - At 8µm resolution: 80 µm → 10 bins
+  - **Tuning guidance:**
+    - Increase (100-150 µm) for tissues with larger edge artifacts
+    - Decrease (50-60 µm) for precise edge detection
+
+- *`min_cluster_area_um2`* (Default: 1280) – Minimum cluster area in square micrometers (physical units)
+  - Clusters smaller than this will be filtered out during morphological cleaning
+  - Automatically converted to bins based on `resolution`:
+    - At 16µm resolution: 1280 µm² → 5 bins (16×16 µm per bin)
+    - At 8µm resolution: 1280 µm² → 20 bins (8×8 µm per bin)
+  - **Physical consistency:** Same area threshold gives different bin counts at different resolutions
+  - Default (1280 µm²) was calibrated for 16µm resolution
+
+- *`col_x`* and *`col_y`* (Default: `"array_col"`, `"array_row"`) – Column names for bin coordinates
+  - **Important:** These should be **bin indices**, not pixel coordinates
+  - Using bin indices is much more memory-efficient than pixel coordinates
+
+**Key Difference from Visium:** VisiumHD parameters are specified in **physical units (µm, µm²)** rather than bin counts. This ensures consistency across resolutions while the algorithm handles the bin conversion internally.
+
+---
+
+### **`classifyEdgeArtifacts()` Parameters**
+
+The classification step is **platform-independent** but requires appropriate parameter scaling.
+
+- *`min_spots`* (Default: 20) – **CRITICAL PARAMETER:** Threshold (in number of spots/bins) to distinguish `"large"` from `"small"` artifacts
+
+  **Platform-Specific Scaling Required:**
+  
+  This parameter must be adjusted based on spatial resolution to represent equivalent **physical artifact sizes**:
+  
+  | Platform | Recommended `min_spots` | Physical Area | Scaling Factor |
+  |----------|------------------------|---------------|----------------|
+  | **Standard Visium (55µm)** | `20-40` | ~0.06-0.12 mm² | Baseline (1×) |
+  | **VisiumHD 16µm bins** | `100-200` | ~0.026-0.051 mm² | ~6-10× Visium |
+  | **VisiumHD 8µm bins** | `400-800` | ~0.026-0.051 mm² | ~20-40× Visium |
+  
+  **Automatic Scaling Formula:**
+```r
+  min_spots_HD <- min_spots_visium × (55 / bin_size_µm)²
+  
+  # Example: For min_spots = 30 on Standard Visium
+  # VisiumHD 16µm: 30 × (55/16)² ≈ 354 bins
+  # VisiumHD 8µm:  30 × (55/8)²  ≈ 1,420 bins
+```
+  
+  **Why scaling matters:** The same physical artifact (e.g., 0.1 mm² edge dryspot) will cover:
+  - Standard Visium: ~33 spots
+  - VisiumHD 16µm: ~390 bins  
+  - VisiumHD 8µm: ~1,560 bins
+  
+  Without scaling, large VisiumHD artifacts would be incorrectly classified as "small."
+
+- *`qc_metric`* (Default: `"sum_umi"`) – QC metric column for validation (must exist but not directly used in classification logic)
+
+- *`samples`* (Default: `"sample_id"`) – Sample ID column name
+
+- *`exclude_slides`* (Default: `NULL`) – Vector of slide IDs to exclude from edge classification
+  - Spots on these slides will have edge artifact status set to `FALSE`
+
+- *`name`* (Default: `"edge_artifact"`) – Must match the name used in `detectEdgeArtifacts()`
+
+---
+
+### **Platform Comparison Summary**
+
+| Feature | Standard Visium | VisiumHD |
+|---------|----------------|----------|
+| **Grid Type** | Hexagonal | Square |
+| **Requires `shifted`?** | Yes (`TRUE`) | No (not used) |
+| **Resolution Parameter** | Not applicable | **Required** (`"8um"` or `"16um"`) |
+| **Edge Detection Method** | Morphological + boundary coverage | Buffer zone + morphological |
+| **Parameter Units** | Spot counts | Physical units (µm, µm²) |
+| **Default `min_spots` (classify)** | 20-40 | 100-200 (16µm), 400-800 (8µm) |
+| **Typical Dataset Size** | ~5,000 spots | ~480k bins (16µm), ~1.9M bins (8µm) |
+
+
+## Understanding the Output Columns
+
+After both functions, several columns are added to `colData(spe)`:
+
+- **`*_edge`** – Raw detection: Is the spot in a cluster touching the tissue border? (TRUE/FALSE)  
+- **`*_problem_id`** – Raw detection: ID of the problem area.  
+- **`*_problem_size`** – Raw detection: Size (number of spots) of the problem area.  
+- `*_true_edges` — **Intermediate:** Edge status after applying `exclude_slides` (used by `classifyEdgeArtifacts()`).
+- `*_classification` — **Final classification:** One of `"not_artifact"`, `"large_edge_artifact"`, `"small_edge_artifact"`, `"large_interior_artifact"`, or `"small_interior_artifact"`.
+
+
+## Running the Full Workflow: Standard Visium Example
+
+This package includes `spe_vignette`, a lightweight `SpatialExperiment` object derived from a human hippocampus Visium sample.
+
+**This vignette will load this raw-like object and run the full `SpatialDryArtifacts` workflow on it live.**
+
+**Note:** To meet package size requirements (< 5MB), this object has been subset (e.g., to coding genes) and sparsified, but **no artifact detection has been run.** We will perform those steps now.
+
+### Data Preparation: Converting to Dense Matrix
+
+The underlying spatial clustering functions in this package currently require a **dense matrix** to perform coordinate-based calculations. We must first convert the sparse `counts` assay in our `spe_vignette` object to a standard (dense) matrix.
+```{r run_workflow, message=TRUE, warning=FALSE}
+data(spe_vignette)
+cat("Loaded data dimensions:", dim(spe_vignette), "\n")
+
+assay(spe_vignette, "counts") <- as.matrix(assay(spe_vignette, "counts"))
+names(colData(spe_vignette))[names(colData(spe_vignette)) == "sum"] <- "sum_umi"
+
+spe_detected <- detectEdgeArtifacts(
+  spe_vignette,
+  platform = "visium",        # IMPORTANT: Specify Standard Visium platform
+  qc_metric = "sum_umi",         
+  samples = "sample_id",
+  shifted = TRUE,             # Hexagonal grid coordinate adjustment
+  batch_var = "sample_id", 
+  mad_threshold = 3,
+  edge_threshold = 0.75,
+  name = "edge_artifact" 
+)
+
+cat("\n=== RESULTS ===\n")
+table(Edge_Detected = spe_detected$edge_artifact_edge)
+
+# Classification with Standard Visium parameters
+spe_classified <- classifyEdgeArtifacts(
+  spe_detected,       
+  min_spots = 20,  
+  name = "edge_artifact" 
+)
+
+cat("\n=== Classification Results ===\n")
+table(spe_classified$edge_artifact_classification)
+```
+
+## VisiumHD Workflow Example
+
+For VisiumHD data, the workflow is identical **except for parameter scaling**. Here's a complete example showing how to adapt parameters for VisiumHD:
+
+### VisiumHD 16µm Resolution Example
+```{r visiumhd_16um_example, eval=FALSE}
+# This is a pseudo-example demonstrating VisiumHD 16µm workflow
+# Assumes you have loaded a VisiumHD SpatialExperiment object as 'spe_hd16'
+
+# Step 1: Ensure required QC metrics are calculated
+library(scuttle)
+spe_hd16 <- addPerCellQCMetrics(spe_hd16)
+
+# Step 2: Detection Phase - VisiumHD uses square grid (no 'shifted' needed)
+spe_hd16_detected <- detectEdgeArtifacts(
+  spe_hd16,
+  platform = "visiumhd",       # Specify VisiumHD platform
+  resolution = "16um",          # REQUIRED for VisiumHD
+  qc_metric = "sum_umi",            # or "sum" depending on your colData
+  samples = "sample_id",
+  buffer_width_um = 100,        # VisiumHD-specific parameter
+  mad_threshold = 2.5,
+  edge_threshold = 0.75,
+  name = "edge_artifact"
+)
+
+# Step 3: Classification Phase - CRITICAL: Scale min_spots for VisiumHD resolution
+# For 16µm bins, use ~6-10× the Standard Visium threshold
+min_spots_16um <- 30 * (55/16)^2  # ≈ 354 bins
+
+spe_hd16_classified <- classifyEdgeArtifacts(
+  spe_hd16_detected,
+  qc_metric = "sum_umi",
+  min_spots = round(min_spots_16um),  # ~350 bins
+  name = "edge_artifact"
+)
+
+# Visualization (same approach as Standard Visium)
+table(spe_hd16_classified$edge_artifact_classification)
+```
+
+### VisiumHD 8µm Resolution Example
+```{r visiumhd_8um_example, eval=FALSE}
+# This is a pseudo-example demonstrating VisiumHD 8µm workflow
+# Assumes you have loaded a VisiumHD 8µm SpatialExperiment object as 'spe_hd8'
+
+# Step 1: QC metrics
+spe_hd8 <- addPerCellQCMetrics(spe_hd8)
+
+# Step 2: Detection Phase
+spe_hd8_detected <- detectEdgeArtifacts(
+  spe_hd8,
+  platform = "visiumhd",       # Specify VisiumHD platform
+  resolution = "8um",           # REQUIRED: Specify 8µm resolution
+  qc_metric = "sum_umi",
+  samples = "sample_id",
+  buffer_width_um = 100,        # Buffer zone in micrometers
+  mad_threshold = 2.5,
+  edge_threshold = 0.75,
+  name = "edge_artifact"
+)
+
+# Step 3: Classification with 8µm-appropriate threshold
+# For 8µm bins, use ~20-40× the Standard Visium threshold
+min_spots_8um <- 30 * (55/8)^2  # ≈ 1,420 bins
+
+spe_hd8_classified <- classifyEdgeArtifacts(
+  spe_hd8_detected,
+  qc_metric = "sum_umi",
+  min_spots = round(min_spots_8um),  # ~1,400 bins
+  name = "edge_artifact"
+)
+
+table(spe_hd8_classified$edge_artifact_classification)
+```
+
+### Key VisiumHD Considerations
+
+**Platform-Specific Function Calls:**
+
+| Platform | Function Call | Required Parameters |
+|----------|--------------|---------------------|
+| **Standard Visium** | `detectEdgeArtifacts(..., platform="visium")` | `shifted=TRUE` |
+| **VisiumHD 16µm** | `detectEdgeArtifacts(..., platform="visiumhd", resolution="16um")` | `resolution` |
+| **VisiumHD 8µm** | `detectEdgeArtifacts(..., platform="visiumhd", resolution="8um")` | `resolution` |
+
+**Parameter Recommendations by Platform:**
+
+| Parameter | Standard Visium | VisiumHD 16µm | VisiumHD 8µm |
+|-----------|----------------|---------------|--------------|
+| `platform` | `"visium"` | `"visiumhd"` | `"visiumhd"` |
+| `resolution` | N/A (not used) | `"16um"` | `"8um"` |
+| `shifted` | `TRUE` | N/A (handled internally) | N/A |
+| `buffer_width_um` | N/A | `100` (default) | `100` (default) |
+| `mad_threshold` | 1.5-3.0 | 2.0-3.0 | 2.0-3.0 |
+| `min_spots` (classify) | 20-40 | 100-200 | 400-800 |
+| Grid Type | Hexagonal | Square | Square |
+
+
+## Visualization: QC Metrics and Detection Results
+
+We'll create a comprehensive visualization showing QC metrics, detection results, and detailed cluster information:
+```{r plot, fig.width=12, fig.height=24}
+library(SpatialExperiment) 
+library(patchwork)
+
+plot_data <- as.data.frame(colData(spe_classified))
+plot_data <- cbind(plot_data, as.data.frame(spatialCoords(spe_classified)))
+plot_data_in_tissue <- plot_data[plot_data$in_tissue, ]
+
+base_theme <- theme_void() +
+    theme(plot.title = element_text(size = 12, hjust = 0.5),
+          legend.position = "right")
+
+# Plot 1: UMI Counts
+p1 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                       color = log10(sum_umi + 1))) +
+  geom_point(size = 0.5) +
+  scale_color_viridis_c(name = "log10(UMI)") +
+  ggtitle("A. UMI Counts") +
+  base_theme +
+  coord_fixed() 
+
+# Plot 2: Detected Genes
+if ("detected" %in% names(plot_data_in_tissue)) {
+  p2 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                         color = detected)) +
+    geom_point(size = 0.5) +
+    scale_color_viridis_c(name = "Genes", option = "plasma") +
+    ggtitle("B. Detected Genes") +
+    base_theme +
+    coord_fixed() 
+} else {
+  p2 <- ggplot() + theme_void() + ggtitle("B. Detected Genes (Data N/A)")
+}
+
+# Plot 3: Raw Detection (Any Problem Area)
+if ("edge_artifact_problem_id" %in% names(plot_data_in_tissue)) {
+   p3 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                          color = !is.na(edge_artifact_problem_id))) +
+     geom_point(size = 0.5) +
+     scale_color_manual(values = c("FALSE" = "lightgray", "TRUE" = "red"), 
+                       name = "Problem?") +
+     ggtitle("C. Raw Detection (All Problem Areas)") +
+     base_theme +
+     coord_fixed() 
+} else {
+   p3 <- ggplot() + theme_void() + ggtitle("C. Raw Detection (Data N/A)")
+}
+
+# Plot 4: Cluster IDs
+if ("edge_artifact_problem_id" %in% names(plot_data_in_tissue)) {
+  plot_data_in_tissue$cluster_display <- NA
+  
+  has_cluster <- !is.na(plot_data_in_tissue$edge_artifact_problem_id)
+  plot_data_in_tissue$cluster_display[has_cluster] <- 
+    plot_data_in_tissue$edge_artifact_problem_id[has_cluster]
+
+  n_clusters <- length(unique(plot_data_in_tissue$cluster_display[has_cluster]))
+  
+  p4 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                         color = cluster_display)) +
+    geom_point(size = 0.5) +
+    scale_color_discrete(name = "Cluster ID", na.value = "lightgray") +
+    ggtitle(paste0("D. Problem Area Clusters (n=", n_clusters, ")")) +
+    base_theme +
+    coord_fixed() +
+    theme(legend.key.size = unit(0.3, "cm"),
+          legend.text = element_text(size = 8))
+} else {
+  p4 <- ggplot() + theme_void() + ggtitle("D. Cluster IDs (Data N/A)")
+}
+
+# Plot 5: Edge vs Interior Separation
+if ("edge_artifact_edge" %in% names(plot_data_in_tissue)) {
+  plot_data_in_tissue$artifact_type <- "Normal"
+  
+  # Mark edge artifacts
+  plot_data_in_tissue$artifact_type[plot_data_in_tissue$edge_artifact_edge] <- "Edge Artifact"
+  
+  # Mark interior problem areas (not edges)
+  interior_mask <- !is.na(plot_data_in_tissue$edge_artifact_problem_id) & 
+                   !plot_data_in_tissue$edge_artifact_edge
+  plot_data_in_tissue$artifact_type[interior_mask] <- "Interior Problem"
+  
+  p5 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                         color = artifact_type)) +
+    geom_point(size = 0.5) +
+    scale_color_manual(
+      values = c("Normal" = "lightgray", 
+                 "Edge Artifact" = "red",
+                 "Interior Problem" = "blue"),
+      name = "Artifact Type"
+    ) +
+    ggtitle("E. Edge vs Interior Distinction") +
+    base_theme +
+    coord_fixed()
+} else {
+  p5 <- ggplot() + theme_void() + ggtitle("E. Edge vs Interior (Data N/A)")
+}
+
+# Plot 6: Final Hierarchical Classification 
+if ("edge_artifact_classification" %in% names(plot_data_in_tissue)) {
+  p6 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
+                                         color = edge_artifact_classification)) +
+    geom_point(size = 0.5) +
+    scale_color_manual(
+      values = c("not_artifact" = "lightgray", 
+                 "large_edge_artifact" = "red",
+                 "small_edge_artifact" = "orange",
+                 "large_interior_artifact" = "blue",
+                 "small_interior_artifact" = "cyan"),
+      name = "Final Class",
+      na.value = "grey50"
+    ) +
+    ggtitle("F. Final Hierarchical Classification") +
+    base_theme +
+    coord_fixed() 
+} else {
+    p6 <- ggplot() + theme_void() + ggtitle("F. Final Classification (Data N/A)")
+}
+
+# Combine all plots in a 3x2 layout
+(p1 | p2) / (p3 | p4) / (p5 | p6)
+```
+
+## Classification Summary
+
+Let's examine the enhanced classification system:
+```{r classification}
+cat("--- Final Classification Summary (`edge_artifact_classification`) ---\n")
+# Use the 'spe_classified' object we created in the step above
+final_summary <- table(spe_classified$edge_artifact_classification)
+print(final_summary)
+
+final_pct <- round(100 * final_summary / sum(final_summary), 2)
+final_df <- data.frame(
+  Classification = names(final_summary),
+  Count = as.numeric(final_summary),
+  Percentage = as.numeric(final_pct)
+)
+print(final_df)
+cat("\n\n")
+
+cat("--- Raw Edge Detection Summary (`edge_artifact_edge`) ---\n")
+# Use the 'spe_classified' object and the new column name
+edge_summary <- table(spe_classified$edge_artifact_edge)
+print(edge_summary)
+
+edge_pct <- round(100 * edge_summary / sum(edge_summary), 2)
+edge_df <- data.frame(
+  Flagged_As_Edge = names(edge_summary),
+  Count = as.numeric(edge_summary),
+  Percentage = as.numeric(edge_pct)
+)
+print(edge_df)
+```
+
+## Quality Control Validation
+
+Finally, let's validate that flagged spots have lower quality metrics:
+```{r validation}
+in_tissue_data <- spe_classified[, spe_classified$in_tissue]
+
+qc_data <- data.frame(
+  sum_umi = in_tissue_data$sum_umi,
+  detected_genes = in_tissue_data$detected,
+  flagged = in_tissue_data$edge_artifact_edge 
+)
+
+# --- Calculate Median Differences ---
+flagged_umi <- median(qc_data$sum_umi[qc_data$flagged], na.rm = TRUE)
+nonflagged_umi <- median(qc_data$sum_umi[!qc_data$flagged], na.rm = TRUE)
+
+flagged_gene <- median(qc_data$detected_genes[qc_data$flagged], na.rm = TRUE)
+nonflagged_gene <- median(qc_data$detected_genes[!qc_data$flagged], na.rm = TRUE)
+
+cat("QC Validation Results (comparing raw edge detection flag):\n")
+cat("Flagged spots - Median UMI:", round(flagged_umi), "\n")
+cat("Non-flagged spots - Median UMI:", round(nonflagged_umi), "\n")
+cat("UMI difference:", round(nonflagged_umi - flagged_umi), "\n\n")
+
+cat("Flagged spots - Median Detected Genes:", round(flagged_gene), "\n")
+cat("Non-flagged spots - Median Detected Genes:", round(nonflagged_gene), "\n")
+cat("Gene difference:", round(nonflagged_gene - flagged_gene), "\n")
+
+qc_data$flag_status <- ifelse(qc_data$flagged, "Flagged (Raw Edge)", "Non-Flagged")
+
+validation_plot <- ggplot(qc_data, aes(x = flag_status, y = log10(sum_umi + 1), fill = flag_status)) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("Flagged (Raw Edge)" = "lightcoral", "Non-Flagged" = "lightblue")) +
+  labs(
+    title = "QC Validation: UMI Counts in Raw Edge vs Non-Edge Spots",
+    x = "Raw Edge Detection Status", y = "log10(UMI Count + 1)"
+  ) +
+  theme_minimal()
+
+print(validation_plot)
+```
+
+
+## Filtering Out Problematic Spots (Optional)
+
+Based on the new classifications, users can make informed decisions about filtering. For example, you might decide to remove all **edge artifacts** (both large and small) while keeping **interior artifacts** for further review.
+
+Here's how you can filter the `SpatialExperiment` object to remove all spots classified as both `"large_edge_artifact"` or `"small_edge_artifact"`:
+```{r filtering}
+if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
+  spots_to_keep <- !spe_classified$edge_artifact_classification %in% 
+                      c("large_edge_artifact", "small_edge_artifact")
+  spe_filtered <- spe_classified[, spots_to_keep]
+  cat("Original number of spots:", ncol(spe_classified), "\n")
+  cat("Number of spots after filtering:", ncol(spe_filtered), "\n")
+} else {
+  cat("Classification column not found. Filtering step skipped.\n")
+}
+```
+```{r plotFiltering, fig.width=12, fig.height=6, message=FALSE, warning=FALSE}
+plot_data_before <- as.data.frame(colData(spe_classified))
+coords_mat <- spatialCoords(spe_classified)
+plot_data_before <- cbind(plot_data_before, as.data.frame(coords_mat))
+plot_data_before_in_tissue <- plot_data_before[plot_data_before$in_tissue, ]
+
+plot_data_after <- as.data.frame(colData(spe_filtered))
+if (ncol(spe_filtered) > 0) {
+  coords_mat_after <- spatialCoords(spe_filtered)
+  plot_data_after <- cbind(plot_data_after, as.data.frame(coords_mat_after))
+}
+
+base_theme <- theme_void() +
+    theme(plot.title = element_text(size = 12, hjust = 0.5),
+          legend.position = "right")
+
+p1_umi_before <- ggplot(plot_data_before_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = log10(sum_umi + 1))) +
+  geom_point(size = 0.5) +
+  scale_color_viridis_c(name = "log10(UMI)") +
+  ggtitle("UMI Counts (Before Filtering)") +
+  base_theme +
+  coord_fixed() 
+
+if (ncol(spe_filtered) > 0) {
+  p2_umi_after <- ggplot(plot_data_after, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = log10(sum_umi + 1))) +
+    geom_point(size = 0.5) +
+    scale_color_viridis_c(name = "log10(UMI)") +
+    ggtitle("UMI Counts (After Filtering)") +
+    base_theme +
+    coord_fixed() 
+} else {
+  p2_umi_after <- ggplot() + theme_void() + ggtitle("UMI Counts (After Filtering - No Spots)")
+}
+
+p3_class_before <- ggplot(plot_data_before_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = edge_artifact_classification)) +
+  geom_point(size = 0.5) +
+  scale_color_manual(
+    values = c("not_artifact" = "lightgray", 
+               "large_edge_artifact" = "red",
+               "small_edge_artifact" = "orange",
+               "large_interior_artifact" = "blue",
+               "small_interior_artifact" = "cyan"),
+    name = "Final Class",
+    na.value="grey50",
+    drop = FALSE
+  ) +
+  ggtitle("Classification (Before Filtering)") +
+  base_theme +
+  coord_fixed()
+
+if (ncol(spe_filtered) > 0) {
+  p4_class_after <- ggplot(plot_data_after, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = edge_artifact_classification)) +
+    geom_point(size = 0.5) +
+    scale_color_manual(
+      values = c("not_artifact" = "lightgray", 
+                 "large_edge_artifact" = "red",
+                 "small_edge_artifact" = "orange",
+                 "large_interior_artifact" = "blue",
+                 "small_interior_artifact" = "cyan"),
+      name = "Final Class",
+      na.value="grey50",
+      drop = FALSE
+    ) +
+    ggtitle("Classification (After Filtering)") +
+    base_theme +
+    coord_fixed()
+} else {
+  p4_class_after <- ggplot() + theme_void() + ggtitle("Classification (After Filtering - No Spots)")
+}
+
+combined_filtering_plot_2x2 <- (p1_umi_before | p2_umi_after) / (p3_class_before | p4_class_after)
+print(combined_filtering_plot_2x2)
+```
+
+
+## Conclusion
+
+This vignette demonstrated the **SpatialDryArtifacts** workflow across multiple spatial transcriptomics platforms. Specifically, it showed:
+
+- **Standard Visium workflow:** Complete example using the included hippocampus dataset
+- **VisiumHD adaptation:** How to properly scale parameters for 16µm and 8µm resolution data  
+- **Platform-specific considerations:** Grid arrangement, parameter scaling formulas, and typical artifact sizes
+- **Visualization:** Display hierarchical classification results alongside QC metrics  
+- **Classification logic:** Distinguish between edge vs. interior and large vs. small artifacts
+- **Validation:** Flagged spots show significantly lower molecular capture
+
+**Key Takeaways for Multi-Platform Usage:**
+
+1. **Grid Structure:** Standard Visium uses hexagonal grids (`shifted = TRUE`), while VisiumHD uses square grids (`shifted = FALSE`)
+
+2. **Critical Parameter Scaling:** The `min_spots` threshold in `classifyEdgeArtifacts()` must scale with spatial resolution:
+   - Use the formula: `min_spots_HD = min_spots_visium × (55 / bin_size)²`
+   - Without scaling, artifacts will be incorrectly classified by size
+
+3. **Morphological Framework:** The same detection logic works across platforms, automatically adapting to different grid arrangements
+
+4. **Physical Consistency:** Scaled parameters ensure that "large" and "small" artifact classifications represent equivalent physical sizes regardless of platform
+
+Overall, **SpatialDryArtifacts** provides a unified, platform-agnostic framework for detecting and classifying spatial artifacts, enabling consistent quality control across the evolving spatial transcriptomics technology landscape.
+
+## Session Information
+```{r session_info}
+sessionInfo()
+```

@@ -1,20 +1,50 @@
-Package: SpatialArtifacts
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Package: SpatialDryArtifacts
+Title: Detect and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data
+Version: 0.99.0
+Authors@R: c(
+    person("Jiali Harriet", "He", email = "harrietjialihh@gmail.com", role = c("aut", "cre")),
+    person("Stephanie", "Hicks", email = "shicks19@jhu.edu", role = "aut"),
+    person("Michael", "Totty", email = "mtotty2@jh.edu", role = "aut"),
+    person("Jacqueline", "Thompson", email = "jthom338@jh.edu", role = "aut"))
+Description: SpatialDryArtifacts implements enhanced methods for detecting edge dryspots - 
+    technical artifacts caused by incomplete reagent coverage during Visium spatial transcriptomics sample preparation. 
+    This package extends existing spatial transcriptomics quality control methods by incorporating spatial neighborhood information. 
+    It provides a two-step workflow to identify, classify, and 
+    handle edge dryspot artifacts in 10x Visium data. These artifacts, 
+    often appearing as areas of low gene and UMI counts at tissue edges, 
+    can negatively impact downstream analyses.
 License: MIT + file LICENSE
+LazyDataCompression: xz
 Encoding: UTF-8
+biocViews:
+    Spatial,
+    Transcriptomics,
+    QualityControl,
+    Visualization,
+    Software
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-URL: https://cambridgecat13.github.io/SpatialArtifacts/
+URL: https://github.com/CambridgeCat13/SpatialDryArtifacts, https://cambridgecat13.github.io/SpatialDryArtifacts/
+BugReports: https://github.com/CambridgeCat13/SpatialDryArtifacts/issues
 Imports: 
     dplyr,
-    methods,
-    S4Vectors,
+    raster,
     scuttle,
     SpatialExperiment,
-    stats,
-    SummarizedExperiment,
-    terra
+    SummarizedExperiment
+Suggests: 
+    patchwork,
+    S4Vectors,
+    pkgload,
+    igraph,
+    ExperimentHub,
+    ggplot2,
+    gridExtra,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
+LazyData: true
