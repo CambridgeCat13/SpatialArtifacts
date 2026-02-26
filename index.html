@@ -13,6 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Detect and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data">
 <meta name="description" content="SpatialDryArtifacts implements enhanced methods for detecting edge dryspots - technical artifacts caused by incomplete reagent coverage during Visium spatial transcriptomics sample preparation. This package extends existing spatial transcriptomics quality control methods by incorporating spatial neighborhood information. It provides a two-step workflow to identify, classify, and handle edge dryspot artifacts in 10x Visium data. These artifacts, often appearing as areas of low gene and UMI counts at tissue edges, can negatively impact downstream analyses.">
 <meta property="og:description" content="SpatialDryArtifacts implements enhanced methods for detecting edge dryspots - technical artifacts caused by incomplete reagent coverage during Visium spatial transcriptomics sample preparation. This package extends existing spatial transcriptomics quality control methods by incorporating spatial neighborhood information. It provides a two-step workflow to identify, classify, and handle edge dryspot artifacts in 10x Visium data. These artifacts, often appearing as areas of low gene and UMI counts at tissue edges, can negatively impact downstream analyses.">
+<meta property="og:image" content="https://cambridgecat13.github.io/SpatialArtifacts/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -52,8 +53,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="spatialartifacts">SpatialArtifacts<a class="anchor" aria-label="anchor" href="#spatialartifacts"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="spatialartifacts">SpatialArtifacts<a class="anchor" aria-label="anchor" href="#spatialartifacts"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
 <p>The goal of <code>SpatialArtifacts</code> is to detect interior and edge artifacts, such as dry spots caused by incomplete reagent coverage or tissue handling, in spatial transcriptomics data. The package currently supports the 10x Genomics <code>Visium</code> and <code>VisiumHD</code> platforms.</p>
