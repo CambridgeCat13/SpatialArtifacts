@@ -1,4 +1,5 @@
 url: https://cambridgecat13.github.io/SpatialArtifacts/
 template:
   bootstrap: 5
-
+  params:
+    logo: man/figures/logo.png
