@@ -1,7 +1,5 @@
 # Spatial Artifacts
 
-# SpatialArtifacts
-
 The goal of `SpatialArtifacts` is to detect interior and edge artifacts,
 such as dry spots caused by incomplete reagent coverage or tissue
 handling, in spatial transcriptomics data. The package currently
