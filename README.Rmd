@@ -77,7 +77,7 @@ table(spe$edge_artifact_classification)
 
 ## Tutorials
 
-A detailed tutorial is available in the package vignette from Bioconductor. A direct link to the tutorial / package vignette is available [here]().
+A detailed tutorial is available in the package vignette from Bioconductor. A direct link to the tutorial / package vignette is available [here](https://cambridgecat13.github.io/SpatialArtifacts/articles/hippocampus-edge-detection.html).
 
 
 ## Development tools
