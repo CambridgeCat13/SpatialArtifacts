@@ -2,18 +2,28 @@
 
 ## Authors
 
-- **First Last**. Author, maintainer.
+- **Jiali Harriet He**. Author, maintainer.
+
+- **Stephanie Hicks**. Author.
+
+- **Michael Totty**. Author.
+
+- **Jacqueline Thompson**. Author.
 
 ## Citation
 
-Last F (2026). *SpatialArtifacts: What the Package Does (One Line, Title
-Case)*. R package version 0.0.0.9000,
-<https://cambridgecat13.github.io/SpatialArtifacts/>.
+Source:
+[`DESCRIPTION`](https://github.com/CambridgeCat13/SpatialDryArtifacts/blob/main/DESCRIPTION)
+
+He J, Hicks S, Totty M, Thompson J (2026). *SpatialDryArtifacts: Detect
+and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data*. R
+package version 0.99.0,
+<https://github.com/CambridgeCat13/SpatialDryArtifacts>.
 
     @Manual{,
-      title = {SpatialArtifacts: What the Package Does (One Line, Title Case)},
-      author = {First Last},
+      title = {SpatialDryArtifacts: Detect and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data},
+      author = {Jiali Harriet He and Stephanie Hicks and Michael Totty and Jacqueline Thompson},
       year = {2026},
-      note = {R package version 0.0.0.9000},
-      url = {https://cambridgecat13.github.io/SpatialArtifacts/},
+      note = {R package version 0.99.0},
+      url = {https://github.com/CambridgeCat13/SpatialDryArtifacts},
     }

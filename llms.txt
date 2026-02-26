@@ -120,3 +120,9 @@ available [here](https://cambridgecat13.github.io/SpatialArtifacts/).
 - [`spe_vignette`](https://cambridgecat13.github.io/SpatialArtifacts/reference/spe_vignette.md)
   : Mock SpatialExperiment for Vignettes
 
+# Articles
+
+### All vignettes
+
+- [Spatial Edge Artifacts Detection in Hippocampus
+  Data](https://cambridgecat13.github.io/SpatialArtifacts/articles/hippocampus-edge-detection.md):
