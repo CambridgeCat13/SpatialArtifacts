@@ -38,7 +38,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
 BiocManager::install("SpatialArtifacts")
 ```
 
-You can install the development version of SpatialDryArtifacts from
+You can install the development version of SpatialArtifacts from
 [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
 
 ``` r
@@ -75,7 +75,8 @@ table(spe$edge_artifact_classification)
 
 A detailed tutorial is available in the package vignette from
 Bioconductor. A direct link to the tutorial / package vignette is
-available [here](https://cambridgecat13.github.io/SpatialArtifacts/).
+available
+[here](https://cambridgecat13.github.io/SpatialArtifacts/articles/hippocampus-edge-detection.html).
 
 ## Development tools
 

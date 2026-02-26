@@ -67,7 +67,7 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <strong>SpatialDryArtifacts</strong> R package provides a robust,
+<p>The <strong>SpatialArtifacts</strong> R package provides a robust,
 two-step workflow to identify, classify, and handle spatial artifacts in
 spatial transcriptomics data from multiple platforms including
 <strong>10x Visium</strong> (standard and HD).</p>
@@ -79,8 +79,8 @@ datasets across different spatial transcriptomics platforms.</p>
 <div class="section level3">
 <h3 id="platform-support">Platform Support<a class="anchor" aria-label="anchor" href="#platform-support"></a>
 </h3>
-<p><strong>SpatialDryArtifacts</strong> is designed to work across
-multiple spatial transcriptomics platforms:</p>
+<p><strong>SpatialArtifacts</strong> is designed to work across multiple
+spatial transcriptomics platforms:</p>
 <ul>
 <li>
 <strong>Standard Visium</strong> (55µm bins, hexagonal grid): ~5,000
@@ -98,7 +98,7 @@ different grid arrangements, but <strong>parameter scaling is
 critical</strong> for optimal performance across platforms.</p>
 </div>
 <div class="section level3">
-<h3 id="the-spatialdryartifacts-workflow">The SpatialDryArtifacts Workflow<a class="anchor" aria-label="anchor" href="#the-spatialdryartifacts-workflow"></a>
+<h3 id="the-spatialartifacts-workflow">The SpatialArtifacts Workflow<a class="anchor" aria-label="anchor" href="#the-spatialartifacts-workflow"></a>
 </h3>
 <p>The core philosophy is a two-step process: <strong>Detect, then
 Classify</strong>.<br>
@@ -643,7 +643,7 @@ classification:</strong> One of <code>"not_artifact"</code>,
 <code>SpatialExperiment</code> object derived from a human hippocampus
 Visium sample.</p>
 <p><strong>This vignette will load this raw-like object and run the full
-<code>SpatialDryArtifacts</code> workflow on it live.</strong></p>
+<code>SpatialArtifacts</code> workflow on it live.</strong></p>
 <p><strong>Note:</strong> To meet package size requirements (&lt; 5MB),
 this object has been subset (e.g., to coding genes) and sparsified, but
 <strong>no artifact detection has been run.</strong> We will perform
@@ -1212,7 +1212,7 @@ to remove all spots classified as both
 <div class="section level3">
 <h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h3>
-<p>This vignette demonstrated the <strong>SpatialDryArtifacts</strong>
+<p>This vignette demonstrated the <strong>SpatialArtifacts</strong>
 workflow across multiple spatial transcriptomics platforms.
 Specifically, it showed:</p>
 <ul>
@@ -1261,7 +1261,7 @@ arrangements</p></li>
 that “large” and “small” artifact classifications represent equivalent
 physical sizes regardless of platform</p></li>
 </ol>
-<p>Overall, <strong>SpatialDryArtifacts</strong> provides a unified,
+<p>Overall, <strong>SpatialArtifacts</strong> provides a unified,
 platform-agnostic framework for detecting and classifying spatial
 artifacts, enabling consistent quality control across the evolving
 spatial transcriptomics technology landscape.</p>
@@ -1294,7 +1294,7 @@ spatial transcriptomics technology landscape.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
 <span><span class="co">#&gt;  [1] dplyr_1.2.0                 patchwork_1.3.2            </span></span>
-<span><span class="co">#&gt;  [3] ggplot2_4.0.2               SpatialDryArtifacts_0.99.0 </span></span>
+<span><span class="co">#&gt;  [3] ggplot2_4.0.2               SpatialArtifacts_0.0.0.9000</span></span>
 <span><span class="co">#&gt;  [5] SpatialExperiment_1.20.0    SingleCellExperiment_1.32.0</span></span>
 <span><span class="co">#&gt;  [7] SummarizedExperiment_1.40.0 Biobase_2.70.0             </span></span>
 <span><span class="co">#&gt;  [9] GenomicRanges_1.62.1        Seqinfo_1.0.0              </span></span>

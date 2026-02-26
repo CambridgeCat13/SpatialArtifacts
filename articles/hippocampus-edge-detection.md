@@ -2,8 +2,8 @@
 
 ## Introduction
 
-The **SpatialDryArtifacts** R package provides a robust, two-step
-workflow to identify, classify, and handle spatial artifacts in spatial
+The **SpatialArtifacts** R package provides a robust, two-step workflow
+to identify, classify, and handle spatial artifacts in spatial
 transcriptomics data from multiple platforms including **10x Visium**
 (standard and HD).
 
@@ -15,7 +15,7 @@ different spatial transcriptomics platforms.
 
 ### Platform Support
 
-**SpatialDryArtifacts** is designed to work across multiple spatial
+**SpatialArtifacts** is designed to work across multiple spatial
 transcriptomics platforms:
 
 - **Standard Visium** (55µm bins, hexagonal grid): ~5,000 spots per
@@ -29,7 +29,7 @@ The morphological detection framework automatically adapts to different
 grid arrangements, but **parameter scaling is critical** for optimal
 performance across platforms.
 
-### The SpatialDryArtifacts Workflow
+### The SpatialArtifacts Workflow
 
 The core philosophy is a two-step process: **Detect, then Classify**.  
 This separates the sensitive task of identifying all potential problem
@@ -365,7 +365,7 @@ This package includes `spe_vignette`, a lightweight `SpatialExperiment`
 object derived from a human hippocampus Visium sample.
 
 **This vignette will load this raw-like object and run the full
-`SpatialDryArtifacts` workflow on it live.**
+`SpatialArtifacts` workflow on it live.**
 
 **Note:** To meet package size requirements (\< 5MB), this object has
 been subset (e.g., to coding genes) and sparsified, but **no artifact
@@ -872,7 +872,7 @@ print(combined_filtering_plot_2x2)
 
 ### Conclusion
 
-This vignette demonstrated the **SpatialDryArtifacts** workflow across
+This vignette demonstrated the **SpatialArtifacts** workflow across
 multiple spatial transcriptomics platforms. Specifically, it showed:
 
 - **Standard Visium workflow:** Complete example using the included
@@ -909,7 +909,7 @@ multiple spatial transcriptomics platforms. Specifically, it showed:
     “small” artifact classifications represent equivalent physical sizes
     regardless of platform
 
-Overall, **SpatialDryArtifacts** provides a unified, platform-agnostic
+Overall, **SpatialArtifacts** provides a unified, platform-agnostic
 framework for detecting and classifying spatial artifacts, enabling
 consistent quality control across the evolving spatial transcriptomics
 technology landscape.
@@ -941,7 +941,7 @@ sessionInfo()
 #> 
 #> other attached packages:
 #>  [1] dplyr_1.2.0                 patchwork_1.3.2            
-#>  [3] ggplot2_4.0.2               SpatialDryArtifacts_0.99.0 
+#>  [3] ggplot2_4.0.2               SpatialArtifacts_0.0.0.9000
 #>  [5] SpatialExperiment_1.20.0    SingleCellExperiment_1.32.0
 #>  [7] SummarizedExperiment_1.40.0 Biobase_2.70.0             
 #>  [9] GenomicRanges_1.62.1        Seqinfo_1.0.0              
