@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 library(SummarizedExperiment)
 library(SpatialExperiment)
-library(SpatialDryArtifacts)
+library(SpatialArtifacts)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
@@ -22,13 +22,13 @@ library(dplyr)
 
 # Introduction
 
-The **SpatialDryArtifacts** R package provides a robust, two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including **10x Visium** (standard and HD).  
+The **SpatialArtifacts** R package provides a robust, two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including **10x Visium** (standard and HD).  
 
 These artifacts, often appearing as areas of low gene/UMI counts or high mitochondrial ratio at tissue edges (edge artifacts) or in the interior (interior artifacts), can negatively impact downstream analyses. This guide demonstrates how to use the package on real-world datasets across different spatial transcriptomics platforms.
 
 ## Platform Support
 
-**SpatialDryArtifacts** is designed to work across multiple spatial transcriptomics platforms:
+**SpatialArtifacts** is designed to work across multiple spatial transcriptomics platforms:
 
 - **Standard Visium** (55µm bins, hexagonal grid): ~5,000 spots per capture area
 - **VisiumHD 16µm** (16µm bins, square grid): ~480,000 bins per capture area  
@@ -37,7 +37,7 @@ These artifacts, often appearing as areas of low gene/UMI counts or high mitocho
 The morphological detection framework automatically adapts to different grid arrangements, but **parameter scaling is critical** for optimal performance across platforms.
 
 
-## The SpatialDryArtifacts Workflow
+## The SpatialArtifacts Workflow
 
 The core philosophy is a two-step process: **Detect, then Classify**.  
 This separates the sensitive task of identifying all potential problem spots from the more nuanced task of deciding what to do with them.
@@ -278,7 +278,7 @@ After both functions, several columns are added to `colData(spe)`:
 
 This package includes `spe_vignette`, a lightweight `SpatialExperiment` object derived from a human hippocampus Visium sample.
 
-**This vignette will load this raw-like object and run the full `SpatialDryArtifacts` workflow on it live.**
+**This vignette will load this raw-like object and run the full `SpatialArtifacts` workflow on it live.**
 
 **Note:** To meet package size requirements (< 5MB), this object has been subset (e.g., to coding genes) and sparsified, but **no artifact detection has been run.** We will perform those steps now.
 
@@ -712,7 +712,7 @@ print(combined_filtering_plot_2x2)
 
 ## Conclusion
 
-This vignette demonstrated the **SpatialDryArtifacts** workflow across multiple spatial transcriptomics platforms. Specifically, it showed:
+This vignette demonstrated the **SpatialArtifacts** workflow across multiple spatial transcriptomics platforms. Specifically, it showed:
 
 - **Standard Visium workflow:** Complete example using the included hippocampus dataset
 - **VisiumHD adaptation:** How to properly scale parameters for 16µm and 8µm resolution data  
@@ -733,7 +733,7 @@ This vignette demonstrated the **SpatialDryArtifacts** workflow across multiple 
 
 4. **Physical Consistency:** Scaled parameters ensure that "large" and "small" artifact classifications represent equivalent physical sizes regardless of platform
 
-Overall, **SpatialDryArtifacts** provides a unified, platform-agnostic framework for detecting and classifying spatial artifacts, enabling consistent quality control across the evolving spatial transcriptomics technology landscape.
+Overall, **SpatialArtifacts** provides a unified, platform-agnostic framework for detecting and classifying spatial artifacts, enabling consistent quality control across the evolving spatial transcriptomics technology landscape.
 
 ## Session Information
 ```{r session_info}

@@ -43,7 +43,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
 BiocManager::install("SpatialArtifacts")
 ```
 
-You can install the development version of SpatialDryArtifacts from [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
+You can install the development version of SpatialArtifacts from [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
 
 ``` r
 # install.packages("pak")
