@@ -3,8 +3,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# SpatialArtifacts
-
 <!-- badges: start -->
 
 [![Lifecycle:
