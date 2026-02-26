@@ -6,10 +6,10 @@
 #' @param samples Sample ID column (default: "sample_id")
 #' @param mad_threshold MAD threshold (default: 3)
 #' @param buffer_width_um Buffer zone width in micrometers (default: 80)
-#'   Approximately 10 bins at 8$\mu$m resolution, 5 bins at 16$\mu$m resolution
-#' @param min_cluster_area_um2 Minimum cluster area in $\mu$m$^2$ (default: 1280)
-#'   Approximately 20 bins at 8$\mu$m resolution, 5 bins at 16$\mu$m resolution
-#'   Default based on 16$\mu$m standard (5 bins = reasonable minimum cluster)
+#'   Approximately 10 bins at 8$u$m resolution, 5 bins at 16$u$m resolution
+#' @param min_cluster_area_um2 Minimum cluster area in $u$m$^2$ (default: 1280)
+#'   Approximately 20 bins at 8$u$m resolution, 5 bins at 16$u$m resolution
+#'   Default based on 16$u$m standard (5 bins = reasonable minimum cluster)
 #' @param batch_var Batch variable (default: "sample_id")
 #' @param col_x X coordinate column (default: "array_col") 
 #' @param col_y Y coordinate column (default: "array_row")
@@ -61,6 +61,10 @@
 #' 
 #' # Run detection for 16um resolution
 #' # (Physical buffer 80um / 16um bin size = 5 bins. Artifact is 2 bins wide.)
+#' 
+#' colnames(spe_hd) <- paste0("spot_", seq_len(ncol(spe_hd)))
+#' rownames(spe_hd) <- paste0("gene_", seq_len(nrow(spe_hd)))
+#' 
 #' spe_hd <- detectEdgeArtifacts_VisiumHD(
 #'     spe_hd, 
 #'     resolution = "16um",
@@ -88,8 +92,8 @@
 #' spe <- detectEdgeArtifacts_VisiumHD(
 #'   spe, 
 #'   resolution = "16um",
-#'   buffer_width_um = 100,      # 100 $\mu$m buffer
-#'   min_cluster_area_um2 = 2000 # 2000 $\mu$m^2 minimum 
+#'   buffer_width_um = 100,      # 100 $u$m buffer
+#'   min_cluster_area_um2 = 2000 # 2000 $u$m^2 minimum 
 #' )
 #' }
 #'
@@ -196,8 +200,8 @@ detectEdgeArtifacts_VisiumHD <- function(
                     coord_min_x, coord_max_x, coord_min_y, coord_max_y))
     message(sprintf("Buffer Width: %d um -> %d bins", 
                     buffer_width_um, buffer_width_bins))
-    message(sprintf("Min Cluster Area: %d um2 -> %d bins (%.1f bins at 16um)", 
-                    min_cluster_area_um2, min_cluster_area_bins, bin_area_um2/256))
+    message(sprintf("Min Cluster Area: %d um2 -> %d bins", 
+                min_cluster_area_um2, min_cluster_size_bins))
     message(sprintf("Samples: %d", length(sampleList)))
   }
   

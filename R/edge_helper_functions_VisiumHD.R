@@ -71,8 +71,7 @@ my_fill_star <- function(x) {
 #'
 #' @return Processed SpatRaster
 #'
-#' @keywords internal
-#' @noRd
+#' @export
 focal_transformations_terra <- function(r, min_cluster_size = 5) {
   
   if (!inherits(r, "SpatRaster")) {

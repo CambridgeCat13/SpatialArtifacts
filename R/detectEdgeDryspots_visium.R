@@ -39,7 +39,7 @@
 #'                                  nrow = 10, ncol = n_spots)),
 #'   colData = DataFrame(
 #'     in_tissue = rep(TRUE, n_spots),
-#'     sum = mock_counts,
+#'     sum_gene = mock_counts,
 #'     sum_umi = mock_counts, # Add sum_umi for classify function
 #'     sample_id = "mock_sample",
 #'     slide = "mock_slide",

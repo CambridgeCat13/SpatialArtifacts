@@ -107,7 +107,6 @@ my_outline <- function(x) {
 #' print(terra::values(r_cleaned))
 #'
 #' @export
-#' @noRd
 focal_transformations <- function(raster_object, min_cluster_size = 40) {
   
   if (!requireNamespace("terra", quietly = TRUE)) {
