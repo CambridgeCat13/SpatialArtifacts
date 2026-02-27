@@ -31,10 +31,11 @@ Imports:
     raster,
     scuttle,
     SpatialExperiment,
-    SummarizedExperiment
+    SummarizedExperiment,
+    S4Vectors,
+    methods
 Suggests: 
     patchwork,
-    S4Vectors,
     pkgload,
     igraph,
     ExperimentHub,
