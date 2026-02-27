@@ -1,17 +1,47 @@
-# Spatial Edge Artifacts Detection in Hippocampus Data
+# SpatialArtifacts Tutorial
 
 ## Introduction
 
-The **SpatialArtifacts** R package provides a robust, two-step workflow
-to identify, classify, and handle spatial artifacts in spatial
-transcriptomics data from multiple platforms including **10x Visium**
-(standard and HD).
+`SpatialArtifacts` is an R package that provides a data-driven a
+two-step workflow to identify, classify, and handle spatial artifacts in
+spatial transcriptomics data from multiple platforms including **10x
+Visium** (Standard and HD). The `SpatialArtifacts` method combines
+median absolute deviation (MAD)-based outlier detection with
+morphological image processing. It is is implemented as an R package
+within the Bioconductor framework, and is available from
+[Bioconductor](https://bioconductor.org/packages/SpatialArtifacts).
 
 These artifacts, often appearing as areas of low gene/UMI counts or high
 mitochondrial ratio at tissue edges (edge artifacts) or in the interior
 (interior artifacts), can negatively impact downstream analyses. This
 guide demonstrates how to use the package on real-world datasets across
 different spatial transcriptomics platforms.
+
+More details describing the method are available in our paper, available
+from
+[bioRxiv](https://cambridgecat13.github.io/SpatialArtifacts/articles/).
+
+## Installation
+
+The following code will install the latest release version of the
+`nnSVG` package from Bioconductor. Additional details are shown on the
+[Bioconductor](https://bioconductor.org/packages/SpatialArtifacts) page.
+
+``` r
+install.packages("BiocManager")
+BiocManager::install("SpatialArtifacts")
+```
+
+The latest development version can also be installed from the `devel`
+version of Bioconductor or from
+[GitHub](https://github.com/CambridgeCat13/SpatialArtifacts).
+
+## Input data format
+
+In the examples below, we assume the input data are provided as a
+[SpatialExperiment](https://bioconductor.org/packages/SpatialExperiment)
+Bioconductor object. In this case, the outputs are stored in the
+`rowData` of the `SpatialExperiment` object.
 
 ### Platform Support
 
@@ -29,93 +59,103 @@ The morphological detection framework automatically adapts to different
 grid arrangements, but **parameter scaling is critical** for optimal
 performance across platforms.
 
-### The SpatialArtifacts Workflow
+## Tutorial
 
-The core philosophy is a two-step process: **Detect, then Classify**.  
-This separates the sensitive task of identifying all potential problem
-spots from the more nuanced task of deciding what to do with them.
+The core philosophy is a two-step process: **detect, and then
+classify**. This separates the sensitive task of identifying all
+potential problem spots from the more nuanced task of deciding what to
+do with them.
 
-#### **Step 1: `detectEdgeArtifacts()` — The Detection Phase**
+### The detection phase
 
-**Goal**: Cast a wide net and identify all spots that could potentially
+In the first step, we use the
+[`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md)
+function. Here, the goal is to identify all spots that could potentially
 be part of an artifact.
 
-**How does it work**:
+How does it work:
 
-- **Outlier Identification**: Finds spots with abnormally low QC metrics
+- **Outlier identification**: Find spots with abnormally low QC metrics
   (e.g., `sum_gene`) using a Median Absolute Deviation (MAD)
   threshold.  
-- **Morphological Cleaning**: Applies sequential raster-based focal
+- **Morphological cleaning**: Apply sequential raster-based focal
   operations through
   [`focal_transformations()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/focal_transformations.md):
-  1.  **3×3 fill** (`my_fill`): Fills spots completely surrounded by
+  1.  **3×3 fill** (`my_fill`): Fill spots completely surrounded by
       outliers
-  2.  **5×5 outline** (`my_outline`): Fills spots outlined by outliers
-      in a larger 16-pixel perimeter
-  3.  **Star pattern** (`my_fill_star`): Fills spots with outliers in
-      all four cardinal directions (N, S, E, W)
-  4.  **Small cluster removal**: Removes isolated normal regions below
+  2.  **5×5 outline** (`my_outline`): Fill spots outlined by outliers in
+      a larger 16-pixel perimeter
+  3.  **Star pattern** (`my_fill_star`): Fill spots with outliers in all
+      four cardinal directions (N, S, E, W)
+  4.  **Small cluster removal**: Remove isolated normal regions below
       `min_cluster_size` threshold (default: 40 spots)
 
-  - Uses 8-directional connectivity for connected component analysis
-- **Cluster Detection**: Groups these outliers into contiguous “problem
-  areas” (`problemAreas`).  
-- **Edge Identification**: Evaluates whether clusters touch tissue
+  - Use 8-directional connectivity for connected component analysis
+- **Cluster detection**: Group these outliers into contiguous “problem
+  areas” (`problemAreas`)
+- **Edge identification**: Evaluate whether clusters touch tissue
   boundaries using
   [`clumpEdges()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/clumpEdges.md).
   For each of the four borders (north, south, east, west), calculates
   the proportion of boundary spots belonging to each cluster. A cluster
   is classified as an edge artifact if this proportion meets or exceeds
   `edge_threshold` (default: 0.75, meaning ≥75% border coverage) on any
-  single border direction.
-- **Key Outputs**: Adds three *raw* columns to your `spe` object:
-  `_edge`, `_problem_id`, and `_problem_size`.
+  single border direction
 
-#### **Step 2: `classifyEdgeArtifacts()` — The Decision Phase**
+The output from this phase will add three *raw* columns to your `spe`
+object: `_edge`, `_problem_id`, and `_problem_size`
 
-**Goal**: Take the raw detections from Step 1 and apply a clear,
-hierarchical logic to assign final labels.
+### The classification phase
 
-**How does it work**: - **Input**: Requires the `spe` object processed
-by
-[`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md).  
-- **Hierarchical Classification**: Applies a 2×2 logic system based on
-**Location** and **Size**: 1. **Location**: Is the artifact an
-`_edge_artifact` (`TRUE` or `FALSE`) based on the detection step?  
-2. **Size**: Is the artifact’s `_problem_size` larger than `min_spots`
-(default: `20`)?  
-- **Label Assignment**: This logic produces five intuitive categories: -
-`"not_artifact"` — High-quality spots  
-- `"large_edge_artifact"` — Large artifact cluster (`> min_spots`)
-touching the tissue edge  
-- `"small_edge_artifact"` — Small artifact cluster (`≤ min_spots`)
-touching the tissue edge  
-- `"large_interior_artifact"` — Large artifact cluster (`> min_spots`)
-located inside the tissue  
-- `"small_interior_artifact"` — Small artifact cluster (`≤ min_spots`)
-located inside the tissue  
-- **Key Outputs**: Adds one final, intuitive classification column:
+In the second step, we use the
+[`classifyEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/classifyEdgeArtifacts.md)
+function. Here the goal is to take the raw detections from the previous
+step and apply a clear, hierarchical logic to assign final labels.
+
+How does it work:
+
+- **Input**: Requires the `spe` object processed by
+  [`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md)  
+- **Hierarchical Classification**: Apply a 2×2 logic system based on
+  **Location** and **Size**:
+  1.  **Location**: Is the artifact an `_edge_artifact` (`TRUE` or
+      `FALSE`) based on the detection step?  
+  2.  **Size**: Is the artifact’s `_problem_size` larger than
+      `min_spots` (default: `20`)?  
+- **Label Assignment**: This logic produces five intuitive categories:
+  - `"not_artifact"` — High-quality spots  
+  - `"large_edge_artifact"` — Large artifact cluster (`> min_spots`)
+    touching the tissue edge  
+  - `"small_edge_artifact"` — Small artifact cluster (`≤ min_spots`)
+    touching the tissue edge  
+  - `"large_interior_artifact"` — Large artifact cluster (`> min_spots`)
+    located inside the tissue  
+  - `"small_interior_artifact"` — Small artifact cluster (`≤ min_spots`)
+    located inside the tissue
+
+The output from this phase will add one classification column named
 `_classification`.
 
-### Parameter Guide
+## Helpful information on parameters
 
-Tuning parameters lets you adapt the workflow to different tissue types,
-data quality, **and spatial transcriptomics platforms**. The package
-uses a **wrapper function** that routes to platform-specific
+Tuning the parameters lets you adapt the workflow to different tissue
+types, data quality, and spatial transcriptomics platforms. The package
+uses a wrapper function that routes to platform-specific
 implementations.
 
-#### **Platform Selection**
+### Platform selection
 
 **CRITICAL FIRST STEP:** Specify your platform using the `platform`
 parameter in
-[`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md):
+[`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md)
+function:
 
 | Platform            | Function Call                                                           | Required Parameters            |
 |---------------------|-------------------------------------------------------------------------|--------------------------------|
 | **Standard Visium** | `detectEdgeArtifacts(spe, platform="visium", ...)`                      | `shifted` (usually `TRUE`)     |
 | **VisiumHD**        | `detectEdgeArtifacts(spe, platform="visiumhd", resolution="16um", ...)` | `resolution` (“8um” or “16um”) |
 
-**Example calls:**
+### Example use cases
 
 ``` r
 # Standard Visium (55µm hexagonal grid)
@@ -128,53 +168,49 @@ spe <- detectEdgeArtifacts(spe, platform = "visiumhd", resolution = "16um", ...)
 spe <- detectEdgeArtifacts(spe, platform = "visiumhd", resolution = "8um", ...)
 ```
 
-------------------------------------------------------------------------
-
-#### **`detectEdgeArtifacts()` Parameters**
+### Parameters for `detectEdgeArtifacts()`
 
 The wrapper function accepts platform-specific parameters that are
 routed to the appropriate implementation.
 
-##### **Universal Parameters (All Platforms)**
+#### For all platforms
 
-- *`platform`* (**REQUIRED**) – Character string: `"visium"` or
+- `platform` (**REQUIRED**) – Character string: `"visium"` or
   `"visiumhd"` (case insensitive)
 
   - Determines which platform-specific function to use
   - No default value; must be explicitly specified for clarity
 
-- *`qc_metric`* (Default: `"sum_gene"`) – Column name for QC metric used
+- `qc_metric` (Default: `"sum_gene"`) – Column name for QC metric used
   in outlier detection
 
   - Common alternatives: `"sum_umi"`, `"detected"`, `"nFeature"`
   - The function will auto-detect some common variants
 
-- *`samples`* (Default: `"sample_id"`) – Column name for sample
+- `samples` (Default: `"sample_id"`) – Column name for sample
   identifiers
 
   - Each sample is processed independently
 
-- *`mad_threshold`* (Default: 3) – Sensitivity for detecting outliers
+- `mad_threshold` (Default: 3) – Sensitivity for detecting outliers
 
   - Lower values (1.5–2) are more sensitive
   - Higher values (3–4) are more conservative
 
-- *`name`* (Default: `"edge_artifact"`) – Prefix for output column names
+- `name` (Default: `"edge_artifact"`) – Prefix for output column names
 
   - Outputs: `[name]_edge`, `[name]_problem_id`, `[name]_problem_size`
 
-- *`verbose`* (Default: `TRUE`) – Print progress messages
+- `verbose` (Default: `TRUE`) – Print progress messages
 
-- *`keep_intermediate`* (Default: `FALSE`) – Retain intermediate outlier
+- `keep_intermediate` (Default: `FALSE`) – Retain intermediate outlier
   detection columns
 
-------------------------------------------------------------------------
+#### For standard Visium
 
-##### **Standard Visium-Specific Parameters**
+When `platform = "visium"`, use:
 
-*(Used when `platform = "visium"`)*
-
-- *`edge_threshold`* (Default: 0.75) – Minimum proportion of a tissue
+- `edge_threshold` (Default: 0.75) – Minimum proportion of a tissue
   boundary that must be occupied by outlier clusters (collectively) for
   those clusters to be classified as edge artifacts.
 
@@ -209,14 +245,14 @@ routed to the appropriate implementation.
   - Very low values (\<0.30): Aggressive, may misclassify biological
     low-expression zones as artifacts
 
-- *`min_cluster_size`* (Default: 40) – Minimum cluster size (in spots)
-  for morphological cleaning during focal transformation steps
+- `min_cluster_size` (Default: 40) – Minimum cluster size (in spots) for
+  morphological cleaning during focal transformation steps
 
   - Isolated “normal” regions smaller than this threshold within outlier
     areas will be filled in to create contiguous artifact regions
   - **For Standard Visium:** 40 spots ≈ 0.12 mm² physical area
 
-- *`shifted`* (Default: `FALSE`) – Apply coordinate adjustment for
+- `shifted` (Default: `FALSE`) – Apply coordinate adjustment for
   hexagonal grid alignment
 
   - **Standard Visium typically requires `shifted = TRUE`** when using
@@ -225,25 +261,23 @@ routed to the appropriate implementation.
     VisiumHD square grids.
   - This corrects for the staggered arrangement of hexagonal spots
 
-- *`batch_var`* (Default: `"both"`) – Determines grouping for MAD
+- `batch_var` (Default: `"both"`) – Determines grouping for MAD
   calculation
 
   - Options: `"sample_id"`, `"slide"`, or `"both"`
   - `"both"`: Spots flagged as outliers if below threshold in either
     sample or slide grouping
 
-------------------------------------------------------------------------
+#### For VisiumHD
 
-##### **VisiumHD-Specific Parameters**
+When `platform = "visiumhd"`, use:
 
-*(Used when `platform = "visiumhd"`)*
-
-- *`resolution`* (**REQUIRED**) – Character string: `"8um"` or `"16um"`
+- `resolution` (**REQUIRED**) – Character string: `"8um"` or `"16um"`
   - Specifies the bin size of your VisiumHD data
   - This is **mandatory** for VisiumHD; the function will error if not
     provided
   - Determines conversion from physical units (µm) to bins
-- *`buffer_width_um`* (Default: 80) – Buffer zone width in micrometers
+- `buffer_width_um` (Default: 80) – Buffer zone width in micrometers
   (physical units)
   - Defines the edge region where artifacts are expected
   - Automatically converted to bins based on `resolution`:
@@ -252,7 +286,7 @@ routed to the appropriate implementation.
   - **Tuning guidance:**
     - Increase (100-150 µm) for tissues with larger edge artifacts
     - Decrease (50-60 µm) for precise edge detection
-- *`min_cluster_area_um2`* (Default: 1280) – Minimum cluster area in
+- `min_cluster_area_um2` (Default: 1280) – Minimum cluster area in
   square micrometers (physical units)
   - Clusters smaller than this will be filtered out during morphological
     cleaning
@@ -262,26 +296,24 @@ routed to the appropriate implementation.
   - **Physical consistency:** Same area threshold gives different bin
     counts at different resolutions
   - Default (1280 µm²) was calibrated for 16µm resolution
-- *`col_x`* and *`col_y`* (Default: `"array_col"`, `"array_row"`) –
-  Column names for bin coordinates
+- `col_x` and `col_y` (Default: `"array_col"`, `"array_row"`) – Column
+  names for bin coordinates
   - **Important:** These should be **bin indices**, not pixel
     coordinates
   - Using bin indices is much more memory-efficient than pixel
     coordinates
 
-**Key Difference from Visium:** VisiumHD parameters are specified in
+**Key Difference from Visium**: VisiumHD parameters are specified in
 **physical units (µm, µm²)** rather than bin counts. This ensures
 consistency across resolutions while the algorithm handles the bin
 conversion internally.
 
-------------------------------------------------------------------------
-
-#### **`classifyEdgeArtifacts()` Parameters**
+### Parameters for `classifyEdgeArtifacts()`
 
 The classification step is **platform-independent** but requires
 appropriate parameter scaling.
 
-- *`min_spots`* (Default: 20) – **CRITICAL PARAMETER:** Threshold (in
+- `min_spots` (Default: 20) – **CRITICAL PARAMETER:** Threshold (in
   number of spots/bins) to distinguish `"large"` from `"small"`
   artifacts
 
@@ -316,22 +348,20 @@ appropriate parameter scaling.
   Without scaling, large VisiumHD artifacts would be incorrectly
   classified as “small.”
 
-- *`qc_metric`* (Default: `"sum_umi"`) – QC metric column for validation
+- `qc_metric` (Default: `"sum_umi"`) – QC metric column for validation
   (must exist but not directly used in classification logic)
 
-- *`samples`* (Default: `"sample_id"`) – Sample ID column name
+- `samples` (Default: `"sample_id"`) – Sample ID column name
 
-- *`exclude_slides`* (Default: `NULL`) – Vector of slide IDs to exclude
+- `exclude_slides` (Default: `NULL`) – Vector of slide IDs to exclude
   from edge classification
 
   - Spots on these slides will have edge artifact status set to `FALSE`
 
-- *`name`* (Default: `"edge_artifact"`) – Must match the name used in
+- `name` (Default: `"edge_artifact"`) – Must match the name used in
   [`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md)
 
-------------------------------------------------------------------------
-
-#### **Platform Comparison Summary**
+### **Platform Comparison Summary**
 
 | Feature                            | Standard Visium                   | VisiumHD                            |
 |------------------------------------|-----------------------------------|-------------------------------------|
@@ -343,7 +373,7 @@ appropriate parameter scaling.
 | **Default `min_spots` (classify)** | 20-40                             | 100-200 (16µm), 400-800 (8µm)       |
 | **Typical Dataset Size**           | ~5,000 spots                      | ~480k bins (16µm), ~1.9M bins (8µm) |
 
-### Understanding the Output Columns
+### Understanding the output columns
 
 After both functions, several columns are added to `colData(spe)`:
 
@@ -359,7 +389,7 @@ After both functions, several columns are added to `colData(spe)`:
   `"not_artifact"`, `"large_edge_artifact"`, `"small_edge_artifact"`,
   `"large_interior_artifact"`, or `"small_interior_artifact"`.
 
-### Running the Full Workflow: Standard Visium Example
+## Example: Standard Visium workflow
 
 This package includes `spe_vignette`, a lightweight `SpatialExperiment`
 object derived from a human hippocampus Visium sample.
@@ -371,7 +401,7 @@ object derived from a human hippocampus Visium sample.
 been subset (e.g., to coding genes) and sparsified, but **no artifact
 detection has been run.** We will perform those steps now.
 
-#### Data Preparation: Converting to Dense Matrix
+### Data preparation: converting to dense matrix
 
 The underlying spatial clustering functions in this package currently
 require a **dense matrix** to perform coordinate-based calculations. We

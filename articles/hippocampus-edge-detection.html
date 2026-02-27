@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Spatial Edge Artifacts Detection in Hippocampus Data • SpatialDryArtifacts</title>
+<title>SpatialArtifacts Tutorial • SpatialDryArtifacts</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Spatial Edge Artifacts Detection in Hippocampus Data">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SpatialArtifacts Tutorial">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/hippocampus-edge-detection.html">Spatial Edge Artifacts Detection in Hippocampus Data</a></li>
+<li><a class="dropdown-item" href="../articles/hippocampus-edge-detection.html">SpatialArtifacts Tutorial</a></li>
   </ul>
 </li>
       </ul>
@@ -54,27 +54,61 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Spatial Edge Artifacts Detection in Hippocampus Data</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/CambridgeCat13/SpatialDryArtifacts/blob/main/vignettes/hippocampus-edge-detection.Rmd" class="external-link"><code>vignettes/hippocampus-edge-detection.Rmd</code></a></small>
+      <img src="../logo.png" class="logo" alt=""><h1>SpatialArtifacts Tutorial</h1>
+                        <h4 data-toc-skip class="author">Harriet Jiali
+He</h4>
+            <address class="author_afil">
+      Johns Hopkins University, Baltimore, MD, United
+States<br><h4 data-toc-skip class="author">Stephanie
+C. Hicks</h4>
+            <address class="author_afil">
+      Johns Hopkins University, Baltimore, MD, United
+States<br><small class="dont-index">Source: <a href="https://github.com/CambridgeCat13/SpatialDryArtifacts/blob/main/vignettes/hippocampus-edge-detection.Rmd" class="external-link"><code>vignettes/hippocampus-edge-detection.Rmd</code></a></small>
       <div class="d-none name"><code>hippocampus-edge-detection.Rmd</code></div>
-    </div>
+    </address>
+</address>
+</div>
 
     
     
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <strong>SpatialArtifacts</strong> R package provides a robust,
-two-step workflow to identify, classify, and handle spatial artifacts in
-spatial transcriptomics data from multiple platforms including
-<strong>10x Visium</strong> (standard and HD).</p>
+<p><code>SpatialArtifacts</code> is an R package that provides a
+data-driven a two-step workflow to identify, classify, and handle
+spatial artifacts in spatial transcriptomics data from multiple
+platforms including <strong>10x Visium</strong> (Standard and HD). The
+<code>SpatialArtifacts</code> method combines median absolute deviation
+(MAD)-based outlier detection with morphological image processing. It is
+is implemented as an R package within the Bioconductor framework, and is
+available from <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
 <p>These artifacts, often appearing as areas of low gene/UMI counts or
 high mitochondrial ratio at tissue edges (edge artifacts) or in the
 interior (interior artifacts), can negatively impact downstream
 analyses. This guide demonstrates how to use the package on real-world
 datasets across different spatial transcriptomics platforms.</p>
+<p>More details describing the method are available in our paper,
+available from <a href="">bioRxiv</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The following code will install the latest release version of the
+<code>nnSVG</code> package from Bioconductor. Additional details are
+shown on the <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>
+page.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"SpatialArtifacts"</span><span class="op">)</span></span></code></pre></div>
+<p>The latest development version can also be installed from the
+<code>devel</code> version of Bioconductor or from <a href="https://github.com/CambridgeCat13/SpatialArtifacts" class="external-link">GitHub</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="input-data-format">Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"></a>
+</h2>
+<p>In the examples below, we assume the input data are provided as a <a href="https://bioconductor.org/packages/SpatialExperiment" class="external-link">SpatialExperiment</a>
+Bioconductor object. In this case, the outputs are stored in the
+<code>rowData</code> of the <code>SpatialExperiment</code> object.</p>
 <div class="section level3">
 <h3 id="platform-support">Platform Support<a class="anchor" aria-label="anchor" href="#platform-support"></a>
 </h3>
@@ -96,114 +130,135 @@ bins per capture area</li>
 different grid arrangements, but <strong>parameter scaling is
 critical</strong> for optimal performance across platforms.</p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
+</h2>
+<p>The core philosophy is a two-step process: <strong>detect, and then
+classify</strong>. This separates the sensitive task of identifying all
+potential problem spots from the more nuanced task of deciding what to
+do with them.</p>
 <div class="section level3">
-<h3 id="the-spatialartifacts-workflow">The SpatialArtifacts Workflow<a class="anchor" aria-label="anchor" href="#the-spatialartifacts-workflow"></a>
+<h3 id="the-detection-phase">The detection phase<a class="anchor" aria-label="anchor" href="#the-detection-phase"></a>
 </h3>
-<p>The core philosophy is a two-step process: <strong>Detect, then
-Classify</strong>.<br>
-This separates the sensitive task of identifying all potential problem
-spots from the more nuanced task of deciding what to do with them.</p>
-<div class="section level4">
-<h4 id="step-1-detectedgeartifacts-the-detection-phase">
-<strong>Step 1: <code>detectEdgeArtifacts()</code> — The Detection
-Phase</strong><a class="anchor" aria-label="anchor" href="#step-1-detectedgeartifacts-the-detection-phase"></a>
-</h4>
-<p><strong>Goal</strong>: Cast a wide net and identify all spots that
-could potentially be part of an artifact.</p>
-<p><strong>How does it work</strong>:</p>
+<p>In the first step, we use the <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>
+function. Here, the goal is to identify all spots that could potentially
+be part of an artifact.</p>
+<p>How does it work:</p>
 <ul>
 <li>
-<strong>Outlier Identification</strong>: Finds spots with abnormally
+<strong>Outlier identification</strong>: Find spots with abnormally
 low QC metrics (e.g., <code>sum_gene</code>) using a Median Absolute
 Deviation (MAD) threshold.<br>
 </li>
 <li>
-<strong>Morphological Cleaning</strong>: Applies sequential
+<strong>Morphological cleaning</strong>: Apply sequential
 raster-based focal operations through
 <code><a href="../reference/focal_transformations.html">focal_transformations()</a></code>:
 <ol style="list-style-type: decimal">
 <li>
-<strong>3×3 fill</strong> (<code>my_fill</code>): Fills spots
+<strong>3×3 fill</strong> (<code>my_fill</code>): Fill spots
 completely surrounded by outliers</li>
 <li>
-<strong>5×5 outline</strong> (<code>my_outline</code>): Fills spots
+<strong>5×5 outline</strong> (<code>my_outline</code>): Fill spots
 outlined by outliers in a larger 16-pixel perimeter</li>
 <li>
-<strong>Star pattern</strong> (<code>my_fill_star</code>): Fills
+<strong>Star pattern</strong> (<code>my_fill_star</code>): Fill
 spots with outliers in all four cardinal directions (N, S, E, W)</li>
 <li>
-<strong>Small cluster removal</strong>: Removes isolated normal
+<strong>Small cluster removal</strong>: Remove isolated normal
 regions below <code>min_cluster_size</code> threshold (default: 40
 spots)</li>
 </ol>
 <ul>
-<li>Uses 8-directional connectivity for connected component
-analysis</li>
+<li>Use 8-directional connectivity for connected component analysis</li>
 </ul>
 </li>
 <li>
-<strong>Cluster Detection</strong>: Groups these outliers into
-contiguous “problem areas” (<code>problemAreas</code>).<br>
-</li>
+<strong>Cluster detection</strong>: Group these outliers into
+contiguous “problem areas” (<code>problemAreas</code>)</li>
 <li>
-<strong>Edge Identification</strong>: Evaluates whether clusters
+<strong>Edge identification</strong>: Evaluate whether clusters
 touch tissue boundaries using <code><a href="../reference/clumpEdges.html">clumpEdges()</a></code>. For each of the
 four borders (north, south, east, west), calculates the proportion of
 boundary spots belonging to each cluster. A cluster is classified as an
 edge artifact if this proportion meets or exceeds
 <code>edge_threshold</code> (default: 0.75, meaning ≥75% border
-coverage) on any single border direction.</li>
-<li>
-<strong>Key Outputs</strong>: Adds three <em>raw</em> columns to
-your <code>spe</code> object: <code>_edge</code>,
-<code>_problem_id</code>, and <code>_problem_size</code>.</li>
+coverage) on any single border direction</li>
 </ul>
+<p>The output from this phase will add three <em>raw</em> columns to
+your <code>spe</code> object: <code>_edge</code>,
+<code>_problem_id</code>, and <code>_problem_size</code></p>
 </div>
-<div class="section level4">
-<h4 id="step-2-classifyedgeartifacts-the-decision-phase">
-<strong>Step 2: <code>classifyEdgeArtifacts()</code> — The Decision
-Phase</strong><a class="anchor" aria-label="anchor" href="#step-2-classifyedgeartifacts-the-decision-phase"></a>
-</h4>
-<p><strong>Goal</strong>: Take the raw detections from Step 1 and apply
-a clear, hierarchical logic to assign final labels.</p>
-<p><strong>How does it work</strong>: - <strong>Input</strong>: Requires
-the <code>spe</code> object processed by
-<code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>.<br>
-- <strong>Hierarchical Classification</strong>: Applies a 2×2 logic
-system based on <strong>Location</strong> and <strong>Size</strong>: 1.
+<div class="section level3">
+<h3 id="the-classification-phase">The classification phase<a class="anchor" aria-label="anchor" href="#the-classification-phase"></a>
+</h3>
+<p>In the second step, we use the <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code>
+function. Here the goal is to take the raw detections from the previous
+step and apply a clear, hierarchical logic to assign final labels.</p>
+<p>How does it work:</p>
+<ul>
+<li>
+<strong>Input</strong>: Requires the <code>spe</code> object
+processed by <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code><br>
+</li>
+<li>
+<strong>Hierarchical Classification</strong>: Apply a 2×2 logic
+system based on <strong>Location</strong> and <strong>Size</strong>:
+<ol style="list-style-type: decimal">
+<li>
 <strong>Location</strong>: Is the artifact an
 <code>_edge_artifact</code> (<code>TRUE</code> or <code>FALSE</code>)
 based on the detection step?<br>
-2. <strong>Size</strong>: Is the artifact’s <code>_problem_size</code>
+</li>
+<li>
+<strong>Size</strong>: Is the artifact’s <code>_problem_size</code>
 larger than <code>min_spots</code> (default: <code>20</code>)?<br>
-- <strong>Label Assignment</strong>: This logic produces five intuitive
-categories: - <code>"not_artifact"</code> — High-quality spots<br>
-- <code>"large_edge_artifact"</code> — Large artifact cluster
+</li>
+</ol>
+</li>
+<li>
+<strong>Label Assignment</strong>: This logic produces five
+intuitive categories:
+<ul>
+<li>
+<code>"not_artifact"</code> — High-quality spots<br>
+</li>
+<li>
+<code>"large_edge_artifact"</code> — Large artifact cluster
 (<code>&gt; min_spots</code>) touching the tissue edge<br>
-- <code>"small_edge_artifact"</code> — Small artifact cluster
+</li>
+<li>
+<code>"small_edge_artifact"</code> — Small artifact cluster
 (<code>≤ min_spots</code>) touching the tissue edge<br>
-- <code>"large_interior_artifact"</code> — Large artifact cluster
+</li>
+<li>
+<code>"large_interior_artifact"</code> — Large artifact cluster
 (<code>&gt; min_spots</code>) located inside the tissue<br>
-- <code>"small_interior_artifact"</code> — Small artifact cluster
-(<code>≤ min_spots</code>) located inside the tissue<br>
-- <strong>Key Outputs</strong>: Adds one final, intuitive classification
-column: <code>_classification</code>.</p>
+</li>
+<li>
+<code>"small_interior_artifact"</code> — Small artifact cluster
+(<code>≤ min_spots</code>) located inside the tissue</li>
+</ul>
+</li>
+</ul>
+<p>The output from this phase will add one classification column named
+<code>_classification</code>.</p>
 </div>
 </div>
+<div class="section level2">
+<h2 id="helpful-information-on-parameters">Helpful information on parameters<a class="anchor" aria-label="anchor" href="#helpful-information-on-parameters"></a>
+</h2>
+<p>Tuning the parameters lets you adapt the workflow to different tissue
+types, data quality, and spatial transcriptomics platforms. The package
+uses a wrapper function that routes to platform-specific
+implementations.</p>
 <div class="section level3">
-<h3 id="parameter-guide">Parameter Guide<a class="anchor" aria-label="anchor" href="#parameter-guide"></a>
+<h3 id="platform-selection">Platform selection<a class="anchor" aria-label="anchor" href="#platform-selection"></a>
 </h3>
-<p>Tuning parameters lets you adapt the workflow to different tissue
-types, data quality, <strong>and spatial transcriptomics
-platforms</strong>. The package uses a <strong>wrapper function</strong>
-that routes to platform-specific implementations.</p>
-<div class="section level4">
-<h4 id="platform-selection">
-<strong>Platform Selection</strong><a class="anchor" aria-label="anchor" href="#platform-selection"></a>
-</h4>
 <p><strong>CRITICAL FIRST STEP:</strong> Specify your platform using the
-<code>platform</code> parameter in
-<code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>:</p>
+<code>platform</code> parameter in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>
+function:</p>
 <table class="table">
 <colgroup>
 <col width="22%">
@@ -230,8 +285,11 @@ that routes to platform-specific implementations.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Example calls:</strong></p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+</div>
+<div class="section level3">
+<h3 id="example-use-cases">Example use cases<a class="anchor" aria-label="anchor" href="#example-use-cases"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Standard Visium (55µm hexagonal grid)</span></span>
 <span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visium"</span>, shifted <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -240,22 +298,19 @@ that routes to platform-specific implementations.</p>
 <span></span>
 <span><span class="co"># VisiumHD 8µm (square grid)</span></span>
 <span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visiumhd"</span>, resolution <span class="op">=</span> <span class="st">"8um"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-<hr>
 </div>
-<div class="section level4">
-<h4 id="detectedgeartifacts-parameters">
-<strong><code>detectEdgeArtifacts()</code> Parameters</strong><a class="anchor" aria-label="anchor" href="#detectedgeartifacts-parameters"></a>
-</h4>
+<div class="section level3">
+<h3 id="parameters-for-detectedgeartifacts">Parameters for <code>detectEdgeArtifacts()</code><a class="anchor" aria-label="anchor" href="#parameters-for-detectedgeartifacts"></a>
+</h3>
 <p>The wrapper function accepts platform-specific parameters that are
 routed to the appropriate implementation.</p>
-<div class="section level5">
-<h5 id="universal-parameters-all-platforms">
-<strong>Universal Parameters (All Platforms)</strong><a class="anchor" aria-label="anchor" href="#universal-parameters-all-platforms"></a>
-</h5>
+<div class="section level4">
+<h4 id="for-all-platforms">For all platforms<a class="anchor" aria-label="anchor" href="#for-all-platforms"></a>
+</h4>
 <ul>
 <li>
-<p><em><code>platform</code></em> (<strong>REQUIRED</strong>) –
-Character string: <code>"visium"</code> or <code>"visiumhd"</code> (case
+<p><code>platform</code> (<strong>REQUIRED</strong>) – Character
+string: <code>"visium"</code> or <code>"visiumhd"</code> (case
 insensitive)</p>
 <ul>
 <li>Determines which platform-specific function to use</li>
@@ -263,9 +318,8 @@ insensitive)</p>
 </ul>
 </li>
 <li>
-<p><em><code>qc_metric</code></em> (Default:
-<code>"sum_gene"</code>) – Column name for QC metric used in outlier
-detection</p>
+<p><code>qc_metric</code> (Default: <code>"sum_gene"</code>) –
+Column name for QC metric used in outlier detection</p>
 <ul>
 <li>Common alternatives: <code>"sum_umi"</code>,
 <code>"detected"</code>, <code>"nFeature"</code>
@@ -274,47 +328,44 @@ detection</p>
 </ul>
 </li>
 <li>
-<p><em><code>samples</code></em> (Default: <code>"sample_id"</code>)
-– Column name for sample identifiers</p>
+<p><code>samples</code> (Default: <code>"sample_id"</code>) – Column
+name for sample identifiers</p>
 <ul>
 <li>Each sample is processed independently</li>
 </ul>
 </li>
 <li>
-<p><em><code>mad_threshold</code></em> (Default: 3) – Sensitivity
-for detecting outliers</p>
+<p><code>mad_threshold</code> (Default: 3) – Sensitivity for
+detecting outliers</p>
 <ul>
 <li>Lower values (1.5–2) are more sensitive</li>
 <li>Higher values (3–4) are more conservative</li>
 </ul>
 </li>
 <li>
-<p><em><code>name</code></em> (Default:
-<code>"edge_artifact"</code>) – Prefix for output column names</p>
+<p><code>name</code> (Default: <code>"edge_artifact"</code>) –
+Prefix for output column names</p>
 <ul>
 <li>Outputs: <code>[name]_edge</code>, <code>[name]_problem_id</code>,
 <code>[name]_problem_size</code>
 </li>
 </ul>
 </li>
-<li><p><em><code>verbose</code></em> (Default: <code>TRUE</code>) –
-Print progress messages</p></li>
-<li><p><em><code>keep_intermediate</code></em> (Default:
-<code>FALSE</code>) – Retain intermediate outlier detection
-columns</p></li>
+<li><p><code>verbose</code> (Default: <code>TRUE</code>) – Print
+progress messages</p></li>
+<li><p><code>keep_intermediate</code> (Default: <code>FALSE</code>) –
+Retain intermediate outlier detection columns</p></li>
 </ul>
-<hr>
 </div>
-<div class="section level5">
-<h5 id="standard-visium-specific-parameters">
-<strong>Standard Visium-Specific Parameters</strong><a class="anchor" aria-label="anchor" href="#standard-visium-specific-parameters"></a>
-</h5>
-<p><em>(Used when <code>platform = "visium"</code>)</em></p>
+<div class="section level4">
+<h4 id="for-standard-visium">For standard Visium<a class="anchor" aria-label="anchor" href="#for-standard-visium"></a>
+</h4>
+<p>When <code>platform = "visium"</code>, use:</p>
 <ul>
 <li>
-<p><em><code>edge_threshold</code></em> (Default: 0.75) – Minimum
-proportion of a tissue boundary that must be occupied by outlier
-clusters (collectively) for those clusters to be classified as edge
+<p><code>edge_threshold</code> (Default: 0.75) – Minimum proportion
+of a tissue boundary that must be occupied by outlier clusters
+(collectively) for those clusters to be classified as edge
 artifacts.</p>
 <p><strong>Important Behavior:</strong> The threshold is applied to the
 <strong>total coverage</strong> of all outlier clusters on each boundary
@@ -348,9 +399,9 @@ low-expression zones as artifacts</li>
 </ul>
 </li>
 <li>
-<p><em><code>min_cluster_size</code></em> (Default: 40) – Minimum
-cluster size (in spots) for morphological cleaning during focal
-transformation steps</p>
+<p><code>min_cluster_size</code> (Default: 40) – Minimum cluster
+size (in spots) for morphological cleaning during focal transformation
+steps</p>
 <ul>
 <li>Isolated “normal” regions smaller than this threshold within outlier
 areas will be filled in to create contiguous artifact regions</li>
@@ -360,8 +411,8 @@ area</li>
 </ul>
 </li>
 <li>
-<p><em><code>shifted</code></em> (Default: <code>FALSE</code>) –
-Apply coordinate adjustment for hexagonal grid alignment</p>
+<p><code>shifted</code> (Default: <code>FALSE</code>) – Apply
+coordinate adjustment for hexagonal grid alignment</p>
 <ul>
 <li>
 <strong>Standard Visium typically requires
@@ -373,7 +424,7 @@ or for VisiumHD square grids.</li>
 </ul>
 </li>
 <li>
-<p><em><code>batch_var</code></em> (Default: <code>"both"</code>) –
+<p><code>batch_var</code> (Default: <code>"both"</code>) –
 Determines grouping for MAD calculation</p>
 <ul>
 <li>Options: <code>"sample_id"</code>, <code>"slide"</code>, or
@@ -385,17 +436,15 @@ either sample or slide grouping</li>
 </ul>
 </li>
 </ul>
-<hr>
 </div>
-<div class="section level5">
-<h5 id="visiumhd-specific-parameters">
-<strong>VisiumHD-Specific Parameters</strong><a class="anchor" aria-label="anchor" href="#visiumhd-specific-parameters"></a>
-</h5>
-<p><em>(Used when <code>platform = "visiumhd"</code>)</em></p>
+<div class="section level4">
+<h4 id="for-visiumhd">For VisiumHD<a class="anchor" aria-label="anchor" href="#for-visiumhd"></a>
+</h4>
+<p>When <code>platform = "visiumhd"</code>, use:</p>
 <ul>
 <li>
-<em><code>resolution</code></em> (<strong>REQUIRED</strong>) –
-Character string: <code>"8um"</code> or <code>"16um"</code>
+<code>resolution</code> (<strong>REQUIRED</strong>) – Character
+string: <code>"8um"</code> or <code>"16um"</code>
 <ul>
 <li>Specifies the bin size of your VisiumHD data</li>
 <li>This is <strong>mandatory</strong> for VisiumHD; the function will
@@ -404,8 +453,8 @@ error if not provided</li>
 </ul>
 </li>
 <li>
-<em><code>buffer_width_um</code></em> (Default: 80) – Buffer zone
-width in micrometers (physical units)
+<code>buffer_width_um</code> (Default: 80) – Buffer zone width in
+micrometers (physical units)
 <ul>
 <li>Defines the edge region where artifacts are expected</li>
 <li>Automatically converted to bins based on <code>resolution</code>:
@@ -424,8 +473,8 @@ width in micrometers (physical units)
 </ul>
 </li>
 <li>
-<em><code>min_cluster_area_um2</code></em> (Default: 1280) – Minimum
-cluster area in square micrometers (physical units)
+<code>min_cluster_area_um2</code> (Default: 1280) – Minimum cluster
+area in square micrometers (physical units)
 <ul>
 <li>Clusters smaller than this will be filtered out during morphological
 cleaning</li>
@@ -442,9 +491,9 @@ different bin counts at different resolutions</li>
 </ul>
 </li>
 <li>
-<em><code>col_x</code></em> and <em><code>col_y</code></em>
-(Default: <code>"array_col"</code>, <code>"array_row"</code>) – Column
-names for bin coordinates
+<code>col_x</code> and <code>col_y</code> (Default:
+<code>"array_col"</code>, <code>"array_row"</code>) – Column names for
+bin coordinates
 <ul>
 <li>
 <strong>Important:</strong> These should be <strong>bin
@@ -454,23 +503,20 @@ coordinates</li>
 </ul>
 </li>
 </ul>
-<p><strong>Key Difference from Visium:</strong> VisiumHD parameters are
+<p><strong>Key Difference from Visium</strong>: VisiumHD parameters are
 specified in <strong>physical units (µm, µm²)</strong> rather than bin
 counts. This ensures consistency across resolutions while the algorithm
 handles the bin conversion internally.</p>
-<hr>
 </div>
 </div>
-<div class="section level4">
-<h4 id="classifyedgeartifacts-parameters">
-<strong><code>classifyEdgeArtifacts()</code>
-Parameters</strong><a class="anchor" aria-label="anchor" href="#classifyedgeartifacts-parameters"></a>
-</h4>
+<div class="section level3">
+<h3 id="parameters-for-classifyedgeartifacts">Parameters for <code>classifyEdgeArtifacts()</code><a class="anchor" aria-label="anchor" href="#parameters-for-classifyedgeartifacts"></a>
+</h3>
 <p>The classification step is <strong>platform-independent</strong> but
 requires appropriate parameter scaling.</p>
 <ul>
 <li>
-<p><em><code>min_spots</code></em> (Default: 20) – <strong>CRITICAL
+<p><code>min_spots</code> (Default: 20) – <strong>CRITICAL
 PARAMETER:</strong> Threshold (in number of spots/bins) to distinguish
 <code>"large"</code> from <code>"small"</code> artifacts</p>
 <p><strong>Platform-Specific Scaling Required:</strong></p>
@@ -512,11 +558,11 @@ represent equivalent <strong>physical artifact sizes</strong>:</p>
 </tbody>
 </table>
 <p><strong>Automatic Scaling Formula:</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>min_spots_HD <span class="ot">&lt;-</span> min_spots_visium × (<span class="dv">55</span> <span class="sc">/</span> bin_size_µm)²</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Example: For min_spots = 30 on Standard Visium</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># VisiumHD 16µm: 30 × (55/16)² ≈ 354 bins</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># VisiumHD 8µm:  30 × (55/8)²  ≈ 1,420 bins</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>min_spots_HD <span class="ot">&lt;-</span> min_spots_visium × (<span class="dv">55</span> <span class="sc">/</span> bin_size_µm)²</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># Example: For min_spots = 30 on Standard Visium</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># VisiumHD 16µm: 30 × (55/16)² ≈ 354 bins</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># VisiumHD 8µm:  30 × (55/8)²  ≈ 1,420 bins</span></span></code></pre></div>
 <p><strong>Why scaling matters:</strong> The same physical artifact
 (e.g., 0.1 mm² edge dryspot) will cover:</p>
 <ul>
@@ -528,30 +574,28 @@ represent equivalent <strong>physical artifact sizes</strong>:</p>
 <p>Without scaling, large VisiumHD artifacts would be incorrectly
 classified as “small.”</p>
 </li>
-<li><p><em><code>qc_metric</code></em> (Default: <code>"sum_umi"</code>)
-– QC metric column for validation (must exist but not directly used in
+<li><p><code>qc_metric</code> (Default: <code>"sum_umi"</code>) – QC
+metric column for validation (must exist but not directly used in
 classification logic)</p></li>
-<li><p><em><code>samples</code></em> (Default: <code>"sample_id"</code>)
-– Sample ID column name</p></li>
+<li><p><code>samples</code> (Default: <code>"sample_id"</code>) – Sample
+ID column name</p></li>
 <li>
-<p><em><code>exclude_slides</code></em> (Default: <code>NULL</code>)
-– Vector of slide IDs to exclude from edge classification</p>
+<p><code>exclude_slides</code> (Default: <code>NULL</code>) – Vector
+of slide IDs to exclude from edge classification</p>
 <ul>
 <li>Spots on these slides will have edge artifact status set to
 <code>FALSE</code>
 </li>
 </ul>
 </li>
-<li><p><em><code>name</code></em> (Default:
-<code>"edge_artifact"</code>) – Must match the name used in
-<code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code></p></li>
+<li><p><code>name</code> (Default: <code>"edge_artifact"</code>) – Must
+match the name used in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code></p></li>
 </ul>
-<hr>
 </div>
-<div class="section level4">
-<h4 id="platform-comparison-summary">
+<div class="section level3">
+<h3 id="platform-comparison-summary">
 <strong>Platform Comparison Summary</strong><a class="anchor" aria-label="anchor" href="#platform-comparison-summary"></a>
-</h4>
+</h3>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="25%">
@@ -604,9 +648,8 @@ classification logic)</p></li>
 </tbody>
 </table>
 </div>
-</div>
 <div class="section level3">
-<h3 id="understanding-the-output-columns">Understanding the Output Columns<a class="anchor" aria-label="anchor" href="#understanding-the-output-columns"></a>
+<h3 id="understanding-the-output-columns">Understanding the output columns<a class="anchor" aria-label="anchor" href="#understanding-the-output-columns"></a>
 </h3>
 <p>After both functions, several columns are added to
 <code>colData(spe)</code>:</p>
@@ -635,9 +678,10 @@ classification:</strong> One of <code>"not_artifact"</code>,
 <code>"small_interior_artifact"</code>.</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="running-the-full-workflow-standard-visium-example">Running the Full Workflow: Standard Visium Example<a class="anchor" aria-label="anchor" href="#running-the-full-workflow-standard-visium-example"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="example-standard-visium-workflow">Example: Standard Visium workflow<a class="anchor" aria-label="anchor" href="#example-standard-visium-workflow"></a>
+</h2>
 <p>This package includes <code>spe_vignette</code>, a lightweight
 <code>SpatialExperiment</code> object derived from a human hippocampus
 Visium sample.</p>
@@ -647,15 +691,15 @@ Visium sample.</p>
 this object has been subset (e.g., to coding genes) and sparsified, but
 <strong>no artifact detection has been run.</strong> We will perform
 those steps now.</p>
-<div class="section level4">
-<h4 id="data-preparation-converting-to-dense-matrix">Data Preparation: Converting to Dense Matrix<a class="anchor" aria-label="anchor" href="#data-preparation-converting-to-dense-matrix"></a>
-</h4>
+<div class="section level3">
+<h3 id="data-preparation-converting-to-dense-matrix">Data preparation: converting to dense matrix<a class="anchor" aria-label="anchor" href="#data-preparation-converting-to-dense-matrix"></a>
+</h3>
 <p>The underlying spatial clustering functions in this package currently
 require a <strong>dense matrix</strong> to perform coordinate-based
 calculations. We must first convert the sparse <code>counts</code> assay
 in our <code>spe_vignette</code> object to a standard (dense)
 matrix.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Loaded data dimensions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loaded data dimensions: 12971 4965</span></span>
@@ -712,7 +756,6 @@ matrix.</p>
 <span><span class="co">#&gt;            not_artifact     small_edge_artifact small_interior_artifact </span></span>
 <span><span class="co">#&gt;                    4887                      74                       4</span></span></code></pre></div>
 </div>
-</div>
 <div class="section level3">
 <h3 id="visiumhd-workflow-example">VisiumHD Workflow Example<a class="anchor" aria-label="anchor" href="#visiumhd-workflow-example"></a>
 </h3>
@@ -722,7 +765,7 @@ adapt parameters for VisiumHD:</p>
 <div class="section level4">
 <h4 id="visiumhd-16µm-resolution-example">VisiumHD 16µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-16%C2%B5m-resolution-example"></a>
 </h4>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is a pseudo-example demonstrating VisiumHD 16µm workflow</span></span>
 <span><span class="co"># Assumes you have loaded a VisiumHD SpatialExperiment object as 'spe_hd16'</span></span>
 <span></span>
@@ -760,7 +803,7 @@ adapt parameters for VisiumHD:</p>
 <div class="section level4">
 <h4 id="visiumhd-8µm-resolution-example">VisiumHD 8µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-8%C2%B5m-resolution-example"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is a pseudo-example demonstrating VisiumHD 8µm workflow</span></span>
 <span><span class="co"># Assumes you have loaded a VisiumHD 8µm SpatialExperiment object as 'spe_hd8'</span></span>
 <span></span>
@@ -889,7 +932,7 @@ adapt parameters for VisiumHD:</p>
 </h3>
 <p>We’ll create a comprehensive visualization showing QC metrics,
 detection results, and detailed cluster information:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/drighelli/SpatialExperiment" class="external-link">SpatialExperiment</a></span><span class="op">)</span> </span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
@@ -1017,7 +1060,7 @@ detection results, and detailed cluster information:</p>
 <h3 id="classification-summary">Classification Summary<a class="anchor" aria-label="anchor" href="#classification-summary"></a>
 </h3>
 <p>Let’s examine the enhanced classification system:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"--- Final Classification Summary (`edge_artifact_classification`) ---\n"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; --- Final Classification Summary (`edge_artifact_classification`) ---</span></span>
 <span><span class="co"># Use the 'spe_classified' object we created in the step above</span></span>
@@ -1065,7 +1108,7 @@ detection results, and detailed cluster information:</p>
 </h3>
 <p>Finally, let’s validate that flagged spots have lower quality
 metrics:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">in_tissue_data</span> <span class="op">&lt;-</span> <span class="va">spe_classified</span><span class="op">[</span>, <span class="va">spe_classified</span><span class="op">$</span><span class="va">in_tissue</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">qc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -1122,7 +1165,7 @@ about filtering. For example, you might decide to remove all
 to remove all spots classified as both
 <code>"large_edge_artifact"</code> or
 <code>"small_edge_artifact"</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_classification"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">spots_to_keep</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> </span>
 <span>                      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"large_edge_artifact"</span>, <span class="st">"small_edge_artifact"</span><span class="op">)</span></span>
@@ -1134,7 +1177,7 @@ to remove all spots classified as both
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Original number of spots: 4965 </span></span>
 <span><span class="co">#&gt; Number of spots after filtering: 4891</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_data_before</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">coords_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span></span>
 <span><span class="va">plot_data_before</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">plot_data_before</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">coords_mat</span><span class="op">)</span><span class="op">)</span></span>
@@ -1268,7 +1311,7 @@ spatial transcriptomics technology landscape.</p>
 <div class="section level3">
 <h3 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
