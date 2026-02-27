@@ -90,6 +90,6 @@ A detailed tutorial is available in the package vignette from Bioconductor. A di
 ## Contributors
 
 - [Harriet Jiali He](https://www.linkedin.com/in/harriet-he-a5ba4b21b)
-- [Jacquelinw Thompson](https://www.linkedin.com/in/jacqueline-r-thompson-6a478a159)
+- [Jacqueline R. Thompson](https://www.linkedin.com/in/jacqueline-r-thompson-6a478a159)
 - [Michael Totty](https://mictott.github.io)
 - [Stephanie C. Hicks](https://stephaniehicks.com)
