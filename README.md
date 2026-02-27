@@ -2,7 +2,6 @@
 # Spatial Artifacts <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![Lifecycle:
@@ -98,7 +97,8 @@ available
 
 ## Contributors
 
-- Harriet Jiali He
-- Jacqueline Thompson
-- Michael Totty
+- [Harriet Jiali He](https://www.linkedin.com/in/harriet-he-a5ba4b21b)
+- [Jacquelinw
+  Thompson](https://www.linkedin.com/in/jacqueline-r-thompson-6a478a159)
+- [Michael Totty](https://mictott.github.io)
 - [Stephanie C. Hicks](https://stephaniehicks.com)
