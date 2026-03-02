@@ -30,6 +30,8 @@ The following code will install the latest release version of the
 shown on
 [Bioconductor](https://bioconductor.org/packages/SpatialArtifacts).
 
+Code
+
 ``` r
 install.packages("BiocManager")
 BiocManager::install("SpatialArtifacts")
@@ -162,6 +164,8 @@ function:
 | **VisiumHD**        | `detectEdgeArtifacts(spe, platform="visiumhd", resolution="16um", ...)` | `resolution` (“8um” or “16um”) |
 
 ### Example use cases
+
+Code
 
 ``` r
 # Standard Visium (55µm hexagonal grid)
@@ -414,6 +418,8 @@ require a **dense matrix** to perform coordinate-based calculations. We
 must first convert the sparse `counts` assay in our `spe_vignette`
 object to a standard (dense) matrix.
 
+Code
+
 ``` r
 data(spe_vignette)
 cat("Loaded data dimensions:", dim(spe_vignette), "\n")
@@ -480,6 +486,8 @@ VisiumHD:
 
 #### VisiumHD 16µm Resolution Example
 
+Code
+
 ``` r
 # This is a pseudo-example demonstrating VisiumHD 16µm workflow
 # Assumes you have loaded a VisiumHD SpatialExperiment object as 'spe_hd16'
@@ -517,6 +525,8 @@ table(spe_hd16_classified$edge_artifact_classification)
 ```
 
 #### VisiumHD 8µm Resolution Example
+
+Code
 
 ``` r
 # This is a pseudo-example demonstrating VisiumHD 8µm workflow
@@ -578,6 +588,8 @@ table(spe_hd8_classified$edge_artifact_classification)
 
 We’ll create a comprehensive visualization showing QC metrics, detection
 results, and detailed cluster information:
+
+Code
 
 ``` r
 library(SpatialExperiment)
@@ -741,6 +753,8 @@ if ("edge_artifact_classification" %in% names(plot_data_in_tissue)) {
 
 Let’s examine the enhanced classification system:
 
+Code
+
 ``` r
 cat("--- Final Classification Summary (`edge_artifact_classification`) ---\n")
 #> --- Final Classification Summary (`edge_artifact_classification`) ---
@@ -788,6 +802,8 @@ print(edge_df)
 ### Quality Control Validation
 
 Finally, let’s validate that flagged spots have lower quality metrics:
+
+Code
 
 ``` r
 in_tissue_data <- spe_classified[, spe_classified$in_tissue]
@@ -848,6 +864,8 @@ Here’s how you can filter the `SpatialExperiment` object to remove all
 spots classified as both `"large_edge_artifact"` or
 `"small_edge_artifact"`:
 
+Code
+
 ``` r
 if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
   spots_to_keep <- !spe_classified$edge_artifact_classification %in%
@@ -861,6 +879,8 @@ if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
 #> Original number of spots: 4965 
 #> Number of spots after filtering: 4891
 ```
+
+Code
 
 ``` r
 plot_data_before <- as.data.frame(colData(spe_classified))
@@ -993,6 +1013,8 @@ consistent quality control across the evolving spatial transcriptomics
 technology landscape.
 
 ### Session Information
+
+Code
 
 ``` r
 sessionInfo()
