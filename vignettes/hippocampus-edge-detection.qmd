@@ -1,13 +1,15 @@
----
+----
 title: "SpatialArtifacts Tutorial"
 author: 
   - name: Harriet Jiali He
+    orcid: 0009-0003-7827-2735
     affiliations:
       - name: "Johns Hopkins University"
         city: Baltimore
         state: MD
         country: United States
   - name: Stephanie C. Hicks
+    orcid: 0000-0002-7858-0231
     affiliations:
       - name: "Johns Hopkins University"
         city: Baltimore
