@@ -47,8 +47,8 @@ center_mask <- .xyz$x >= 4 & .xyz$x <= 6 & .xyz$y >= 4 & .xyz$y <= 6
 
 # 3. Run detection
 clusters <- problemAreas_WithMorphology_terra(
-  .xyz, 
-  uniqueIdentifier = "TEST", 
+  .xyz,
+  uniqueIdentifier = "TEST",
   min_cluster_size = 2,
   resolution = "16um"
 )

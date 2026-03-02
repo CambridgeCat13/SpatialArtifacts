@@ -1,51 +1,39 @@
-Package: SpatialDryArtifacts
-Title: Detect and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data
+Package: SpatialArtifacts
+Title: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data
 Version: 0.99.0
-Authors@R: c(
-    person("Jiali Harriet", "He", email = "harrietjialihh@gmail.com", role = c("aut", "cre")),
-    person("Stephanie", "Hicks", email = "shicks19@jhu.edu", role = "aut"),
-    person("Michael", "Totty", email = "mtotty2@jh.edu", role = "aut"),
-    person("Jacqueline", "Thompson", email = "jthom338@jh.edu", role = "aut"))
-Description: SpatialDryArtifacts implements enhanced methods for detecting edge dryspots - 
-    technical artifacts caused by incomplete reagent coverage during Visium spatial transcriptomics sample preparation. 
-    This package extends existing spatial transcriptomics quality control methods by incorporating spatial neighborhood information. 
-    It provides a two-step workflow to identify, classify, and 
-    handle edge dryspot artifacts in 10x Visium data. These artifacts, 
-    often appearing as areas of low gene and UMI counts at tissue edges, 
-    can negatively impact downstream analyses.
-License: MIT + file LICENSE
-LazyDataCompression: xz
+Date: 2026-03-01
+Authors@R: 
+    c(person("Jiali Harriet", "He", , "harrietjialihh@gmail.com", role = c("aut", "cre")),
+      person("Jacqueline R.", "Thompson", , "jthom338@jh.edu", role = "aut"),
+      person("Michael", "Totty", , "mtotty2@jh.edu", role = "aut"),
+      person("Stephanie C.", "Hicks", , "shicks19@jhu.edu", role = "aut"))
+Description: SpatialArtifacts provides a data-driven two-step workflow to identify, 
+    classify, and handle spatial artifacts in spatial transcriptomics data. The 
+    package combines median absolute deviation (MAD)-based outlier detection 
+    with morphological image processing (fill, outline, and star patterns) to 
+    detect edge and interior artifacts. It supports multiple platforms including 
+    10x Genomics Visium (standard and HD), allowing for consistent quality 
+    control across different spatial resolutions.
+License: Artistic-2.0
+URL: https://github.com/CambridgeCat13/SpatialArtifacts
+BugReports: https://github.com/CambridgeCat13/SpatialArtifacts/issues
+biocViews: Software, Spatial, Transcriptomics, QualityControl, DataImport, WorkflowStep, Classification
 Encoding: UTF-8
-biocViews:
-    Spatial,
-    Transcriptomics,
-    QualityControl,
-    Visualization,
-    Software
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-URL: https://github.com/CambridgeCat13/SpatialDryArtifacts, https://cambridgecat13.github.io/SpatialDryArtifacts/
-BugReports: https://github.com/CambridgeCat13/SpatialDryArtifacts/issues
+SystemRequirements: Quarto (>= 1.0), C++17, GDAL (>= 2.0.1), GEOS (>= 3.4.0), PROJ (>= 4.8.0)
+VignetteBuilder: knitr
 Imports: 
-    dplyr,
-    raster,
-    scuttle,
     SpatialExperiment,
     SummarizedExperiment,
-    S4Vectors,
+    terra,
+    ggplot2,
+    patchwork,
+    stats,
     methods
 Suggests: 
-    patchwork,
-    pkgload,
-    igraph,
-    ExperimentHub,
-    ggplot2,
-    gridExtra,
+    BiocStyle,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
-VignetteBuilder: knitr
-Depends: 
-    R (>= 3.5)
-LazyData: true
+    BiocCheck
+    

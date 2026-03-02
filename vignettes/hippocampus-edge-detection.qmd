@@ -318,14 +318,14 @@ names(colData(spe_vignette))[names(colData(spe_vignette)) == "sum"] <- "sum_umi"
 
 spe_detected <- detectEdgeArtifacts(
   spe_vignette,
-  platform = "visium",        # IMPORTANT: Specify Standard Visium platform
-  qc_metric = "sum_umi",         
+  platform = "visium", # IMPORTANT: Specify Standard Visium platform
+  qc_metric = "sum_umi",
   samples = "sample_id",
-  shifted = TRUE,             # Hexagonal grid coordinate adjustment
-  batch_var = "sample_id", 
+  shifted = TRUE, # Hexagonal grid coordinate adjustment
+  batch_var = "sample_id",
   mad_threshold = 3,
   edge_threshold = 0.75,
-  name = "edge_artifact" 
+  name = "edge_artifact"
 )
 
 cat("\n=== RESULTS ===\n")
@@ -333,9 +333,9 @@ table(Edge_Detected = spe_detected$edge_artifact_edge)
 
 # Classification with Standard Visium parameters
 spe_classified <- classifyEdgeArtifacts(
-  spe_detected,       
-  min_spots = 20,  
-  name = "edge_artifact" 
+  spe_detected,
+  min_spots = 20,
+  name = "edge_artifact"
 )
 
 cat("\n=== Classification Results ===\n")
@@ -358,11 +358,11 @@ spe_hd16 <- addPerCellQCMetrics(spe_hd16)
 # Step 2: Detection Phase - VisiumHD uses square grid (no 'shifted' needed)
 spe_hd16_detected <- detectEdgeArtifacts(
   spe_hd16,
-  platform = "visiumhd",       # Specify VisiumHD platform
-  resolution = "16um",          # REQUIRED for VisiumHD
-  qc_metric = "sum_umi",            # or "sum" depending on your colData
+  platform = "visiumhd", # Specify VisiumHD platform
+  resolution = "16um", # REQUIRED for VisiumHD
+  qc_metric = "sum_umi", # or "sum" depending on your colData
   samples = "sample_id",
-  buffer_width_um = 100,        # VisiumHD-specific parameter
+  buffer_width_um = 100, # VisiumHD-specific parameter
   mad_threshold = 2.5,
   edge_threshold = 0.75,
   name = "edge_artifact"
@@ -370,12 +370,12 @@ spe_hd16_detected <- detectEdgeArtifacts(
 
 # Step 3: Classification Phase - CRITICAL: Scale min_spots for VisiumHD resolution
 # For 16µm bins, use ~6-10× the Standard Visium threshold
-min_spots_16um <- 30 * (55/16)^2  # ≈ 354 bins
+min_spots_16um <- 30 * (55 / 16)^2 # ≈ 354 bins
 
 spe_hd16_classified <- classifyEdgeArtifacts(
   spe_hd16_detected,
   qc_metric = "sum_umi",
-  min_spots = round(min_spots_16um),  # ~350 bins
+  min_spots = round(min_spots_16um), # ~350 bins
   name = "edge_artifact"
 )
 
@@ -394,11 +394,11 @@ spe_hd8 <- addPerCellQCMetrics(spe_hd8)
 # Step 2: Detection Phase
 spe_hd8_detected <- detectEdgeArtifacts(
   spe_hd8,
-  platform = "visiumhd",       # Specify VisiumHD platform
-  resolution = "8um",           # REQUIRED: Specify 8µm resolution
+  platform = "visiumhd", # Specify VisiumHD platform
+  resolution = "8um", # REQUIRED: Specify 8µm resolution
   qc_metric = "sum_umi",
   samples = "sample_id",
-  buffer_width_um = 100,        # Buffer zone in micrometers
+  buffer_width_um = 100, # Buffer zone in micrometers
   mad_threshold = 2.5,
   edge_threshold = 0.75,
   name = "edge_artifact"
@@ -406,12 +406,12 @@ spe_hd8_detected <- detectEdgeArtifacts(
 
 # Step 3: Classification with 8µm-appropriate threshold
 # For 8µm bins, use ~20-40× the Standard Visium threshold
-min_spots_8um <- 30 * (55/8)^2  # ≈ 1,420 bins
+min_spots_8um <- 30 * (55 / 8)^2 # ≈ 1,420 bins
 
 spe_hd8_classified <- classifyEdgeArtifacts(
   spe_hd8_detected,
   qc_metric = "sum_umi",
-  min_spots = round(min_spots_8um),  # ~1,400 bins
+  min_spots = round(min_spots_8um), # ~1,400 bins
   name = "edge_artifact"
 )
 
@@ -445,7 +445,7 @@ table(spe_hd8_classified$edge_artifact_classification)
 
 We'll create a comprehensive visualization showing QC metrics, detection results, and detailed cluster information:
 ```{r plot, fig.width=12, fig.height=24}
-library(SpatialExperiment) 
+library(SpatialExperiment)
 library(patchwork)
 
 plot_data <- as.data.frame(colData(spe_classified))
@@ -453,115 +453,147 @@ plot_data <- cbind(plot_data, as.data.frame(spatialCoords(spe_classified)))
 plot_data_in_tissue <- plot_data[plot_data$in_tissue, ]
 
 base_theme <- theme_void() +
-    theme(plot.title = element_text(size = 12, hjust = 0.5),
-          legend.position = "right")
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    legend.position = "right"
+  )
 
 # Plot 1: UMI Counts
-p1 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                       color = log10(sum_umi + 1))) +
+p1 <- ggplot(plot_data_in_tissue, aes(
+  x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+  color = log10(sum_umi + 1)
+)) +
   geom_point(size = 0.5) +
   scale_color_viridis_c(name = "log10(UMI)") +
   ggtitle("A. UMI Counts") +
   base_theme +
-  coord_fixed() 
+  coord_fixed()
 
 # Plot 2: Detected Genes
 if ("detected" %in% names(plot_data_in_tissue)) {
-  p2 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                         color = detected)) +
+  p2 <- ggplot(plot_data_in_tissue, aes(
+    x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+    color = detected
+  )) +
     geom_point(size = 0.5) +
     scale_color_viridis_c(name = "Genes", option = "plasma") +
     ggtitle("B. Detected Genes") +
     base_theme +
-    coord_fixed() 
+    coord_fixed()
 } else {
-  p2 <- ggplot() + theme_void() + ggtitle("B. Detected Genes (Data N/A)")
+  p2 <- ggplot() +
+    theme_void() +
+    ggtitle("B. Detected Genes (Data N/A)")
 }
 
 # Plot 3: Raw Detection (Any Problem Area)
 if ("edge_artifact_problem_id" %in% names(plot_data_in_tissue)) {
-   p3 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                          color = !is.na(edge_artifact_problem_id))) +
-     geom_point(size = 0.5) +
-     scale_color_manual(values = c("FALSE" = "lightgray", "TRUE" = "red"), 
-                       name = "Problem?") +
-     ggtitle("C. Raw Detection (All Problem Areas)") +
-     base_theme +
-     coord_fixed() 
+  p3 <- ggplot(plot_data_in_tissue, aes(
+    x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+    color = !is.na(edge_artifact_problem_id)
+  )) +
+    geom_point(size = 0.5) +
+    scale_color_manual(
+      values = c("FALSE" = "lightgray", "TRUE" = "red"),
+      name = "Problem?"
+    ) +
+    ggtitle("C. Raw Detection (All Problem Areas)") +
+    base_theme +
+    coord_fixed()
 } else {
-   p3 <- ggplot() + theme_void() + ggtitle("C. Raw Detection (Data N/A)")
+  p3 <- ggplot() +
+    theme_void() +
+    ggtitle("C. Raw Detection (Data N/A)")
 }
 
 # Plot 4: Cluster IDs
 if ("edge_artifact_problem_id" %in% names(plot_data_in_tissue)) {
   plot_data_in_tissue$cluster_display <- NA
-  
+
   has_cluster <- !is.na(plot_data_in_tissue$edge_artifact_problem_id)
-  plot_data_in_tissue$cluster_display[has_cluster] <- 
+  plot_data_in_tissue$cluster_display[has_cluster] <-
     plot_data_in_tissue$edge_artifact_problem_id[has_cluster]
 
   n_clusters <- length(unique(plot_data_in_tissue$cluster_display[has_cluster]))
-  
-  p4 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                         color = cluster_display)) +
+
+  p4 <- ggplot(plot_data_in_tissue, aes(
+    x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+    color = cluster_display
+  )) +
     geom_point(size = 0.5) +
     scale_color_discrete(name = "Cluster ID", na.value = "lightgray") +
     ggtitle(paste0("D. Problem Area Clusters (n=", n_clusters, ")")) +
     base_theme +
     coord_fixed() +
-    theme(legend.key.size = unit(0.3, "cm"),
-          legend.text = element_text(size = 8))
+    theme(
+      legend.key.size = unit(0.3, "cm"),
+      legend.text = element_text(size = 8)
+    )
 } else {
-  p4 <- ggplot() + theme_void() + ggtitle("D. Cluster IDs (Data N/A)")
+  p4 <- ggplot() +
+    theme_void() +
+    ggtitle("D. Cluster IDs (Data N/A)")
 }
 
 # Plot 5: Edge vs Interior Separation
 if ("edge_artifact_edge" %in% names(plot_data_in_tissue)) {
   plot_data_in_tissue$artifact_type <- "Normal"
-  
+
   # Mark edge artifacts
   plot_data_in_tissue$artifact_type[plot_data_in_tissue$edge_artifact_edge] <- "Edge Artifact"
-  
+
   # Mark interior problem areas (not edges)
-  interior_mask <- !is.na(plot_data_in_tissue$edge_artifact_problem_id) & 
-                   !plot_data_in_tissue$edge_artifact_edge
+  interior_mask <- !is.na(plot_data_in_tissue$edge_artifact_problem_id) &
+    !plot_data_in_tissue$edge_artifact_edge
   plot_data_in_tissue$artifact_type[interior_mask] <- "Interior Problem"
-  
-  p5 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                         color = artifact_type)) +
+
+  p5 <- ggplot(plot_data_in_tissue, aes(
+    x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+    color = artifact_type
+  )) +
     geom_point(size = 0.5) +
     scale_color_manual(
-      values = c("Normal" = "lightgray", 
-                 "Edge Artifact" = "red",
-                 "Interior Problem" = "blue"),
+      values = c(
+        "Normal" = "lightgray",
+        "Edge Artifact" = "red",
+        "Interior Problem" = "blue"
+      ),
       name = "Artifact Type"
     ) +
     ggtitle("E. Edge vs Interior Distinction") +
     base_theme +
     coord_fixed()
 } else {
-  p5 <- ggplot() + theme_void() + ggtitle("E. Edge vs Interior (Data N/A)")
+  p5 <- ggplot() +
+    theme_void() +
+    ggtitle("E. Edge vs Interior (Data N/A)")
 }
 
-# Plot 6: Final Hierarchical Classification 
+# Plot 6: Final Hierarchical Classification
 if ("edge_artifact_classification" %in% names(plot_data_in_tissue)) {
-  p6 <- ggplot(plot_data_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, 
-                                         color = edge_artifact_classification)) +
+  p6 <- ggplot(plot_data_in_tissue, aes(
+    x = pxl_col_in_fullres, y = pxl_row_in_fullres,
+    color = edge_artifact_classification
+  )) +
     geom_point(size = 0.5) +
     scale_color_manual(
-      values = c("not_artifact" = "lightgray", 
-                 "large_edge_artifact" = "red",
-                 "small_edge_artifact" = "orange",
-                 "large_interior_artifact" = "blue",
-                 "small_interior_artifact" = "cyan"),
+      values = c(
+        "not_artifact" = "lightgray",
+        "large_edge_artifact" = "red",
+        "small_edge_artifact" = "orange",
+        "large_interior_artifact" = "blue",
+        "small_interior_artifact" = "cyan"
+      ),
       name = "Final Class",
       na.value = "grey50"
     ) +
     ggtitle("F. Final Hierarchical Classification") +
     base_theme +
-    coord_fixed() 
+    coord_fixed()
 } else {
-    p6 <- ggplot() + theme_void() + ggtitle("F. Final Classification (Data N/A)")
+  p6 <- ggplot() +
+    theme_void() +
+    ggtitle("F. Final Classification (Data N/A)")
 }
 
 # Combine all plots in a 3x2 layout
@@ -609,7 +641,7 @@ in_tissue_data <- spe_classified[, spe_classified$in_tissue]
 qc_data <- data.frame(
   sum_umi = in_tissue_data$sum_umi,
   detected_genes = in_tissue_data$detected,
-  flagged = in_tissue_data$edge_artifact_edge 
+  flagged = in_tissue_data$edge_artifact_edge
 )
 
 # --- Calculate Median Differences ---
@@ -650,8 +682,8 @@ Based on the new classifications, users can make informed decisions about filter
 Here's how you can filter the `SpatialExperiment` object to remove all spots classified as both `"large_edge_artifact"` or `"small_edge_artifact"`:
 ```{r filtering}
 if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
-  spots_to_keep <- !spe_classified$edge_artifact_classification %in% 
-                      c("large_edge_artifact", "small_edge_artifact")
+  spots_to_keep <- !spe_classified$edge_artifact_classification %in%
+    c("large_edge_artifact", "small_edge_artifact")
   spe_filtered <- spe_classified[, spots_to_keep]
   cat("Original number of spots:", ncol(spe_classified), "\n")
   cat("Number of spots after filtering:", ncol(spe_filtered), "\n")
@@ -672,15 +704,17 @@ if (ncol(spe_filtered) > 0) {
 }
 
 base_theme <- theme_void() +
-    theme(plot.title = element_text(size = 12, hjust = 0.5),
-          legend.position = "right")
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    legend.position = "right"
+  )
 
 p1_umi_before <- ggplot(plot_data_before_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = log10(sum_umi + 1))) +
   geom_point(size = 0.5) +
   scale_color_viridis_c(name = "log10(UMI)") +
   ggtitle("UMI Counts (Before Filtering)") +
   base_theme +
-  coord_fixed() 
+  coord_fixed()
 
 if (ncol(spe_filtered) > 0) {
   p2_umi_after <- ggplot(plot_data_after, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = log10(sum_umi + 1))) +
@@ -688,21 +722,25 @@ if (ncol(spe_filtered) > 0) {
     scale_color_viridis_c(name = "log10(UMI)") +
     ggtitle("UMI Counts (After Filtering)") +
     base_theme +
-    coord_fixed() 
+    coord_fixed()
 } else {
-  p2_umi_after <- ggplot() + theme_void() + ggtitle("UMI Counts (After Filtering - No Spots)")
+  p2_umi_after <- ggplot() +
+    theme_void() +
+    ggtitle("UMI Counts (After Filtering - No Spots)")
 }
 
 p3_class_before <- ggplot(plot_data_before_in_tissue, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = edge_artifact_classification)) +
   geom_point(size = 0.5) +
   scale_color_manual(
-    values = c("not_artifact" = "lightgray", 
-               "large_edge_artifact" = "red",
-               "small_edge_artifact" = "orange",
-               "large_interior_artifact" = "blue",
-               "small_interior_artifact" = "cyan"),
+    values = c(
+      "not_artifact" = "lightgray",
+      "large_edge_artifact" = "red",
+      "small_edge_artifact" = "orange",
+      "large_interior_artifact" = "blue",
+      "small_interior_artifact" = "cyan"
+    ),
     name = "Final Class",
-    na.value="grey50",
+    na.value = "grey50",
     drop = FALSE
   ) +
   ggtitle("Classification (Before Filtering)") +
@@ -713,20 +751,24 @@ if (ncol(spe_filtered) > 0) {
   p4_class_after <- ggplot(plot_data_after, aes(x = pxl_col_in_fullres, y = pxl_row_in_fullres, color = edge_artifact_classification)) +
     geom_point(size = 0.5) +
     scale_color_manual(
-      values = c("not_artifact" = "lightgray", 
-                 "large_edge_artifact" = "red",
-                 "small_edge_artifact" = "orange",
-                 "large_interior_artifact" = "blue",
-                 "small_interior_artifact" = "cyan"),
+      values = c(
+        "not_artifact" = "lightgray",
+        "large_edge_artifact" = "red",
+        "small_edge_artifact" = "orange",
+        "large_interior_artifact" = "blue",
+        "small_interior_artifact" = "cyan"
+      ),
       name = "Final Class",
-      na.value="grey50",
+      na.value = "grey50",
       drop = FALSE
     ) +
     ggtitle("Classification (After Filtering)") +
     base_theme +
     coord_fixed()
 } else {
-  p4_class_after <- ggplot() + theme_void() + ggtitle("Classification (After Filtering - No Spots)")
+  p4_class_after <- ggplot() +
+    theme_void() +
+    ggtitle("Classification (After Filtering - No Spots)")
 }
 
 combined_filtering_plot_2x2 <- (p1_umi_before | p2_umi_after) / (p3_class_before | p4_class_after)

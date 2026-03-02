@@ -63,11 +63,12 @@ coords <- expand.grid(row = 1:4, col = 1:4)
 
 # Simulate counts with lower values at edges (top row)
 mock_counts <- rpois(n_spots, lambda = 500)
-mock_counts[1:4] <- rpois(4, lambda = 50)  # Edge artifact
+mock_counts[1:4] <- rpois(4, lambda = 50) # Edge artifact
 
 spe_mock <- SpatialExperiment::SpatialExperiment(
   assays = list(counts = matrix(rpois(n_spots * 10, lambda = 5),
-                                 nrow = 10, ncol = n_spots)),
+    nrow = 10, ncol = n_spots
+  )),
   colData = DataFrame(
     in_tissue = rep(TRUE, n_spots),
     sum_gene = mock_counts,
@@ -95,6 +96,8 @@ spe_detected <- detectEdgeArtifacts_Visium(
 
 # Check detection results
 table(spe_detected$edge_artifact_edge)
-head(colData(spe_detected)[, c("edge_artifact_edge",
-                                "edge_artifact_problem_id")])
+head(colData(spe_detected)[, c(
+  "edge_artifact_edge",
+  "edge_artifact_problem_id"
+)])
 }

@@ -32,11 +32,12 @@
 #'
 #' # Simulate counts with lower values at edges (top row)
 #' mock_counts <- rpois(n_spots, lambda = 500)
-#' mock_counts[1:4] <- rpois(4, lambda = 50)  # Edge artifact
+#' mock_counts[1:4] <- rpois(4, lambda = 50) # Edge artifact
 #'
 #' spe_mock <- SpatialExperiment::SpatialExperiment(
 #'   assays = list(counts = matrix(rpois(n_spots * 10, lambda = 5),
-#'                                  nrow = 10, ncol = n_spots)),
+#'     nrow = 10, ncol = n_spots
+#'   )),
 #'   colData = DataFrame(
 #'     in_tissue = rep(TRUE, n_spots),
 #'     sum_gene = mock_counts,
@@ -64,27 +65,29 @@
 #'
 #' # Check detection results
 #' table(spe_detected$edge_artifact_edge)
-#' head(colData(spe_detected)[, c("edge_artifact_edge",
-#'                                 "edge_artifact_problem_id")])
+#' head(colData(spe_detected)[, c(
+#'   "edge_artifact_edge",
+#'   "edge_artifact_problem_id"
+#' )])
 #' @import SpatialExperiment
 #' @importFrom dplyr %>% sym
 #' @importFrom SummarizedExperiment colData colData<-
 #' @importFrom scuttle isOutlier
-#' 
+#'
 #' @export
 detectEdgeArtifacts_Visium <- function(
-    spe,
-    qc_metric = "sum_gene",
-    samples = "sample_id",
-    mad_threshold = 3,
-    edge_threshold = 0.75,
-    min_cluster_size = 40,
-    shifted = FALSE,
-    batch_var = "both",
-    name = "edge_artifact", 
-    verbose = TRUE,
-    keep_intermediate = FALSE) {
-
+  spe,
+  qc_metric = "sum_gene",
+  samples = "sample_id",
+  mad_threshold = 3,
+  edge_threshold = 0.75,
+  min_cluster_size = 40,
+  shifted = FALSE,
+  batch_var = "both",
+  name = "edge_artifact",
+  verbose = TRUE,
+  keep_intermediate = FALSE
+) {
   lg10_metric <- paste0("lg10_", qc_metric)
   colData(spe)[[lg10_metric]] <- log10(colData(spe)[[qc_metric]] + 1)
 
@@ -119,7 +122,7 @@ detectEdgeArtifacts_Visium <- function(
     tmp_dframe <- colData(spe)[colData(spe)[[samples]] == sample_name, ]
     xyz_df <- as.data.frame(tmp_dframe[, c("array_row", "array_col", outlier_binary_col)])
     rownames(xyz_df) <- rownames(tmp_dframe)
-    
+
     clumpEdges(
       xyz_df,
       offTissue = rownames(tmp_dframe)[tmp_dframe$in_tissue == FALSE],
@@ -128,11 +131,11 @@ detectEdgeArtifacts_Visium <- function(
       min_cluster_size = min_cluster_size
     )
   })
-  
+
   # Initialize the result column
   colData(spe)[[paste0(name, "_edge")]] <- FALSE
   # Accurately assign results back to the spe object
-  for(sample_name in names(edge_spots_list)) {
+  for (sample_name in names(edge_spots_list)) {
     spots_to_flag <- edge_spots_list[[sample_name]]
     if (length(spots_to_flag) > 0) {
       colData(spe)[spots_to_flag, paste0(name, "_edge")] <- TRUE
@@ -163,14 +166,14 @@ detectEdgeArtifacts_Visium <- function(
   # Initialize result columns
   colData(spe)[[paste0(name, "_problem_id")]] <- NA
   colData(spe)[[paste0(name, "_problem_size")]] <- 0
-  
+
   # Accurately assign results in one vectorized operation
   if (nrow(all_problem_areas) > 0) {
     # Match by barcode (spotcode) which should be unique within the problem area dataframe
     colData(spe)[all_problem_areas$spotcode, paste0(name, "_problem_id")] <- all_problem_areas$clumpID
     colData(spe)[all_problem_areas$spotcode, paste0(name, "_problem_size")] <- all_problem_areas$clumpSize
   }
-  
+
   # Clean up intermediate columns if requested
   if (!keep_intermediate) {
     intermediate_cols <- c(
@@ -179,7 +182,7 @@ detectEdgeArtifacts_Visium <- function(
       paste0(qc_metric, "_", mad_threshold, "MAD_outlier_sample"),
       outlier_binary_col
     )
-    
+
     # Only remove columns that exist
     existing_cols <- intersect(intermediate_cols, colnames(colData(spe)))
     if (length(existing_cols) > 0) {
@@ -187,13 +190,15 @@ detectEdgeArtifacts_Visium <- function(
       if (verbose) message("Removed intermediate columns: ", paste(existing_cols, collapse = ", "))
     }
   }
-  
+
   if (verbose) {
     total_edge_spots <- sum(colData(spe)[[paste0(name, "_edge")]], na.rm = TRUE)
     total_problem_spots <- sum(!is.na(colData(spe)[[paste0(name, "_problem_id")]]))
-    message(sprintf("Edge artifact detection completed!\n  Total edge spots: %d\n  Total problem area spots: %d", 
-                    total_edge_spots, total_problem_spots))
+    message(sprintf(
+      "Edge artifact detection completed!\n  Total edge spots: %d\n  Total problem area spots: %d",
+      total_edge_spots, total_problem_spots
+    ))
   }
-  
+
   return(spe)
 }

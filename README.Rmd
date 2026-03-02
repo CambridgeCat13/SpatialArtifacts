@@ -36,7 +36,7 @@ To find more information, please visit the [documentation website](https://cambr
 You can install the latest version of `SpatialArtifacts` from Bioconductor with the following code: 
 ```{r 'install', eval = FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
+  install.packages("BiocManager")
 }
 
 BiocManager::install("SpatialArtifacts")

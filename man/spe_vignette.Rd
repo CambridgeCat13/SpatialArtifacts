@@ -4,12 +4,19 @@
 \alias{spe_vignette}
 \title{Mock SpatialExperiment for Vignettes}
 \format{
-A SpatialExperiment object
+A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
 }
 \source{
 Internal simulation
 }
+\value{
+A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
+}
 \description{
-A minimal SpatialExperiment object used for demonstrating
-the spatial artifact detection workflow.
+A minimal \code{\link[SpatialExperiment]{SpatialExperiment}} object used for
+demonstrating the spatial artifact detection workflow.
+}
+\examples{
+data(spe_vignette)
+spe_vignette
 }

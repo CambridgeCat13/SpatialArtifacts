@@ -7,9 +7,9 @@
 detectEdgeArtifacts(spe, platform = c("visium", "visiumhd"), ...)
 }
 \arguments{
-\item{spe}{A SpatialExperiment object}
+\item{spe}{A SpatialExperiment object.}
 
-\item{platform}{Character string: "visium" or "visiumhd" (case insensitive)}
+\item{platform}{Character string: "visium" or "visiumhd" (case insensitive).}
 
 \item{...}{Additional arguments passed to the specific function:
 \itemize{
@@ -18,16 +18,23 @@ detectEdgeArtifacts(spe, platform = c("visium", "visiumhd"), ...)
 }}
 }
 \value{
-A SpatialExperiment object with artifact annotations.
+A \code{\link[SpatialExperiment]{SpatialExperiment}} object with
+artifact detection columns (\code{_edge}, \code{_problem_id}, \code{_problem_size})
+added to \code{colData}.
 }
 \description{
 A convenient wrapper that routes to platform-specific edge detection methods.
 }
 \examples{
-# 1. Standard Visium
-# spe <- detectEdgeArtifacts(spe, platform = "Visium")
+# Load example data
+data(spe_vignette)
 
-# 2. Visium HD (Must provide resolution)
-# spe <- detectEdgeArtifacts(spe, platform = "VisiumHD", resolution = "16um")
+# 1. Standard Visium example (runnable)
+spe_visium <- detectEdgeArtifacts(spe_vignette, platform = "visium")
+
+# 2. Visium HD example (wrapped in  to avoid execution without HD data)
+\donttest{
+# spe_hd <- detectEdgeArtifacts(spe_hd_example, platform = "visiumhd", resolution = "16um")
+}
 
 }
