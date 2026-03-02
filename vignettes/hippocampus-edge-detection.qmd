@@ -1,4 +1,4 @@
-----
+---
 title: "SpatialArtifacts Tutorial"
 author: 
   - name: Harriet Jiali He
