@@ -79,6 +79,21 @@ detectEdgeArtifacts_VisiumHD(
 
   Keep intermediate columns (default: FALSE)
 
+## Value
+
+A
+[`SpatialExperiment`](https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment.html)
+object with artifact detection columns added to `colData`:
+
+- `[name]_edge`: Logical, indicates if a bin is an outlier within the
+  buffer zone.
+
+- `[name]_problem_id`: Character, unique ID for each detected interior
+  problem area.
+
+- `[name]_problem_size`: Numeric, the number of bins within each problem
+  area cluster.
+
 ## Details
 
 IMPORTANT: This function uses array_col/array_row (bin indices), NOT
@@ -114,18 +129,18 @@ coords <- expand.grid(array_row = 1:n_rows, array_col = 1:n_cols)
 # Simulate gene counts: Edge artifact (left 2 cols) has low counts
 counts <- rep(100, n_bins)
 is_edge <- coords$array_col <= 2
-counts[is_edge] <- 10 
+counts[is_edge] <- 10
 
 # Create SpatialExperiment object
 spe_hd <- SpatialExperiment(
-    assays = list(counts = matrix(counts, nrow = 1, ncol = n_bins)),
-    colData = DataFrame(
-        sample_id = "mock_hd",
-        in_tissue = rep(TRUE, n_bins),
-        sum_gene = counts, 
-        array_row = coords$array_row,
-        array_col = coords$array_col
-    )
+  assays = list(counts = matrix(counts, nrow = 1, ncol = n_bins)),
+  colData = DataFrame(
+    sample_id = "mock_hd",
+    in_tissue = rep(TRUE, n_bins),
+    sum_gene = counts,
+    array_row = coords$array_row,
+    array_col = coords$array_col
+  )
 )
 
 # Run detection for 16um resolution
@@ -135,9 +150,9 @@ colnames(spe_hd) <- paste0("spot_", seq_len(ncol(spe_hd)))
 rownames(spe_hd) <- paste0("gene_", seq_len(nrow(spe_hd)))
 
 spe_hd <- detectEdgeArtifacts_VisiumHD(
-    spe_hd, 
-    resolution = "16um",
-    qc_metric = "sum_gene"
+  spe_hd,
+  resolution = "16um",
+  qc_metric = "sum_gene"
 )
 #> ================================================================
 #> VisiumHD Edge Artifact Detection
@@ -190,17 +205,17 @@ if (FALSE) { # \dontrun{
 # min_cluster_area_um2 = 1280 -> 20 bins
 spe <- detectEdgeArtifacts_VisiumHD(spe, resolution = "8um")
 
-# 16um data with defaults  
+# 16um data with defaults
 # buffer_width_um = 80 -> 5 bins (80 / 16)
 # min_cluster_area_um2 = 1280 -> 5 bins
 spe <- detectEdgeArtifacts_VisiumHD(spe, resolution = "16um")
 
 # Custom parameters (physical units)
 spe <- detectEdgeArtifacts_VisiumHD(
-  spe, 
+  spe,
   resolution = "16um",
-  buffer_width_um = 100,      # 100 $u$m buffer
-  min_cluster_area_um2 = 2000 # 2000 $u$m^2 minimum 
+  buffer_width_um = 100, # 100 $u$m buffer
+  min_cluster_area_um2 = 2000 # 2000 $u$m^2 minimum
 )
 } # }
 ```

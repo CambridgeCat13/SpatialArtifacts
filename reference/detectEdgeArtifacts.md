@@ -13,11 +13,11 @@ detectEdgeArtifacts(spe, platform = c("visium", "visiumhd"), ...)
 
 - spe:
 
-  A SpatialExperiment object
+  A SpatialExperiment object.
 
 - platform:
 
-  Character string: "visium" or "visiumhd" (case insensitive)
+  Character string: "visium" or "visiumhd" (case insensitive).
 
 - ...:
 
@@ -29,14 +29,23 @@ detectEdgeArtifacts(spe, platform = c("visium", "visiumhd"), ...)
 
 ## Value
 
-A SpatialExperiment object with artifact annotations.
+A
+[`SpatialExperiment`](https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment.html)
+object with artifact detection columns (`_edge`, `_problem_id`,
+`_problem_size`) added to `colData`.
 
 ## Examples
 
 ``` r
-# 1. Standard Visium
-# spe <- detectEdgeArtifacts(spe, platform = "Visium")
+# Load example data
+data(spe_vignette)
 
-# 2. Visium HD (Must provide resolution)
-# spe <- detectEdgeArtifacts(spe, platform = "VisiumHD", resolution = "16um")
+# 1. Standard Visium example (runnable)
+spe_visium <- detectEdgeArtifacts(spe_vignette, platform = "visium")
+#> Error in `[[<-`(`*tmp*`, lg10_metric, value = numeric(0)): 0 elements in value to replace 4965 elements
+
+# 2. Visium HD example (wrapped in  to avoid execution without HD data)
+# \donttest{
+# spe_hd <- detectEdgeArtifacts(spe_hd_example, platform = "visiumhd", resolution = "16um")
+# }
 ```

@@ -4,26 +4,26 @@
 
 - **Jiali Harriet He**. Author, maintainer.
 
-- **Stephanie Hicks**. Author.
+- **Jacqueline R. Thompson**. Author.
 
 - **Michael Totty**. Author.
 
-- **Jacqueline Thompson**. Author.
+- **Stephanie C. Hicks**. Author.
 
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/CambridgeCat13/SpatialDryArtifacts/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/CambridgeCat13/SpatialArtifacts/blob/main/DESCRIPTION)
 
-He J, Hicks S, Totty M, Thompson J (2026). *SpatialDryArtifacts: Detect
-and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data*. R
-package version 0.99.0,
-<https://github.com/CambridgeCat13/SpatialDryArtifacts>.
+He J, Thompson J, Totty M, Hicks S (2026). *SpatialArtifacts:
+Identification and Classification of Spatial Artifacts in Visium and
+Visium HD Data*. R package version 0.99.0,
+<https://github.com/CambridgeCat13/SpatialArtifacts>.
 
     @Manual{,
-      title = {SpatialDryArtifacts: Detect and Classify Edge Dryspot Artifacts in Spatial Transcriptomics Data},
-      author = {Jiali Harriet He and Stephanie Hicks and Michael Totty and Jacqueline Thompson},
+      title = {SpatialArtifacts: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data},
+      author = {Jiali Harriet He and Jacqueline R. Thompson and Michael Totty and Stephanie C. Hicks},
       year = {2026},
       note = {R package version 0.99.0},
-      url = {https://github.com/CambridgeCat13/SpatialDryArtifacts},
+      url = {https://github.com/CambridgeCat13/SpatialArtifacts},
     }

@@ -209,13 +209,13 @@ library(S4Vectors)
 # We simulate the output that detectEdgeArtifacts() would produce
 n_spots <- 5
 spe <- SpatialExperiment(
-    colData = DataFrame(
-        sample_id = "sample01",
-        sum_umi = rep(100, n_spots), 
-        edge_artifact_edge = c(TRUE, TRUE, FALSE, FALSE, FALSE),
-        edge_artifact_problem_id = c("Cluster1", "Cluster1", "Cluster2", "Cluster3", NA),
-        edge_artifact_problem_size = c(50, 50, 10, 30, 0)
-    )
+  colData = DataFrame(
+    sample_id = "sample01",
+    sum_umi = rep(100, n_spots),
+    edge_artifact_edge = c(TRUE, TRUE, FALSE, FALSE, FALSE),
+    edge_artifact_problem_id = c("Cluster1", "Cluster1", "Cluster2", "Cluster3", NA),
+    edge_artifact_problem_size = c(50, 50, 10, 30, 0)
+  )
 )
 
 # Review the mock scenarios:
