@@ -5,17 +5,19 @@
 `SpatialArtifacts` is an R package that provides a data-driven a
 two-step workflow to identify, classify, and handle spatial artifacts in
 spatial transcriptomics data from multiple platforms including **10x
-Visium** (Standard and HD). The `SpatialArtifacts` method combines
-median absolute deviation (MAD)-based outlier detection with
-morphological image processing. It is is implemented as an R package
-within the Bioconductor framework, and is available from
+Visium** (Standard and HD). Broadly, the idea behind the package is we
+that combine median absolute deviation (MAD)-based outlier detection
+with morphological image processing to identify the artifacts. These
+artifacts, often appearing as areas of low gene/UMI counts or high
+mitochondrial ratio at tissue edges (**edge artifacts**) or in the
+interior (**interior artifacts**), can negatively impact downstream
+analyses. The methods are implemented as an R package within the
+Bioconductor framework, and is available from
 [Bioconductor](https://bioconductor.org/packages/SpatialArtifacts).
 
-These artifacts, often appearing as areas of low gene/UMI counts or high
-mitochondrial ratio at tissue edges (edge artifacts) or in the interior
-(interior artifacts), can negatively impact downstream analyses. This
-guide demonstrates how to use the package on real-world datasets across
-different spatial transcriptomics platforms.
+In the following, we provide an overview of the functionality in the
+package and we demonstrate how to apply the package on real-world
+datasets across different spatial transcriptomics platforms.
 
 More details describing the method are available in our paper, available
 from
@@ -24,8 +26,9 @@ from
 ## Installation
 
 The following code will install the latest release version of the
-`nnSVG` package from Bioconductor. Additional details are shown on the
-[Bioconductor](https://bioconductor.org/packages/SpatialArtifacts) page.
+`SpatialArtifacts` package from Bioconductor. Additional details are
+shown on
+[Bioconductor](https://bioconductor.org/packages/SpatialArtifacts).
 
 ``` r
 install.packages("BiocManager")
@@ -45,21 +48,24 @@ Bioconductor object. In this case, the outputs are stored in the
 
 ### Platform Support
 
-**SpatialArtifacts** is designed to work across multiple spatial
+`SpatialArtifacts` is designed to work across multiple spatial
 transcriptomics platforms:
 
-- **Standard Visium** (55µm bins, hexagonal grid): ~5,000 spots per
-  capture area
-- **VisiumHD 16µm** (16µm bins, square grid): ~480,000 bins per capture
-  area  
-- **VisiumHD 8µm** (8µm bins, square grid): ~1,920,000 bins per capture
+- Standard Visium (55µm bins, hexagonal grid): ~5,000 spots per capture
   area
+- VisiumHD 16µm (16µm bins, square grid): ~480,000 bins per capture
+  area  
+- VisiumHD 8µm (8µm bins, square grid): ~1,920,000 bins per capture area
+
+:::.::: {.callout-important}
 
 The morphological detection framework automatically adapts to different
 grid arrangements, but **parameter scaling is critical** for optimal
 performance across platforms.
 
-## Tutorial
+:::
+
+## Two key steps
 
 The core philosophy is a two-step process: **detect, and then
 classify**. This separates the sensitive task of identifying all

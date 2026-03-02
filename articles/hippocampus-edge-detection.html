@@ -69,12 +69,12 @@
 
     <section class="section level2"><h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><code>SpatialArtifacts</code> is an R package that provides a data-driven a two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including <strong>10x Visium</strong> (Standard and HD). The <code>SpatialArtifacts</code> method combines median absolute deviation (MAD)-based outlier detection with morphological image processing. It is is implemented as an R package within the Bioconductor framework, and is available from <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
-<p>These artifacts, often appearing as areas of low gene/UMI counts or high mitochondrial ratio at tissue edges (edge artifacts) or in the interior (interior artifacts), can negatively impact downstream analyses. This guide demonstrates how to use the package on real-world datasets across different spatial transcriptomics platforms.</p>
+<p><code>SpatialArtifacts</code> is an R package that provides a data-driven a two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including <strong>10x Visium</strong> (Standard and HD). Broadly, the idea behind the package is we that combine median absolute deviation (MAD)-based outlier detection with morphological image processing to identify the artifacts. These artifacts, often appearing as areas of low gene/UMI counts or high mitochondrial ratio at tissue edges (<strong>edge artifacts</strong>) or in the interior (<strong>interior artifacts</strong>), can negatively impact downstream analyses. The methods are implemented as an R package within the Bioconductor framework, and is available from <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
+<p>In the following, we provide an overview of the functionality in the package and we demonstrate how to apply the package on real-world datasets across different spatial transcriptomics platforms.</p>
 <p>More details describing the method are available in our paper, available from <a href="">bioRxiv</a>.</p>
 </section><section class="section level2"><h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The following code will install the latest release version of the <code>nnSVG</code> package from Bioconductor. Additional details are shown on the <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a> page.</p>
+<p>The following code will install the latest release version of the <code>SpatialArtifacts</code> package from Bioconductor. Additional details are shown on <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
@@ -86,18 +86,17 @@
 <p>In the examples below, we assume the input data are provided as a <a href="https://bioconductor.org/packages/SpatialExperiment" class="external-link">SpatialExperiment</a> Bioconductor object. In this case, the outputs are stored in the <code>rowData</code> of the <code>SpatialExperiment</code> object.</p>
 <section class="level2"><h3 id="platform-support">Platform Support<a class="anchor" aria-label="anchor" href="#platform-support"></a>
 </h3>
-<p><strong>SpatialArtifacts</strong> is designed to work across multiple spatial transcriptomics platforms:</p>
+<p><code>SpatialArtifacts</code> is designed to work across multiple spatial transcriptomics platforms:</p>
 <ul>
-<li>
-<strong>Standard Visium</strong> (55µm bins, hexagonal grid): ~5,000 spots per capture area</li>
-<li>
-<strong>VisiumHD 16µm</strong> (16µm bins, square grid): ~480,000 bins per capture area<br>
+<li>Standard Visium (55µm bins, hexagonal grid): ~5,000 spots per capture area</li>
+<li>VisiumHD 16µm (16µm bins, square grid): ~480,000 bins per capture area<br>
 </li>
-<li>
-<strong>VisiumHD 8µm</strong> (8µm bins, square grid): ~1,920,000 bins per capture area</li>
+<li>VisiumHD 8µm (8µm bins, square grid): ~1,920,000 bins per capture area</li>
 </ul>
+<p>:::.::: {.callout-important}</p>
 <p>The morphological detection framework automatically adapts to different grid arrangements, but <strong>parameter scaling is critical</strong> for optimal performance across platforms.</p>
-</section></section><section class="section level2"><h2 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
+<p>:::</p>
+</section></section><section class="section level2"><h2 id="two-key-steps">Two key steps<a class="anchor" aria-label="anchor" href="#two-key-steps"></a>
 </h2>
 <p>The core philosophy is a two-step process: <strong>detect, and then classify</strong>. This separates the sensitive task of identifying all potential problem spots from the more nuanced task of deciding what to do with them.</p>
 <section class="level2"><h3 id="the-detection-phase">The detection phase<a class="anchor" aria-label="anchor" href="#the-detection-phase"></a>
