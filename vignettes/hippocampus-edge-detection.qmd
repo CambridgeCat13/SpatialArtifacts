@@ -2,16 +2,31 @@
 title: "SpatialArtifacts Tutorial"
 author: 
   - name: Harriet Jiali He
-    affiliation: "Johns Hopkins University, Baltimore, MD, United States"
+    affiliations:
+      - name: "Johns Hopkins University"
+        city: Baltimore
+        state: MD
+        country: United States
   - name: Stephanie C. Hicks
-    affiliation: "Johns Hopkins University, Baltimore, MD, United States"
-output: rmarkdown::html_vignette
+    affiliations:
+      - name: "Johns Hopkins University"
+        city: Baltimore
+        state: MD
+        country: United States
+format: 
+  html:
+    toc: true
+    toc-depth: 2
+    code-fold: show
 vignette: >
   %\VignetteIndexEntry{SpatialArtifacts Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r setup, include = FALSE}
+
+```{r}
+#| label: setup
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
