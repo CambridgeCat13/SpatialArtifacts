@@ -3,10 +3,10 @@ Title: Identification and Classification of Spatial Artifacts in Visium and Visi
 Version: 0.99.0
 Date: 2026-03-01
 Authors@R: 
-    c(person("Jiali Harriet", "He", , "harrietjialihh@gmail.com", role = c("aut", "cre")),
+    c(person("Harriet Jiali", "He", email = "jhe46@jh.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
       person("Jacqueline R.", "Thompson", , "jthom338@jh.edu", role = "aut"),
       person("Michael", "Totty", , "mtotty2@jh.edu", role = "aut"),
-      person("Stephanie C.", "Hicks", , "shicks19@jhu.edu", role = "aut"))
+      person("Stephanie C.", "Hicks", , "shicks19@jhu.edu", role = "aut", comment = c(ORCID = "0000-0002-7858-0231")))
 Description: SpatialArtifacts provides a data-driven two-step workflow to identify, 
     classify, and handle spatial artifacts in spatial transcriptomics data. The 
     package combines median absolute deviation (MAD)-based outlier detection 
@@ -21,7 +21,7 @@ biocViews: Software, Spatial, Transcriptomics, QualityControl, DataImport, Workf
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-SystemRequirements: Quarto (>= 1.0), C++17, GDAL (>= 2.0.1), GEOS (>= 3.4.0), PROJ (>= 4.8.0)
+SystemRequirements: quarto, GDAL (>= 2.0.1), GEOS (>= 3.4.0), PROJ (>= 4.8.0)
 VignetteBuilder: knitr
 Imports: 
     SpatialExperiment,
@@ -36,4 +36,3 @@ Suggests:
     knitr,
     rmarkdown,
     BiocCheck
-    
