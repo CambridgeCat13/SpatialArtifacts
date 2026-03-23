@@ -88,6 +88,11 @@ detectEdgeArtifacts_Visium <- function(
   verbose = TRUE,
   keep_intermediate = FALSE
 ) {
+  if (!(qc_metric %in% colnames(colData(spe)))) {
+    stop(sprintf("Column '%s' not found in colData(spe). Available columns: %s", 
+                 qc_metric, paste(colnames(colData(spe)), collapse = ", ")))
+  }
+
   lg10_metric <- paste0("lg10_", qc_metric)
   colData(spe)[[lg10_metric]] <- log10(colData(spe)[[qc_metric]] + 1)
 
