@@ -2,33 +2,21 @@
 title: "SpatialArtifacts Tutorial"
 author: 
   - name: Harriet Jiali He
-    orcid: 0009-0003-7827-2735
-    affiliations:
-      - name: "Johns Hopkins University"
-        city: Baltimore
-        state: MD
-        country: United States
+    affiliation: Johns Hopkins University, Baltimore, MD, United States
   - name: Stephanie C. Hicks
-    orcid: 0000-0002-7858-0231
-    affiliations:
-      - name: "Johns Hopkins University"
-        city: Baltimore
-        state: MD
-        country: United States
-format: 
-  html:
+    affiliation: Johns Hopkins University, Baltimore, MD, United States
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
     toc: true
-    toc-depth: 2
-    code-fold: show
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{SpatialArtifacts Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r}
-#| label: setup
-#| include: false
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -74,12 +62,7 @@ In the examples below, we assume the input data are provided as a [SpatialExperi
 - VisiumHD 16µm (16µm bins, square grid): ~480,000 bins per capture area  
 - VisiumHD 8µm (8µm bins, square grid): ~1,920,000 bins per capture area
 
-:::.::: {.callout-important}
-
-The morphological detection framework automatically adapts to different grid arrangements, but **parameter scaling is critical** for optimal performance across platforms.
-
-:::
-
+> **IMPORTANT:** The morphological detection framework automatically adapts to different grid arrangements, but **parameter scaling is critical** for optimal performance across platforms.
 
 # Two key steps 
 

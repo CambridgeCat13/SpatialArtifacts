@@ -1,12 +1,14 @@
 Package: SpatialArtifacts
 Title: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data
-Version: 0.99.0
+Version: 0.99.1
 Date: 2026-03-01
 Authors@R: 
     c(person("Harriet Jiali", "He", email = "jhe46@jh.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
-      person("Jacqueline R.", "Thompson", , "jthom338@jh.edu", role = "aut"),
-      person("Michael", "Totty", , "mtotty2@jh.edu", role = "aut"),
-      person("Stephanie C.", "Hicks", , "shicks19@jhu.edu", role = "aut", comment = c(ORCID = "0000-0002-7858-0231")))
+      person("Jacqueline R.", "Thompson", email = "jthom338@jh.edu", role = "aut"),
+      person("Michael", "Totty", email = "mtotty2@jh.edu", role = "aut"),
+      person("Stephanie C.", "Hicks", email = "shicks19@jhu.edu", role = c("aut", "fnd"), comment = c(ORCID = "0000-0002-7858-0231")))
+Author: Harriet Jiali He [aut, cre], Jacqueline R. Thompson [aut], Michael Totty [aut], Stephanie C. Hicks [aut]
+Maintainer: Harriet Jiali He <jhe46@jh.edu>
 Description: SpatialArtifacts provides a data-driven two-step workflow to identify, 
     classify, and handle spatial artifacts in spatial transcriptomics data. The 
     package combines median absolute deviation (MAD)-based outlier detection 
@@ -14,6 +16,7 @@ Description: SpatialArtifacts provides a data-driven two-step workflow to identi
     detect edge and interior artifacts. It supports multiple platforms including 
     10x Genomics Visium (standard and HD), allowing for consistent quality 
     control across different spatial resolutions.
+Depends: R (>= 4.6.0)
 License: Artistic-2.0
 URL: https://github.com/CambridgeCat13/SpatialArtifacts
 BugReports: https://github.com/CambridgeCat13/SpatialArtifacts/issues
@@ -26,6 +29,9 @@ VignetteBuilder: knitr
 Imports: 
     SpatialExperiment,
     SummarizedExperiment,
+    S4Vectors,
+    scuttle,
+    dplyr,
     terra,
     ggplot2,
     patchwork,
