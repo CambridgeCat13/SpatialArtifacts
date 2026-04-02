@@ -30,9 +30,10 @@
 #' @references
 #' Thompson, J.R., Nelson, E.D., Tippani, M. et al. (2025). An integrated
 #' single-nucleus and spatial transcriptomics atlas reveals the molecular
-#' landscape of the human hippocampus. \emph{Nature Neuroscience} 28,
-#' 1990-2004. \doi{10.1038/s41593-025-02022-0}
+#' landscape of the human hippocampus. \emph{Nature Neuroscience} 28, 
+#' 1990–2004. \doi{10.1038/s41593-025-02022-0}
 #'
+#' @return A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
 #' @name spe_vignette
 #' @examples
 #' data(spe_vignette)

@@ -1,9 +1,0 @@
-citHeader("To cite package 'SpatialArtifacts' in publications use:")
-
-citEntry(entry = "Manual",
-  title        = "SpatialArtifacts: a morphology-based framework for tissue artifact detection in spatial transcriptomics data",
-  author       = as.person(c("Jiali Harriet He", "Jacqueline R. Thompson", "Michael Totty", "Stephanie C. Hicks")),
-  year         = "2026",
-  note         = "R package version 0.99.0. Manuscript in preparation.",
-  url          = "https://github.com/CambridgeCat13/SpatialArtifacts",
-  textVersion  = "He, J. H., Thompson, J. R., Totty, M., & Hicks, S. C. (2026). SpatialArtifacts: a morphology-based framework for tissue artifact detection in spatial transcriptomics data. R package version 0.99.0. Manuscript in preparation.")
