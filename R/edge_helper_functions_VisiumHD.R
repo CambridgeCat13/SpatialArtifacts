@@ -295,7 +295,7 @@ problemAreas_WithMorphology_terra <- function(.xyz,
   )
 
   # Set outlier cells to 1
-  for (i in 1:nrow(.xyz)) {
+  for (i in seq_len(nrow(.xyz))) {
     if (.xyz[i, 3] == 1) {
       # rowFromY and colFromX handle coordinate-to-cell mapping
       row_idx <- terra::rowFromY(r, .xyz[i, 2])
@@ -363,7 +363,7 @@ problemAreas_WithMorphology_terra <- function(.xyz,
   res_list <- vector("list", tot)
   cluster_names <- names(cluster_sizes)
 
-  for (i in 1:tot) {
+  for (i in seq_len(tot)) {
     cid <- as.numeric(cluster_names[i])
     cluster_mask <- cluster_ids == cid
 

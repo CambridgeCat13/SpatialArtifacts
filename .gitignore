@@ -8,3 +8,5 @@ docs
 ^\.github$
 ^.*\.Rproj$
 
+/doc/
+/Meta/

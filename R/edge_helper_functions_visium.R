@@ -204,7 +204,7 @@ lookupKey <- function(.xy, results_df) {
   )
 
   # Set values
-  for (i in 1:nrow(key1)) {
+  for (i in seq_len(nrow(key1))) {
     row_idx <- terra::rowFromY(t1, key1[i, 2])
     col_idx <- terra::colFromX(t1, key1[i, 1])
     cell_idx <- terra::cellFromRowCol(t1, row_idx, col_idx)
@@ -215,14 +215,14 @@ lookupKey <- function(.xy, results_df) {
   rast_dims <- c(nrow(t1), ncol(t1))
   rast <- matrix(rast_values, nrow = rast_dims[1], ncol = rast_dims[2], byrow = TRUE)
 
-  num_key <- sapply(1:nrow(results_df), function(x) {
+  num_key <- vapply(seq_len(nrow(results_df)), function(x) {
     v1 <- as.numeric(results_df[x, ])
     if (v1[1] <= nrow(rast) && v1[2] <= ncol(rast)) {
       rast[v1[1], v1[2]]
     } else {
-      NA
+      NA_real_
     }
-  })
+  }, numeric(1))
 
   num_key <- num_key[!is.na(num_key)]
   edge_spots <- rownames(key1)[key1$numeric_key %in% num_key]
@@ -275,7 +275,7 @@ lookupKeyDF <- function(.xy, results_df) {
   )
 
   # Set values
-  for (i in 1:nrow(key1)) {
+  for (i in seq_len(nrow(key1))) {
     row_idx <- terra::rowFromY(t1, key1[i, 2])
     col_idx <- terra::colFromX(t1, key1[i, 1])
     cell_idx <- terra::cellFromRowCol(t1, row_idx, col_idx)
@@ -286,7 +286,7 @@ lookupKeyDF <- function(.xy, results_df) {
   rast_dims <- c(nrow(t1), ncol(t1))
   rast <- matrix(rast_values, nrow = rast_dims[1], ncol = rast_dims[2], byrow = TRUE)
 
-  num_key <- do.call(rbind, lapply(1:nrow(results_df), function(x) {
+  num_key <- do.call(rbind, lapply(seq_len(nrow(results_df)), function(x) {
     if (results_df[x, 1] <= nrow(rast) && results_df[x, 2] <= ncol(rast)) {
       cbind.data.frame(
         "numeric_key" = rast[results_df[x, 1], results_df[x, 2]],
@@ -417,7 +417,7 @@ clumpEdges <- function(.xyz, offTissue, shifted = FALSE, edge_threshold = 0.75, 
   )
 
   # Set outlier values
-  for (i in 1:nrow(.xyz)) {
+  for (i in seq_len(nrow(.xyz))) {
     if (.xyz[i, 3] == 1) {
       row_idx <- terra::rowFromY(t1, .xyz[i, 2])
       col_idx <- terra::colFromX(t1, .xyz[i, 1])
@@ -501,7 +501,7 @@ clumpEdges <- function(.xyz, offTissue, shifted = FALSE, edge_threshold = 0.75, 
     }
   }
 
-  res <- res[!sapply(res, is.null)]
+  res <- res[!vapply(res, is.null, logical(1))]
 
   if (length(res) == 0) {
     return(c())
@@ -608,7 +608,7 @@ problemAreas <- function(.xyz, offTissue, uniqueIdentifier = NA, shifted = FALSE
   )
 
   # Set outlier values
-  for (i in 1:nrow(.xyz)) {
+  for (i in seq_len(nrow(.xyz))) {
     if (.xyz[i, 3] == 1) {
       row_idx <- terra::rowFromY(t1, .xyz[i, 2])
       col_idx <- terra::colFromX(t1, .xyz[i, 1])
@@ -649,7 +649,7 @@ problemAreas <- function(.xyz, offTissue, uniqueIdentifier = NA, shifted = FALSE
   res <- vector("list", tot)
   if (is.na(uniqueIdentifier)) uniqueIdentifier <- "X"
 
-  for (i in 1:tot) {
+  for (i in seq_len(tot)) {
     cluster_indices <- which(clumps == i, arr.ind = TRUE)
     if (nrow(cluster_indices) > 0) {
       res[[i]] <- cbind.data.frame(
@@ -660,7 +660,7 @@ problemAreas <- function(.xyz, offTissue, uniqueIdentifier = NA, shifted = FALSE
     }
   }
 
-  res <- res[!sapply(res, is.null)]
+  res <- res[!vapply(res, is.null, logical(1))]
 
   if (length(res) == 0) {
     return(data.frame(

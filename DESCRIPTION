@@ -15,7 +15,7 @@ Description: SpatialArtifacts provides a data-driven two-step workflow to identi
     10x Genomics Visium (standard and HD), allowing for consistent quality 
     control across different spatial resolutions.
 Depends: R (>= 4.6.0)
-License: Artistic-2.0
+License: Artistic-2.0 + file LICENSE
 URL: https://github.com/CambridgeCat13/SpatialArtifacts
 BugReports: https://github.com/CambridgeCat13/SpatialArtifacts/issues
 biocViews: Software, Spatial, Transcriptomics, QualityControl, DataImport, WorkflowStep, Classification
@@ -31,12 +31,15 @@ Imports:
     scuttle,
     dplyr,
     terra,
-    ggplot2,
-    patchwork,
     stats,
     methods
 Suggests: 
     BiocStyle,
     knitr,
     rmarkdown,
-    BiocCheck
+    BiocCheck,
+    ggplot2,
+    patchwork,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+

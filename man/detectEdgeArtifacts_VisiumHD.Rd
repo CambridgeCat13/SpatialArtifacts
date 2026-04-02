@@ -89,7 +89,7 @@ library(S4Vectors)
 n_rows <- 20
 n_cols <- 20
 n_bins <- n_rows * n_cols
-coords <- expand.grid(array_row = 1:n_rows, array_col = 1:n_cols)
+coords <- expand.grid(array_row = seq_len(n_rows), array_col = seq_len(n_cols))
 
 # Simulate gene counts: Edge artifact (left 2 cols) has low counts
 counts <- rep(100, n_bins)

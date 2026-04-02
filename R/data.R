@@ -1,11 +1,38 @@
-#' Mock SpatialExperiment for Vignettes
+#' Example SpatialExperiment for Vignettes
 #'
-#' A minimal \code{\link[SpatialExperiment]{SpatialExperiment}} object used for
-#' demonstrating the spatial artifact detection workflow.
+#' A lightweight \code{\link[SpatialExperiment]{SpatialExperiment}} object
+#' derived from a human hippocampus Visium sample, used for demonstrating
+#' the \code{SpatialArtifacts} artifact detection workflow.
 #'
-#' @format A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
-#' @return A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
-#' @source Internal simulation
+#' @format A \code{\link[SpatialExperiment]{SpatialExperiment}} object with
+#'   12,971 genes and 4,965 spots, containing one sample (V11L05-335_C1).
+#'   The \code{colData} includes precomputed QC metrics (e.g., \code{sum},
+#'   \code{detected}) from \code{\link[scuttle]{addPerCellQC}}.
+#'
+#' @details
+#' The object was derived from human hippocampus Visium data (sample
+#' V11L05-335_C1) from the spatialHPC project (LIBD4035). To meet
+#' Bioconductor package size requirements (<5 MB), the object was subset
+#' to highly variable genes using \code{scran::getTopHVGs()}, image data
+#' was removed, and the counts matrix was stored as a sparse matrix with
+#' XZ compression. QC metrics in \code{colData} were computed prior to
+#' gene subsetting and remain accurate for the full spot set.
+#'
+#' @source Derived from human hippocampus Visium data (sample V11L05-335_C1)
+#'   from Thompson et al. (2025). The raw Space Ranger output was accessed
+#'   internally via the spatialHPC project (LIBD4035) on the JHPCE cluster.
+#'   The same dataset is publicly available via the
+#'   \code{humanHippocampus2024} Bioconductor ExperimentHub package
+#'   (\url{https://bioconductor.org/packages/humanHippocampus2024}).
+#'   A script to reproduce this object is provided in
+#'   \code{inst/scripts/make-data.R}.
+#'
+#' @references
+#' Thompson, J.R., Nelson, E.D., Tippani, M. et al. (2025). An integrated
+#' single-nucleus and spatial transcriptomics atlas reveals the molecular
+#' landscape of the human hippocampus. \emph{Nature Neuroscience} 28,
+#' 1990-2004. \doi{10.1038/s41593-025-02022-0}
+#'
 #' @name spe_vignette
 #' @examples
 #' data(spe_vignette)

@@ -30,7 +30,8 @@ A convenient wrapper that routes to platform-specific edge detection methods.
 data(spe_vignette)
 
 # 1. Standard Visium example (runnable)
-spe_visium <- detectEdgeArtifacts(spe_vignette, platform = "visium", qc_metric = "sum", batch_var = "sample_id")
+spe_visium <- detectEdgeArtifacts(spe_vignette, 
+platform = "visium", qc_metric = "sum", batch_var = "sample_id")
 # 2. Visium HD example (wrapped in  to avoid execution without HD data)
 \donttest{
 # spe_hd <- detectEdgeArtifacts(spe_hd_example, platform = "visiumhd", resolution = "16um")

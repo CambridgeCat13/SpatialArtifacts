@@ -50,7 +50,7 @@
 #'   spatialCoords = as.matrix(coords)
 #' )
 #'
-#' colnames(spe_mock) <- paste0("spot_", 1:n_spots)
+#' colnames(spe_mock) <- paste0("spot_", seq_len(n_spots))
 #' rownames(spe_mock) <- paste0("gene_", 1:10)
 #'
 #' # Detect edge artifacts
