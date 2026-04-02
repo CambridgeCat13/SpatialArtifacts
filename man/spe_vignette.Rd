@@ -19,6 +19,9 @@ The same dataset is publicly available via the
 A script to reproduce this object is provided in
 \code{inst/scripts/make-data.R}.
 }
+\value{
+A \code{\link[SpatialExperiment]{SpatialExperiment}} object.
+}
 \description{
 A lightweight \code{\link[SpatialExperiment]{SpatialExperiment}} object
 derived from a human hippocampus Visium sample, used for demonstrating
@@ -41,5 +44,5 @@ spe_vignette
 Thompson, J.R., Nelson, E.D., Tippani, M. et al. (2025). An integrated
 single-nucleus and spatial transcriptomics atlas reveals the molecular
 landscape of the human hippocampus. \emph{Nature Neuroscience} 28,
-1990-2004. \doi{10.1038/s41593-025-02022-0}
+1990–2004. \doi{10.1038/s41593-025-02022-0}
 }

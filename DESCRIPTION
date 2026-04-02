@@ -1,6 +1,6 @@
 Package: SpatialArtifacts
 Title: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data
-Version: 0.99.4
+Version: 0.99.5
 Date: 2026-03-01
 Authors@R: 
     c(person("Harriet Jiali", "He", email = "jhe46@jh.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
