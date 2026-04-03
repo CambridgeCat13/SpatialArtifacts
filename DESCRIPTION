@@ -1,6 +1,6 @@
 Package: SpatialArtifacts
 Title: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data
-Version: 0.99.5
+Version: 0.99.6
 Date: 2026-03-01
 Authors@R: 
     c(person("Harriet Jiali", "He", email = "jhe46@jh.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
@@ -15,7 +15,7 @@ Description: SpatialArtifacts provides a data-driven two-step workflow to identi
     10x Genomics Visium (standard and HD), allowing for consistent quality 
     control across different spatial resolutions.
 Depends: R (>= 4.6.0)
-License: Artistic-2.0 + file LICENSE
+License: Artistic-2.0
 URL: https://github.com/CambridgeCat13/SpatialArtifacts
 BugReports: https://github.com/CambridgeCat13/SpatialArtifacts/issues
 biocViews: Software, Spatial, Transcriptomics, QualityControl, DataImport, WorkflowStep, Classification

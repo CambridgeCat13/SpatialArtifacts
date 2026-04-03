@@ -39,8 +39,11 @@ In the following, we provide an overview of the functionality in the package and
 More details describing the method will be available in our upcoming preprint.
 
 # Installation
-
-The following code will install the latest release version of the `SpatialArtifacts` package from Bioconductor. Additional details are shown on `r Biocpkg("SpatialArtifacts")` package page.
+The latest development version can also be installed from the `devel` 
+version of Bioconductor:
+```{r, eval=FALSE}
+BiocManager::install("SpatialArtifacts", version="devel")
+```
 
 ```{r, eval=FALSE}
 install.packages("BiocManager")
