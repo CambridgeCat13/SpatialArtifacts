@@ -1,3 +1,11 @@
+# SpatialArtifacts 0.99.8
+
+* Bump version for Bioconductor devel build
+
+# SpatialArtifacts 0.99.7
+
+* Removed Date field from DESCRIPTION
+
 # SpatialArtifacts 0.99.6
 
 * Fixed license to Artistic-2.0
