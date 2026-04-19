@@ -10,10 +10,7 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="hippocampus-edge-detection_files/libs/quarto-html/popper.min.js"></script><script src="hippocampus-edge-detection_files/libs/quarto-html/tippy.umd.min.js"></script><link href="hippocampus-edge-detection_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="hippocampus-edge-detection_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SpatialArtifacts Tutorial">
-<meta property="og:image" content="https://cambridgecat13.github.io/SpatialArtifacts/logo.png">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="SpatialArtifacts Tutorial">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -23,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">SpatialArtifacts</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +36,7 @@
 <li><a class="dropdown-item" href="../articles/hippocampus-edge-detection.html">SpatialArtifacts Tutorial</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -50,137 +48,228 @@
 
 
   </div>
-</nav><div class="container template-quarto">
+</nav><div class="container template-article">
+
+
+
+
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>SpatialArtifacts Tutorial</h1>
+                        <h4 data-toc-skip class="author">Harriet Jiali
+He</h4>
+            <address class="author_afil">
+      Johns Hopkins University, Baltimore, MD, United
+States<br><h4 data-toc-skip class="author">Stephanie
+C. Hicks</h4>
+            <address class="author_afil">
+      Johns Hopkins University, Baltimore, MD, United
+States<br><h4 data-toc-skip class="date">2026-04-19</h4>
+      
+      <small class="dont-index">Source: <a href="https://github.com/CambridgeCat13/SpatialArtifacts/blob/main/vignettes/hippocampus-edge-detection.Rmd" class="external-link"><code>vignettes/hippocampus-edge-detection.Rmd</code></a></small>
+      <div class="d-none name"><code>hippocampus-edge-detection.Rmd</code></div>
+    </address>
+</address>
+</div>
 
-      <p class="author">Harriet Jiali HeStephanie C. Hicks</p>
-
-
-      <small class="dont-index">Source: <a href="https://github.com/CambridgeCat13/SpatialArtifacts/blob/main/vignettes/hippocampus-edge-detection.qmd" class="external-link"><code>vignettes/hippocampus-edge-detection.qmd</code></a></small>
-      <div class="d-none name"><code></code></div>
-    </div>
-
-
-
-
-
-
-    <section class="section level2"><h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+    
+    
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><code>SpatialArtifacts</code> is an R package that provides a data-driven a two-step workflow to identify, classify, and handle spatial artifacts in spatial transcriptomics data from multiple platforms including <strong>10x Visium</strong> (Standard and HD). Broadly, the idea behind the package is we that combine median absolute deviation (MAD)-based outlier detection with morphological image processing to identify the artifacts. These artifacts, often appearing as areas of low gene/UMI counts or high mitochondrial ratio at tissue edges (<strong>edge artifacts</strong>) or in the interior (<strong>interior artifacts</strong>), can negatively impact downstream analyses. The methods are implemented as an R package within the Bioconductor framework, and is available from <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
-<p>In the following, we provide an overview of the functionality in the package and we demonstrate how to apply the package on real-world datasets across different spatial transcriptomics platforms.</p>
-<p>More details describing the method are available in our paper, available from <a href="">bioRxiv</a>.</p>
-</section><section class="section level2"><h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<p><code>SpatialArtifacts</code> is an R package that provides a
+data-driven a two-step workflow to identify, classify, and handle
+spatial artifacts in spatial transcriptomics data from multiple
+platforms including <strong>10x Visium</strong> (Standard and HD).
+Broadly, the idea behind the package is we that combine median absolute
+deviation (MAD)-based outlier detection with morphological image
+processing to identify the artifacts. These artifacts, often appearing
+as areas of low gene/UMI counts or high mitochondrial ratio at tissue
+edges (<strong>edge artifacts</strong>) or in the interior
+(<strong>interior artifacts</strong>), can negatively impact downstream
+analyses. The methods are implemented as an R package within the
+Bioconductor framework, and is available via <em><a href="https://bioconductor.org/packages/3.22/SpatialArtifacts" class="external-link">SpatialArtifacts</a></em>.</p>
+<p>In the following, we provide an overview of the functionality in the
+package and we demonstrate how to apply the package on real-world
+datasets across different spatial transcriptomics platforms.</p>
+<p>More details describing the method will be available in our upcoming
+preprint.</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>The following code will install the latest release version of the <code>SpatialArtifacts</code> package from Bioconductor. Additional details are shown on <a href="https://bioconductor.org/packages/SpatialArtifacts" class="external-link">Bioconductor</a>.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
+<p>The latest development version can also be installed from the
+<code>devel</code> version of Bioconductor:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"SpatialArtifacts"</span>, version<span class="op">=</span><span class="st">"devel"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"SpatialArtifacts"</span><span class="op">)</span></span></code></pre></div>
-</details>
+<p>The latest development version can also be installed from the
+<code>devel</code> version of Bioconductor or from <a href="https://github.com/CambridgeCat13/SpatialArtifacts" class="external-link">GitHub</a>.</p>
 </div>
-<p>The latest development version can also be installed from the <code>devel</code> version of Bioconductor or from <a href="https://github.com/CambridgeCat13/SpatialArtifacts" class="external-link">GitHub</a>.</p>
-</section><section class="section level2"><h2 id="input-data-format">Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"></a>
+<div class="section level2">
+<h2 id="input-data-format">Input data format<a class="anchor" aria-label="anchor" href="#input-data-format"></a>
 </h2>
-<p>In the examples below, we assume the input data are provided as a <a href="https://bioconductor.org/packages/SpatialExperiment" class="external-link">SpatialExperiment</a> Bioconductor object. In this case, the outputs are stored in the <code>rowData</code> of the <code>SpatialExperiment</code> object.</p>
-<section class="level2"><h3 id="platform-support">Platform Support<a class="anchor" aria-label="anchor" href="#platform-support"></a>
+<p>In the examples below, we assume the input data are provided as a
+<em><a href="https://bioconductor.org/packages/3.22/SpatialExperiment" class="external-link">SpatialExperiment</a></em>
+Bioconductor object. In this case, the outputs are stored in the
+<code>rowData</code> of the <code>SpatialExperiment</code> object.</p>
+<div class="section level3">
+<h3 id="platform-support">Platform Support<a class="anchor" aria-label="anchor" href="#platform-support"></a>
 </h3>
-<p><code>SpatialArtifacts</code> is designed to work across multiple spatial transcriptomics platforms:</p>
+<p><code>SpatialArtifacts</code> is designed to work across multiple
+spatial transcriptomics platforms:</p>
 <ul>
-<li>Standard Visium (55µm bins, hexagonal grid): ~5,000 spots per capture area</li>
-<li>VisiumHD 16µm (16µm bins, square grid): ~480,000 bins per capture area<br>
+<li>Standard Visium (55µm bins, hexagonal grid): ~5,000 spots per
+capture area</li>
+<li>VisiumHD 16µm (16µm bins, square grid): ~480,000 bins per capture
+area<br>
 </li>
-<li>VisiumHD 8µm (8µm bins, square grid): ~1,920,000 bins per capture area</li>
+<li>VisiumHD 8µm (8µm bins, square grid): ~1,920,000 bins per capture
+area</li>
 </ul>
-<p>:::.::: {.callout-important}</p>
-<p>The morphological detection framework automatically adapts to different grid arrangements, but <strong>parameter scaling is critical</strong> for optimal performance across platforms.</p>
-<p>:::</p>
-</section></section><section class="section level2"><h2 id="two-key-steps">Two key steps<a class="anchor" aria-label="anchor" href="#two-key-steps"></a>
+<blockquote>
+<p><strong>IMPORTANT:</strong> The morphological detection framework
+automatically adapts to different grid arrangements, but
+<strong>parameter scaling is critical</strong> for optimal performance
+across platforms.</p>
+</blockquote>
+</div>
+</div>
+<div class="section level2">
+<h2 id="two-key-steps">Two key steps<a class="anchor" aria-label="anchor" href="#two-key-steps"></a>
 </h2>
-<p>The core philosophy is a two-step process: <strong>detect, and then classify</strong>. This separates the sensitive task of identifying all potential problem spots from the more nuanced task of deciding what to do with them.</p>
-<section class="level2"><h3 id="the-detection-phase">The detection phase<a class="anchor" aria-label="anchor" href="#the-detection-phase"></a>
+<p>The core philosophy is a two-step process: <strong>detect, and then
+classify</strong>. This separates the sensitive task of identifying all
+potential problem spots from the more nuanced task of deciding what to
+do with them.</p>
+<div class="section level3">
+<h3 id="the-detection-phase">The detection phase<a class="anchor" aria-label="anchor" href="#the-detection-phase"></a>
 </h3>
-<p>In the first step, we use the <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code> function. Here, the goal is to identify all spots that could potentially be part of an artifact.</p>
+<p>In the first step, we use the <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>
+function. Here, the goal is to identify all spots that could potentially
+be part of an artifact.</p>
 <p>How does it work:</p>
 <ul>
 <li>
-<strong>Outlier identification</strong>: Find spots with abnormally low QC metrics (e.g., <code>sum_gene</code>) using a Median Absolute Deviation (MAD) threshold.<br>
+<strong>Outlier identification</strong>: Find spots with abnormally
+low QC metrics (e.g., <code>sum_gene</code>) using a Median Absolute
+Deviation (MAD) threshold.<br>
 </li>
 <li>
-<strong>Morphological cleaning</strong>: Apply sequential raster-based focal operations through <code><a href="../reference/focal_transformations.html">focal_transformations()</a></code>:
-<ol type="1">
+<strong>Morphological cleaning</strong>: Apply sequential
+raster-based focal operations through
+<code><a href="../reference/focal_transformations.html">focal_transformations()</a></code>:
+<ol style="list-style-type: decimal">
 <li>
-<strong>3×3 fill</strong> (<code>my_fill</code>): Fill spots completely surrounded by outliers</li>
+<strong>3×3 fill</strong> (<code>my_fill</code>): Fill spots
+completely surrounded by outliers</li>
 <li>
-<strong>5×5 outline</strong> (<code>my_outline</code>): Fill spots outlined by outliers in a larger 16-pixel perimeter</li>
+<strong>5×5 outline</strong> (<code>my_outline</code>): Fill spots
+outlined by outliers in a larger 16-pixel perimeter</li>
 <li>
-<strong>Star pattern</strong> (<code>my_fill_star</code>): Fill spots with outliers in all four cardinal directions (N, S, E, W)</li>
+<strong>Star pattern</strong> (<code>my_fill_star</code>): Fill
+spots with outliers in all four cardinal directions (N, S, E, W)</li>
 <li>
-<strong>Small cluster removal</strong>: Remove isolated normal regions below <code>min_cluster_size</code> threshold (default: 40 spots)</li>
+<strong>Small cluster removal</strong>: Remove isolated normal
+regions below <code>min_cluster_size</code> threshold (default: 40
+spots)</li>
 </ol>
 <ul>
 <li>Use 8-directional connectivity for connected component analysis</li>
 </ul>
 </li>
 <li>
-<strong>Cluster detection</strong>: Group these outliers into contiguous “problem areas” (<code>problemAreas</code>)</li>
+<strong>Cluster detection</strong>: Group these outliers into
+contiguous “problem areas” (<code>problemAreas</code>)</li>
 <li>
-<strong>Edge identification</strong>: Evaluate whether clusters touch tissue boundaries using <code><a href="../reference/clumpEdges.html">clumpEdges()</a></code>. For each of the four borders (north, south, east, west), calculates the proportion of boundary spots belonging to each cluster. A cluster is classified as an edge artifact if this proportion meets or exceeds <code>edge_threshold</code> (default: 0.75, meaning ≥75% border coverage) on any single border direction</li>
+<strong>Edge identification</strong>: Evaluate whether clusters
+touch tissue boundaries using <code><a href="../reference/clumpEdges.html">clumpEdges()</a></code>. For each of the
+four borders (north, south, east, west), calculates the proportion of
+boundary spots belonging to each cluster. A cluster is classified as an
+edge artifact if this proportion meets or exceeds
+<code>edge_threshold</code> (default: 0.75, meaning ≥75% border
+coverage) on any single border direction</li>
 </ul>
-<p>The output from this phase will add three <em>raw</em> columns to your <code>spe</code> object: <code>_edge</code>, <code>_problem_id</code>, and <code>_problem_size</code></p>
-</section><section class="level2"><h3 id="the-classification-phase">The classification phase<a class="anchor" aria-label="anchor" href="#the-classification-phase"></a>
+<p>The output from this phase will add three <em>raw</em> columns to
+your <code>spe</code> object: <code>_edge</code>,
+<code>_problem_id</code>, and <code>_problem_size</code></p>
+</div>
+<div class="section level3">
+<h3 id="the-classification-phase">The classification phase<a class="anchor" aria-label="anchor" href="#the-classification-phase"></a>
 </h3>
-<p>In the second step, we use the <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code> function. Here the goal is to take the raw detections from the previous step and apply a clear, hierarchical logic to assign final labels.</p>
+<p>In the second step, we use the <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code>
+function. Here the goal is to take the raw detections from the previous
+step and apply a clear, hierarchical logic to assign final labels.</p>
 <p>How does it work:</p>
 <ul>
 <li>
-<strong>Input</strong>: Requires the <code>spe</code> object processed by <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code><br>
+<strong>Input</strong>: Requires the <code>spe</code> object
+processed by <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code><br>
 </li>
 <li>
-<strong>Hierarchical Classification</strong>: Apply a 2×2 logic system based on <strong>Location</strong> and <strong>Size</strong>:
-<ol type="1">
+<strong>Hierarchical Classification</strong>: Apply a 2×2 logic
+system based on <strong>Location</strong> and <strong>Size</strong>:
+<ol style="list-style-type: decimal">
 <li>
-<strong>Location</strong>: Is the artifact an <code>_edge_artifact</code> (<code>TRUE</code> or <code>FALSE</code>) based on the detection step?<br>
+<strong>Location</strong>: Is the artifact an
+<code>_edge_artifact</code> (<code>TRUE</code> or <code>FALSE</code>)
+based on the detection step?<br>
 </li>
 <li>
-<strong>Size</strong>: Is the artifact’s <code>_problem_size</code> larger than <code>min_spots</code> (default: <code>20</code>)?<br>
+<strong>Size</strong>: Is the artifact’s <code>_problem_size</code>
+larger than <code>min_spots</code> (default: <code>20</code>)?<br>
 </li>
 </ol>
 </li>
 <li>
-<strong>Label Assignment</strong>: This logic produces five intuitive categories:
+<strong>Label Assignment</strong>: This logic produces five
+intuitive categories:
 <ul>
 <li>
 <code>"not_artifact"</code> — High-quality spots<br>
 </li>
 <li>
-<code>"large_edge_artifact"</code> — Large artifact cluster (<code>&gt; min_spots</code>) touching the tissue edge<br>
+<code>"large_edge_artifact"</code> — Large artifact cluster
+(<code>&gt; min_spots</code>) touching the tissue edge<br>
 </li>
 <li>
-<code>"small_edge_artifact"</code> — Small artifact cluster (<code>≤ min_spots</code>) touching the tissue edge<br>
+<code>"small_edge_artifact"</code> — Small artifact cluster
+(<code>≤ min_spots</code>) touching the tissue edge<br>
 </li>
 <li>
-<code>"large_interior_artifact"</code> — Large artifact cluster (<code>&gt; min_spots</code>) located inside the tissue<br>
+<code>"large_interior_artifact"</code> — Large artifact cluster
+(<code>&gt; min_spots</code>) located inside the tissue<br>
 </li>
 <li>
-<code>"small_interior_artifact"</code> — Small artifact cluster (<code>≤ min_spots</code>) located inside the tissue</li>
+<code>"small_interior_artifact"</code> — Small artifact cluster
+(<code>≤ min_spots</code>) located inside the tissue</li>
 </ul>
 </li>
 </ul>
-<p>The output from this phase will add one classification column named <code>_classification</code>.</p>
-</section></section><section class="section level2"><h2 id="helpful-information-on-parameters">Helpful information on parameters<a class="anchor" aria-label="anchor" href="#helpful-information-on-parameters"></a>
+<p>The output from this phase will add one classification column named
+<code>_classification</code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="helpful-information-on-parameters">Helpful information on parameters<a class="anchor" aria-label="anchor" href="#helpful-information-on-parameters"></a>
 </h2>
-<p>Tuning the parameters lets you adapt the workflow to different tissue types, data quality, and spatial transcriptomics platforms. The package uses a wrapper function that routes to platform-specific implementations.</p>
-<section class="level2"><h3 id="platform-selection">Platform selection<a class="anchor" aria-label="anchor" href="#platform-selection"></a>
+<p>Tuning the parameters lets you adapt the workflow to different tissue
+types, data quality, and spatial transcriptomics platforms. The package
+uses a wrapper function that routes to platform-specific
+implementations.</p>
+<div class="section level3">
+<h3 id="platform-selection">Platform selection<a class="anchor" aria-label="anchor" href="#platform-selection"></a>
 </h3>
-<p><strong>CRITICAL FIRST STEP:</strong> Specify your platform using the <code>platform</code> parameter in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code> function:</p>
-<table class="table caption-top">
+<p><strong>CRITICAL FIRST STEP:</strong> Specify your platform using the
+<code>platform</code> parameter in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code>
+function:</p>
+<table class="table">
 <colgroup>
-<col style="width: 22%">
-<col style="width: 31%">
-<col style="width: 46%">
+<col width="22%">
+<col width="31%">
+<col width="46%">
 </colgroup>
 <thead><tr class="header">
 <th>Platform</th>
@@ -191,8 +280,7 @@
 <tr class="odd">
 <td><strong>Standard Visium</strong></td>
 <td><code>detectEdgeArtifacts(spe, platform="visium", ...)</code></td>
-<td>
-<code>shifted</code> (usually <code>TRUE</code>)</td>
+<td>(none required)</td>
 </tr>
 <tr class="even">
 <td><strong>VisiumHD</strong></td>
@@ -201,71 +289,95 @@
 <code>resolution</code> (“8um” or “16um”)</td>
 </tr>
 </tbody>
-</table></section><section class="level2"><h3 id="example-use-cases">Example use cases<a class="anchor" aria-label="anchor" href="#example-use-cases"></a>
+</table>
+</div>
+<div class="section level3">
+<h3 id="example-use-cases">Example use cases<a class="anchor" aria-label="anchor" href="#example-use-cases"></a>
 </h3>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Standard Visium (55µm hexagonal grid)</span></span>
-<span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visium"</span>, shifted <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visium"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># VisiumHD 16µm (square grid)</span></span>
 <span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visiumhd"</span>, resolution <span class="op">=</span> <span class="st">"16um"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># VisiumHD 8µm (square grid)</span></span>
 <span><span class="va">spe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts</a></span><span class="op">(</span><span class="va">spe</span>, platform <span class="op">=</span> <span class="st">"visiumhd"</span>, resolution <span class="op">=</span> <span class="st">"8um"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
-</details>
 </div>
-</section><section class="level2"><h3 id="parameters-for-detectedgeartifacts">Parameters for <code>detectEdgeArtifacts()</code>
-<a class="anchor" aria-label="anchor" href="#parameters-for-detectedgeartifacts"></a>
+<div class="section level3">
+<h3 id="parameters-for-detectedgeartifacts">Parameters for <code>detectEdgeArtifacts()</code><a class="anchor" aria-label="anchor" href="#parameters-for-detectedgeartifacts"></a>
 </h3>
-<p>The wrapper function accepts platform-specific parameters that are routed to the appropriate implementation.</p>
-<section class="level3"><h4 id="for-all-platforms">For all platforms<a class="anchor" aria-label="anchor" href="#for-all-platforms"></a>
+<p>The wrapper function accepts platform-specific parameters that are
+routed to the appropriate implementation.</p>
+<div class="section level4">
+<h4 id="for-all-platforms">For all platforms<a class="anchor" aria-label="anchor" href="#for-all-platforms"></a>
 </h4>
 <ul>
 <li>
-<p><code>platform</code> (<strong>REQUIRED</strong>) – Character string: <code>"visium"</code> or <code>"visiumhd"</code> (case insensitive)</p>
+<p><code>platform</code> (<strong>REQUIRED</strong>) – Character
+string: <code>"visium"</code> or <code>"visiumhd"</code> (case
+insensitive)</p>
 <ul>
 <li>Determines which platform-specific function to use</li>
 <li>No default value; must be explicitly specified for clarity</li>
 </ul>
 </li>
 <li>
-<p><code>qc_metric</code> (Default: <code>"sum_gene"</code>) – Column name for QC metric used in outlier detection</p>
+<p><code>qc_metric</code> (Default: <code>"sum_gene"</code>) –
+Column name for QC metric used in outlier detection</p>
 <ul>
-<li>Common alternatives: <code>"sum_umi"</code>, <code>"detected"</code>, <code>"nFeature"</code>
+<li>Common alternatives: <code>"sum_umi"</code>,
+<code>"detected"</code>, <code>"nFeature"</code>
 </li>
 <li>The function will auto-detect some common variants</li>
 </ul>
 </li>
 <li>
-<p><code>samples</code> (Default: <code>"sample_id"</code>) – Column name for sample identifiers</p>
+<p><code>samples</code> (Default: <code>"sample_id"</code>) – Column
+name for sample identifiers</p>
 <ul>
 <li>Each sample is processed independently</li>
 </ul>
 </li>
 <li>
-<p><code>mad_threshold</code> (Default: 3) – Sensitivity for detecting outliers</p>
+<p><code>mad_threshold</code> (Default: 3) – Sensitivity for
+detecting outliers</p>
 <ul>
 <li>Lower values (1.5–2) are more sensitive</li>
 <li>Higher values (3–4) are more conservative</li>
 </ul>
 </li>
 <li>
-<p><code>name</code> (Default: <code>"edge_artifact"</code>) – Prefix for output column names</p>
+<p><code>name</code> (Default: <code>"edge_artifact"</code>) –
+Prefix for output column names</p>
 <ul>
-<li>Outputs: <code>[name]_edge</code>, <code>[name]_problem_id</code>, <code>[name]_problem_size</code>
+<li>Outputs: <code>[name]_edge</code>, <code>[name]_problem_id</code>,
+<code>[name]_problem_size</code>
 </li>
 </ul>
 </li>
-<li><p><code>verbose</code> (Default: <code>TRUE</code>) – Print progress messages</p></li>
-<li><p><code>keep_intermediate</code> (Default: <code>FALSE</code>) – Retain intermediate outlier detection columns</p></li>
-</ul></section><section class="level3"><h4 id="for-standard-visium">For standard Visium<a class="anchor" aria-label="anchor" href="#for-standard-visium"></a>
+<li><p><code>verbose</code> (Default: <code>TRUE</code>) – Print
+progress messages</p></li>
+<li><p><code>keep_intermediate</code> (Default: <code>FALSE</code>) –
+Retain intermediate outlier detection columns</p></li>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="for-standard-visium">For standard Visium<a class="anchor" aria-label="anchor" href="#for-standard-visium"></a>
 </h4>
 <p>When <code>platform = "visium"</code>, use:</p>
 <ul>
 <li>
-<p><code>edge_threshold</code> (Default: 0.75) – Minimum proportion of a tissue boundary that must be occupied by outlier clusters (collectively) for those clusters to be classified as edge artifacts.</p>
-<p><strong>Important Behavior:</strong> The threshold is applied to the <strong>total coverage</strong> of all outlier clusters on each boundary direction (North, South, East, West). If multiple clusters collectively cover ≥ <code>edge_threshold</code> of a boundary, <strong>all clusters touching that boundary</strong> are classified as edge artifacts, even if no single cluster meets the threshold individually.</p>
+<p><code>edge_threshold</code> (Default: 0.75) – Minimum proportion
+of a tissue boundary that must be occupied by outlier clusters
+(collectively) for those clusters to be classified as edge
+artifacts.</p>
+<p><strong>Important Behavior:</strong> The threshold is applied to the
+<strong>total coverage</strong> of all outlier clusters on each boundary
+direction (North, South, East, West). If multiple clusters collectively
+cover ≥ <code>edge_threshold</code> of a boundary, <strong>all clusters
+touching that boundary</strong> are classified as edge artifacts, even
+if no single cluster meets the threshold individually.</p>
 <p><strong>Example Scenario:</strong></p>
 <ul>
 <li>North boundary contains 100 spots total</li>
@@ -273,56 +385,79 @@
 <li>Cluster B occupies 50 boundary spots (50% coverage)</li>
 <li>Combined coverage: 80% ≥ 75% threshold</li>
 <li>
-<strong>Result:</strong> Both Cluster A and Cluster B are classified as edge artifacts</li>
+<strong>Result:</strong> Both Cluster A and Cluster B are classified
+as edge artifacts</li>
 </ul>
-<p><strong>Rationale:</strong> Edge drying artifacts typically affect large, continuous regions along tissue boundaries. Multiple clusters on the same boundary often result from a single underlying technical failure (incomplete permeabilization) and should be treated as a unified artifact rather than independent events.</p>
+<p><strong>Rationale:</strong> Edge drying artifacts typically affect
+large, continuous regions along tissue boundaries. Multiple clusters on
+the same boundary often result from a single underlying technical
+failure (incomplete permeabilization) and should be treated as a unified
+artifact rather than independent events.</p>
 <p><strong>Tuning Guidance:</strong></p>
 <ul>
-<li>Higher values (0.75–0.90): More conservative, captures only large-scale boundary failures</li>
-<li>Lower values (0.40–0.60): More sensitive, may flag smaller boundary-adjacent regions</li>
-<li>Very low values (&lt;0.30): Aggressive, may misclassify biological low-expression zones as artifacts</li>
+<li>Higher values (0.75–0.90): More conservative, captures only
+large-scale boundary failures</li>
+<li>Lower values (0.40–0.60): More sensitive, may flag smaller
+boundary-adjacent regions</li>
+<li>Very low values (&lt;0.30): Aggressive, may misclassify biological
+low-expression zones as artifacts</li>
 </ul>
 </li>
 <li>
-<p><code>min_cluster_size</code> (Default: 40) – Minimum cluster size (in spots) for morphological cleaning during focal transformation steps</p>
+<p><code>min_cluster_size</code> (Default: 40) – Minimum cluster
+size (in spots) for morphological cleaning during focal transformation
+steps</p>
 <ul>
-<li>Isolated “normal” regions smaller than this threshold within outlier areas will be filled in to create contiguous artifact regions</li>
+<li>Isolated “normal” regions smaller than this threshold within outlier
+areas will be filled in to create contiguous artifact regions</li>
 <li>
-<strong>For Standard Visium:</strong> 40 spots ≈ 0.12 mm² physical area</li>
+<strong>For Standard Visium:</strong> 40 spots ≈ 0.12 mm² physical
+area</li>
 </ul>
 </li>
 <li>
-<p><code>shifted</code> (Default: <code>FALSE</code>) – Apply coordinate adjustment for hexagonal grid alignment</p>
+<p><code>shifted</code> (Default: <code>FALSE</code>) – Apply
+coordinate adjustment for hexagonal grid alignment</p>
 <ul>
-<li>
-<strong>Standard Visium typically requires <code>shifted = TRUE</code></strong> when using array coordinates from Space Ranger.</li>
-<li>Set to <code>FALSE</code> if using pre-transformed pixel coordinates or for VisiumHD square grids.</li>
-<li>This corrects for the staggered arrangement of hexagonal spots</li>
+<li>Keep the default FALSE when using array_row/array_col coordinates
+from Space Ranger, as rasterFromXYZ handles the hexagonal grid spacing
+automatically.</li>
+<li>Only set to TRUE if using a custom coordinate system where odd
+columns require manual offset correction.</li>
 </ul>
 </li>
 <li>
-<p><code>batch_var</code> (Default: <code>"both"</code>) – Determines grouping for MAD calculation</p>
+<p><code>batch_var</code> (Default: <code>"both"</code>) –
+Determines grouping for MAD calculation</p>
 <ul>
-<li>Options: <code>"sample_id"</code>, <code>"slide"</code>, or <code>"both"</code>
+<li>Options: <code>"sample_id"</code>, <code>"slide"</code>, or
+<code>"both"</code>
 </li>
 <li>
-<code>"both"</code>: Spots flagged as outliers if below threshold in either sample or slide grouping</li>
+<code>"both"</code>: Spots flagged as outliers if below threshold in
+either sample or slide grouping</li>
 </ul>
 </li>
-</ul></section><section class="level3"><h4 id="for-visiumhd">For VisiumHD<a class="anchor" aria-label="anchor" href="#for-visiumhd"></a>
+</ul>
+</div>
+<div class="section level4">
+<h4 id="for-visiumhd">For VisiumHD<a class="anchor" aria-label="anchor" href="#for-visiumhd"></a>
 </h4>
 <p>When <code>platform = "visiumhd"</code>, use:</p>
 <ul>
 <li>
-<code>resolution</code> (<strong>REQUIRED</strong>) – Character string: <code>"8um"</code> or <code>"16um"</code>
+<code>resolution</code> (<strong>REQUIRED</strong>) – Character
+string: <code>"8um"</code> or <code>"16um"</code>
 <ul>
 <li>Specifies the bin size of your VisiumHD data</li>
-<li>This is <strong>mandatory</strong> for VisiumHD; the function will error if not provided</li>
+<li>This is <strong>mandatory</strong> for VisiumHD; the function will
+error if not provided</li>
 <li>Determines conversion from physical units (µm) to bins</li>
 </ul>
 </li>
 <li>
-<code>buffer_width_um</code> (Default: 80) – Buffer zone width in micrometers (physical units)
+<code>buffer_width_um</code> (Default: 80) – Buffer zone width in
+micrometers (physical units)
 <ul>
 <li>Defines the edge region where artifacts are expected</li>
 <li>Automatically converted to bins based on <code>resolution</code>:
@@ -341,9 +476,11 @@
 </ul>
 </li>
 <li>
-<code>min_cluster_area_um2</code> (Default: 1280) – Minimum cluster area in square micrometers (physical units)
+<code>min_cluster_area_um2</code> (Default: 1280) – Minimum cluster
+area in square micrometers (physical units)
 <ul>
-<li>Clusters smaller than this will be filtered out during morphological cleaning</li>
+<li>Clusters smaller than this will be filtered out during morphological
+cleaning</li>
 <li>Automatically converted to bins based on <code>resolution</code>:
 <ul>
 <li>At 16µm resolution: 1280 µm² → 5 bins (16×16 µm per bin)</li>
@@ -351,35 +488,49 @@
 </ul>
 </li>
 <li>
-<strong>Physical consistency:</strong> Same area threshold gives different bin counts at different resolutions</li>
+<strong>Physical consistency:</strong> Same area threshold gives
+different bin counts at different resolutions</li>
 <li>Default (1280 µm²) was calibrated for 16µm resolution</li>
 </ul>
 </li>
 <li>
-<code>col_x</code> and <code>col_y</code> (Default: <code>"array_col"</code>, <code>"array_row"</code>) – Column names for bin coordinates
+<code>col_x</code> and <code>col_y</code> (Default:
+<code>"array_col"</code>, <code>"array_row"</code>) – Column names for
+bin coordinates
 <ul>
 <li>
-<strong>Important:</strong> These should be <strong>bin indices</strong>, not pixel coordinates</li>
-<li>Using bin indices is much more memory-efficient than pixel coordinates</li>
+<strong>Important:</strong> These should be <strong>bin
+indices</strong>, not pixel coordinates</li>
+<li>Using bin indices is much more memory-efficient than pixel
+coordinates</li>
 </ul>
 </li>
 </ul>
-<p><strong>Key Difference from Visium</strong>: VisiumHD parameters are specified in <strong>physical units (µm, µm²)</strong> rather than bin counts. This ensures consistency across resolutions while the algorithm handles the bin conversion internally.</p>
-</section></section><section class="level2"><h3 id="parameters-for-classifyedgeartifacts">Parameters for <code>classifyEdgeArtifacts()</code>
-<a class="anchor" aria-label="anchor" href="#parameters-for-classifyedgeartifacts"></a>
+<p><strong>Key Difference from Visium</strong>: VisiumHD parameters are
+specified in <strong>physical units (µm, µm²)</strong> rather than bin
+counts. This ensures consistency across resolutions while the algorithm
+handles the bin conversion internally.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="parameters-for-classifyedgeartifacts">Parameters for <code>classifyEdgeArtifacts()</code><a class="anchor" aria-label="anchor" href="#parameters-for-classifyedgeartifacts"></a>
 </h3>
-<p>The classification step is <strong>platform-independent</strong> but requires appropriate parameter scaling.</p>
+<p>The classification step is <strong>platform-independent</strong> but
+requires appropriate parameter scaling.</p>
 <ul>
 <li>
-<p><code>min_spots</code> (Default: 20) – <strong>CRITICAL PARAMETER:</strong> Threshold (in number of spots/bins) to distinguish <code>"large"</code> from <code>"small"</code> artifacts</p>
+<p><code>min_spots</code> (Default: 20) – <strong>CRITICAL
+PARAMETER:</strong> Threshold (in number of spots/bins) to distinguish
+<code>"large"</code> from <code>"small"</code> artifacts</p>
 <p><strong>Platform-Specific Scaling Required:</strong></p>
-<p>This parameter must be adjusted based on spatial resolution to represent equivalent <strong>physical artifact sizes</strong>:</p>
-<table class="table caption-top">
+<p>This parameter must be adjusted based on spatial resolution to
+represent equivalent <strong>physical artifact sizes</strong>:</p>
+<table class="table">
 <colgroup>
-<col style="width: 15%">
-<col style="width: 36%">
-<col style="width: 23%">
-<col style="width: 24%">
+<col width="15%">
+<col width="36%">
+<col width="23%">
+<col width="24%">
 </colgroup>
 <thead><tr class="header">
 <th>Platform</th>
@@ -410,38 +561,49 @@
 </tbody>
 </table>
 <p><strong>Automatic Scaling Formula:</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>min_spots_HD <span class="ot">&lt;-</span> min_spots_visium × (<span class="dv">55</span> <span class="sc">/</span> bin_size_µm)²</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: For min_spots = 30 on Standard Visium</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># VisiumHD 16µm: 30 × (55/16)² ≈ 354 bins</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># VisiumHD 8µm:  30 × (55/8)²  ≈ 1,420 bins</span></span></code></pre></div>
-<p><strong>Why scaling matters:</strong> The same physical artifact (e.g., 0.1 mm² edge dryspot) will cover:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>min_spots_HD <span class="ot">&lt;-</span> min_spots_visium × (<span class="dv">55</span> <span class="sc">/</span> bin_size_µm)²</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Example: For min_spots = 30 on Standard Visium</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># VisiumHD 16µm: 30 × (55/16)² ≈ 354 bins</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co"># VisiumHD 8µm:  30 × (55/8)²  ≈ 1,420 bins</span></span></code></pre></div>
+<p><strong>Why scaling matters:</strong> The same physical artifact
+(e.g., 0.1 mm² edge dryspot) will cover:</p>
 <ul>
 <li>Standard Visium: ~33 spots</li>
 <li>VisiumHD 16µm: ~390 bins<br>
 </li>
 <li>VisiumHD 8µm: ~1,560 bins</li>
 </ul>
-<p>Without scaling, large VisiumHD artifacts would be incorrectly classified as “small.”</p>
+<p>Without scaling, large VisiumHD artifacts would be incorrectly
+classified as “small.”</p>
 </li>
-<li><p><code>qc_metric</code> (Default: <code>"sum_umi"</code>) – QC metric column for validation (must exist but not directly used in classification logic)</p></li>
-<li><p><code>samples</code> (Default: <code>"sample_id"</code>) – Sample ID column name</p></li>
+<li><p><code>qc_metric</code> (Default: <code>"sum_umi"</code>) – QC
+metric column for validation (must exist but not directly used in
+classification logic)</p></li>
+<li><p><code>samples</code> (Default: <code>"sample_id"</code>) – Sample
+ID column name</p></li>
 <li>
-<p><code>exclude_slides</code> (Default: <code>NULL</code>) – Vector of slide IDs to exclude from edge classification</p>
+<p><code>exclude_slides</code> (Default: <code>NULL</code>) – Vector
+of slide IDs to exclude from edge classification</p>
 <ul>
-<li>Spots on these slides will have edge artifact status set to <code>FALSE</code>
+<li>Spots on these slides will have edge artifact status set to
+<code>FALSE</code>
 </li>
 </ul>
 </li>
-<li><p><code>name</code> (Default: <code>"edge_artifact"</code>) – Must match the name used in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code></p></li>
-</ul></section><section class="level2"><h3 id="platform-comparison-summary">
+<li><p><code>name</code> (Default: <code>"edge_artifact"</code>) – Must
+match the name used in <code><a href="../reference/detectEdgeArtifacts.html">detectEdgeArtifacts()</a></code></p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="platform-comparison-summary">
 <strong>Platform Comparison Summary</strong><a class="anchor" aria-label="anchor" href="#platform-comparison-summary"></a>
 </h3>
-<table class="table caption-top" style="width:100%;">
+<table style="width:100%;" class="table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 45%">
-<col style="width: 28%">
+<col width="25%">
+<col width="45%">
+<col width="28%">
 </colgroup>
 <thead><tr class="header">
 <th>Feature</th>
@@ -456,14 +618,15 @@
 </tr>
 <tr class="even">
 <td><strong>Requires <code>shifted</code>?</strong></td>
-<td>Yes (<code>TRUE</code>)</td>
+<td>No (default FALSE)</td>
 <td>No (not used)</td>
 </tr>
 <tr class="odd">
 <td><strong>Resolution Parameter</strong></td>
 <td>Not applicable</td>
 <td>
-<strong>Required</strong> (<code>"8um"</code> or <code>"16um"</code>)</td>
+<strong>Required</strong> (<code>"8um"</code> or
+<code>"16um"</code>)</td>
 </tr>
 <tr class="even">
 <td><strong>Edge Detection Method</strong></td>
@@ -486,36 +649,64 @@
 <td>~480k bins (16µm), ~1.9M bins (8µm)</td>
 </tr>
 </tbody>
-</table></section><section class="level2"><h3 id="understanding-the-output-columns">Understanding the output columns<a class="anchor" aria-label="anchor" href="#understanding-the-output-columns"></a>
+</table>
+</div>
+<div class="section level3">
+<h3 id="understanding-the-output-columns">Understanding the output columns<a class="anchor" aria-label="anchor" href="#understanding-the-output-columns"></a>
 </h3>
-<p>After both functions, several columns are added to <code>colData(spe)</code>:</p>
+<p>After both functions, several columns are added to
+<code>colData(spe)</code>:</p>
 <ul>
 <li>
-<strong><code>*_edge</code></strong> – Raw detection: Is the spot in a cluster touching the tissue border? (TRUE/FALSE)<br>
+<strong><code>*_edge</code></strong> – Raw detection: Is the spot in
+a cluster touching the tissue border? (TRUE/FALSE)<br>
 </li>
 <li>
-<strong><code>*_problem_id</code></strong> – Raw detection: ID of the problem area.<br>
+<strong><code>*_problem_id</code></strong> – Raw detection: ID of
+the problem area.<br>
 </li>
 <li>
-<strong><code>*_problem_size</code></strong> – Raw detection: Size (number of spots) of the problem area.<br>
+<strong><code>*_problem_size</code></strong> – Raw detection: Size
+(number of spots) of the problem area.<br>
 </li>
 <li>
-<code>*_true_edges</code> — <strong>Intermediate:</strong> Edge status after applying <code>exclude_slides</code> (used by <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code>).</li>
+<code>*_true_edges</code> — <strong>Intermediate:</strong> Edge
+status after applying <code>exclude_slides</code> (used by
+<code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code>).</li>
 <li>
-<code>*_classification</code> — <strong>Final classification:</strong> One of <code>"not_artifact"</code>, <code>"large_edge_artifact"</code>, <code>"small_edge_artifact"</code>, <code>"large_interior_artifact"</code>, or <code>"small_interior_artifact"</code>.</li>
-</ul></section></section><section class="section level2"><h2 id="example-standard-visium-workflow">Example: Standard Visium workflow<a class="anchor" aria-label="anchor" href="#example-standard-visium-workflow"></a>
+<code>*_classification</code> — <strong>Final
+classification:</strong> One of <code>"not_artifact"</code>,
+<code>"large_edge_artifact"</code>, <code>"small_edge_artifact"</code>,
+<code>"large_interior_artifact"</code>, or
+<code>"small_interior_artifact"</code>.</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example-standard-visium-workflow">Example: Standard Visium workflow<a class="anchor" aria-label="anchor" href="#example-standard-visium-workflow"></a>
 </h2>
-<p>This package includes <code>spe_vignette</code>, a lightweight <code>SpatialExperiment</code> object derived from a human hippocampus Visium sample.</p>
-<p><strong>This vignette will load this raw-like object and run the full <code>SpatialArtifacts</code> workflow on it live.</strong></p>
-<p><strong>Note:</strong> To meet package size requirements (&lt; 5MB), this object has been subset (e.g., to coding genes) and sparsified, but <strong>no artifact detection has been run.</strong> We will perform those steps now.</p>
-<section class="level2"><h3 id="data-preparation-converting-to-dense-matrix">Data preparation: converting to dense matrix<a class="anchor" aria-label="anchor" href="#data-preparation-converting-to-dense-matrix"></a>
+<p>This package includes <code>spe_vignette</code>, a lightweight
+<code>SpatialExperiment</code> object derived from a human hippocampus
+Visium sample.</p>
+<p><strong>This vignette will load this raw-like object and run the full
+<code>SpatialArtifacts</code> workflow on it live.</strong></p>
+<p><strong>Note:</strong> To meet package size requirements (&lt; 5MB),
+this object has been subset (e.g., to coding genes) and sparsified, but
+<strong>no artifact detection has been run.</strong> We will perform
+those steps now.</p>
+<div class="section level3">
+<h3 id="data-preparation-converting-to-dense-matrix">Data preparation: converting to dense matrix<a class="anchor" aria-label="anchor" href="#data-preparation-converting-to-dense-matrix"></a>
 </h3>
-<p>The underlying spatial clustering functions in this package currently require a <strong>dense matrix</strong> to perform coordinate-based calculations. We must first convert the sparse <code>counts</code> assay in our <code>spe_vignette</code> object to a standard (dense) matrix.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<p>The underlying spatial clustering functions in this package currently
+require a <strong>dense matrix</strong> to perform coordinate-based
+calculations. We must first convert the sparse <code>counts</code> assay
+in our <code>spe_vignette</code> object to a standard (dense)
+matrix.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Loaded data dimensions:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loaded data dimensions: 12971 4965</span></span>
+<span><span class="co"># Loaded data dimensions:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 12971  4965</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">spe_vignette</span>, <span class="st">"counts"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/coerce.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">spe_vignette</span>, <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_vignette</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="st">"sum"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"sum_umi"</span></span>
@@ -525,7 +716,6 @@
 <span>  platform <span class="op">=</span> <span class="st">"visium"</span>, <span class="co"># IMPORTANT: Specify Standard Visium platform</span></span>
 <span>  qc_metric <span class="op">=</span> <span class="st">"sum_umi"</span>,</span>
 <span>  samples <span class="op">=</span> <span class="st">"sample_id"</span>,</span>
-<span>  shifted <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Hexagonal grid coordinate adjustment</span></span>
 <span>  batch_var <span class="op">=</span> <span class="st">"sample_id"</span>,</span>
 <span>  mad_threshold <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  edge_threshold <span class="op">=</span> <span class="fl">0.75</span>,</span>
@@ -539,9 +729,7 @@
 <span><span class="co">#&gt;   Total edge spots: 74</span></span>
 <span><span class="co">#&gt;   Total problem area spots: 78</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n=== RESULTS ===\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === RESULTS ===</span></span>
+<span><span class="co"># === RESULTS ===</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span>Edge_Detected <span class="op">=</span> <span class="va">spe_detected</span><span class="op">$</span><span class="va">edge_artifact_edge</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Edge_Detected</span></span>
 <span><span class="co">#&gt; FALSE  TRUE </span></span>
@@ -561,22 +749,22 @@
 <span><span class="co">#&gt;   small_edge_artifact: 74 spots</span></span>
 <span><span class="co">#&gt;   small_interior_artifact: 4 spots</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n=== Classification Results ===\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; === Classification Results ===</span></span>
+<span><span class="co"># === Classification Results ===</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;            not_artifact     small_edge_artifact small_interior_artifact </span></span>
 <span><span class="co">#&gt;                    4887                      74                       4</span></span></code></pre></div>
-</details>
 </div>
-</section><section class="level2"><h3 id="visiumhd-workflow-example">VisiumHD Workflow Example<a class="anchor" aria-label="anchor" href="#visiumhd-workflow-example"></a>
+<div class="section level3">
+<h3 id="visiumhd-workflow-example">VisiumHD Workflow Example<a class="anchor" aria-label="anchor" href="#visiumhd-workflow-example"></a>
 </h3>
-<p>For VisiumHD data, the workflow is identical <strong>except for parameter scaling</strong>. Here’s a complete example showing how to adapt parameters for VisiumHD:</p>
-<section class="level3"><h4 id="visiumhd-16µm-resolution-example">VisiumHD 16µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-16%C2%B5m-resolution-example"></a>
+<p>For VisiumHD data, the workflow is identical <strong>except for
+parameter scaling</strong>. Here’s a complete example showing how to
+adapt parameters for VisiumHD:</p>
+<div class="section level4">
+<h4 id="visiumhd-16µm-resolution-example">VisiumHD 16µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-16%C2%B5m-resolution-example"></a>
 </h4>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is a pseudo-example demonstrating VisiumHD 16µm workflow</span></span>
 <span><span class="co"># Assumes you have loaded a VisiumHD SpatialExperiment object as 'spe_hd16'</span></span>
 <span></span>
@@ -610,12 +798,11 @@
 <span></span>
 <span><span class="co"># Visualization (same approach as Standard Visium)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spe_hd16_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span><span class="op">)</span></span></code></pre></div>
-</details>
 </div>
-</section><section class="level3"><h4 id="visiumhd-8µm-resolution-example">VisiumHD 8µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-8%C2%B5m-resolution-example"></a>
+<div class="section level4">
+<h4 id="visiumhd-8µm-resolution-example">VisiumHD 8µm Resolution Example<a class="anchor" aria-label="anchor" href="#visiumhd-8%C2%B5m-resolution-example"></a>
 </h4>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is a pseudo-example demonstrating VisiumHD 8µm workflow</span></span>
 <span><span class="co"># Assumes you have loaded a VisiumHD 8µm SpatialExperiment object as 'spe_hd8'</span></span>
 <span></span>
@@ -647,16 +834,16 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spe_hd8_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span><span class="op">)</span></span></code></pre></div>
-</details>
 </div>
-</section><section class="level3"><h4 id="key-visiumhd-considerations">Key VisiumHD Considerations<a class="anchor" aria-label="anchor" href="#key-visiumhd-considerations"></a>
+<div class="section level4">
+<h4 id="key-visiumhd-considerations">Key VisiumHD Considerations<a class="anchor" aria-label="anchor" href="#key-visiumhd-considerations"></a>
 </h4>
 <p><strong>Platform-Specific Function Calls:</strong></p>
-<table class="table caption-top">
+<table class="table">
 <colgroup>
-<col style="width: 22%">
-<col style="width: 31%">
-<col style="width: 46%">
+<col width="22%">
+<col width="31%">
+<col width="46%">
 </colgroup>
 <thead><tr class="header">
 <th>Platform</th>
@@ -667,7 +854,7 @@
 <tr class="odd">
 <td><strong>Standard Visium</strong></td>
 <td><code>detectEdgeArtifacts(..., platform="visium")</code></td>
-<td><code>shifted=TRUE</code></td>
+<td>(none required)</td>
 </tr>
 <tr class="even">
 <td><strong>VisiumHD 16µm</strong></td>
@@ -682,7 +869,7 @@
 </tbody>
 </table>
 <p><strong>Parameter Recommendations by Platform:</strong></p>
-<table class="table caption-top">
+<table class="table">
 <thead><tr class="header">
 <th>Parameter</th>
 <th>Standard Visium</th>
@@ -704,7 +891,7 @@
 </tr>
 <tr class="odd">
 <td><code>shifted</code></td>
-<td><code>TRUE</code></td>
+<td>FALSE (default)</td>
 <td>N/A (handled internally)</td>
 <td>N/A</td>
 </tr>
@@ -736,11 +923,15 @@
 <td>Square</td>
 </tr>
 </tbody>
-</table></section></section><section class="level2"><h3 id="visualization-qc-metrics-and-detection-results">Visualization: QC Metrics and Detection Results<a class="anchor" aria-label="anchor" href="#visualization-qc-metrics-and-detection-results"></a>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="visualization-qc-metrics-and-detection-results">Visualization: QC Metrics and Detection Results<a class="anchor" aria-label="anchor" href="#visualization-qc-metrics-and-detection-results"></a>
 </h3>
-<p>We’ll create a comprehensive visualization showing QC metrics, detection results, and detailed cluster information:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<p>We’ll create a comprehensive visualization showing QC metrics,
+detection results, and detailed cluster information:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/drighelli/SpatialExperiment" class="external-link">SpatialExperiment</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
@@ -749,412 +940,249 @@
 <span><span class="va">plot_data_in_tissue</span> <span class="op">&lt;-</span> <span class="va">plot_data</span><span class="op">[</span><span class="va">plot_data</span><span class="op">$</span><span class="va">in_tissue</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="va">base_theme</span> <span class="op">&lt;-</span> <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span></span>
-<span>    plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>    legend.position <span class="op">=</span> <span class="st">"right"</span></span>
-<span>  <span class="op">)</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>, legend.position <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Plot 1: UMI Counts</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>  x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">sum_umi</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"A. UMI Counts"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>  <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Plot 2: Detected Genes</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="st">"detected"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>    color <span class="op">=</span> <span class="va">detected</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="va">.plt</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="va">df</span>, <span class="va">col</span>, <span class="va">fun</span> <span class="op">=</span> \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="va">df</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>, col <span class="op">=</span> <span class="fu">fun</span><span class="op">(</span><span class="va">.data</span><span class="op">[[</span><span class="va">col</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Genes"</span>, option <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"B. Detected Genes"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="va">base_theme</span> <span class="op">+</span></span>
 <span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"B. Detected Genes (Data N/A)"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Plot 3: Raw Detection (Any Problem Area)</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_problem_id"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>    color <span class="op">=</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">edge_artifact_problem_id</span><span class="op">)</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>      values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FALSE"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"TRUE"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>,</span>
-<span>      name <span class="op">=</span> <span class="st">"Problem?"</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"C. Raw Detection (All Problem Areas)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"C. Raw Detection (Data N/A)"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">raw_problem</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span><span class="op">)</span></span>
+<span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">cluster_display</span> <span class="op">&lt;-</span> <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span></span>
+<span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span> <span class="op">&lt;-</span> <span class="st">"Normal"</span></span>
+<span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span><span class="op">[</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_edge</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Edge Artifact"</span></span>
+<span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_edge</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Interior Problem"</span></span>
 <span></span>
-<span><span class="co"># Plot 4: Cluster IDs</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_problem_id"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">cluster_display</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"sum_umi"</span>, \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">.</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"A. UMI Counts"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">has_cluster</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span><span class="op">)</span></span>
-<span>  <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">cluster_display</span><span class="op">[</span><span class="va">has_cluster</span><span class="op">]</span> <span class="op">&lt;-</span></span>
-<span>    <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span><span class="op">[</span><span class="va">has_cluster</span><span class="op">]</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"detected"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Genes"</span>, option <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"B. Detected Genes"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">n_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">cluster_display</span><span class="op">[</span><span class="va">has_cluster</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"raw_problem"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FALSE"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"TRUE"</span> <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Problem?"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"C. Raw Detection"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>    color <span class="op">=</span> <span class="va">cluster_display</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_discrete</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Cluster ID"</span>, na.value <span class="op">=</span> <span class="st">"lightgray"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"D. Problem Area Clusters (n="</span>, <span class="va">n_clusters</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme</span><span class="op">(</span></span>
-<span>      legend.key.size <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.3</span>, <span class="st">"cm"</span><span class="op">)</span>,</span>
-<span>      legend.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"D. Cluster IDs (Data N/A)"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"cluster_display"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_discrete</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Cluster ID"</span>, na.value <span class="op">=</span> <span class="st">"lightgray"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"D. Problem Area Clusters"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>legend.key.size <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.3</span>, <span class="st">"cm"</span><span class="op">)</span>, legend.text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Plot 5: Edge vs Interior Separation</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_edge"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span> <span class="op">&lt;-</span> <span class="st">"Normal"</span></span>
+<span><span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"artifact_type"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Normal"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"Edge Artifact"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"Interior Problem"</span> <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Type"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"E. Edge vs Interior"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co"># Mark edge artifacts</span></span>
-<span>  <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span><span class="op">[</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_edge</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Edge Artifact"</span></span>
+<span><span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="st">"edge_artifact_classification"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>, <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Final Class"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"F. Hierarchical Classification"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co"># Mark interior problem areas (not edges)</span></span>
-<span>  <span class="va">interior_mask</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_problem_id</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>    <span class="op">!</span><span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">edge_artifact_edge</span></span>
-<span>  <span class="va">plot_data_in_tissue</span><span class="op">$</span><span class="va">artifact_type</span><span class="op">[</span><span class="va">interior_mask</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Interior Problem"</span></span>
-<span></span>
-<span>  <span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>    color <span class="op">=</span> <span class="va">artifact_type</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>      values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"Normal"</span> <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
-<span>        <span class="st">"Edge Artifact"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>        <span class="st">"Interior Problem"</span> <span class="op">=</span> <span class="st">"blue"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      name <span class="op">=</span> <span class="st">"Artifact Type"</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"E. Edge vs Interior Distinction"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"E. Edge vs Interior (Data N/A)"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Plot 6: Final Hierarchical Classification</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_classification"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">plot_data_in_tissue</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>,</span>
-<span>    color <span class="op">=</span> <span class="va">edge_artifact_classification</span></span>
-<span>  <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>      values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
-<span>        <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>        <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>,</span>
-<span>        <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>,</span>
-<span>        <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      name <span class="op">=</span> <span class="st">"Final Class"</span>,</span>
-<span>      na.value <span class="op">=</span> <span class="st">"grey50"</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"F. Final Hierarchical Classification"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"F. Final Classification (Data N/A)"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Combine all plots in a 3x2 layout</span></span>
 <span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p3</span> <span class="op">|</span> <span class="va">p4</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p5</span> <span class="op">|</span> <span class="va">p6</span><span class="op">)</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure><p><img src="hippocampus-edge-detection_files/figure-html/plot-1.png" width="1152"></p>
-</figure>
+<p><img src="hippocampus-edge-detection_files/figure-html/plot-1.png" class="r-plt" alt="" width="1152"></p>
 </div>
-</div>
-</div>
-</section><section class="level2"><h3 id="classification-summary">Classification Summary<a class="anchor" aria-label="anchor" href="#classification-summary"></a>
+<div class="section level3">
+<h3 id="classification-summary">Classification Summary<a class="anchor" aria-label="anchor" href="#classification-summary"></a>
 </h3>
 <p>Let’s examine the enhanced classification system:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"--- Final Classification Summary (`edge_artifact_classification`) ---\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --- Final Classification Summary (`edge_artifact_classification`) ---</span></span>
-<span><span class="co"># Use the 'spe_classified' object we created in the step above</span></span>
-<span><span class="va">final_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">final_summary</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;            not_artifact     small_edge_artifact small_interior_artifact </span></span>
-<span><span class="co">#&gt;                    4887                      74                       4</span></span>
-<span></span>
-<span><span class="va">final_pct</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="va">final_summary</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">final_summary</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">final_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  Classification <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">final_summary</span><span class="op">)</span>,</span>
-<span>  Count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">final_summary</span><span class="op">)</span>,</span>
-<span>  Percentage <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">final_pct</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">final_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            Classification Count Percentage</span></span>
-<span><span class="co">#&gt; 1            not_artifact  4887      98.43</span></span>
-<span><span class="co">#&gt; 2     small_edge_artifact    74       1.49</span></span>
-<span><span class="co">#&gt; 3 small_interior_artifact     4       0.08</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n\n"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"--- Raw Edge Detection Summary (`edge_artifact_edge`) ---\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; --- Raw Edge Detection Summary (`edge_artifact_edge`) ---</span></span>
-<span><span class="co"># Use the 'spe_classified' object and the new column name</span></span>
-<span><span class="va">edge_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_edge</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">edge_summary</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; FALSE  TRUE </span></span>
-<span><span class="co">#&gt;  4891    74</span></span>
-<span></span>
-<span><span class="va">edge_pct</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="va">edge_summary</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">edge_summary</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">edge_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  Flagged_As_Edge <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">edge_summary</span><span class="op">)</span>,</span>
-<span>  Count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">edge_summary</span><span class="op">)</span>,</span>
-<span>  Percentage <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">edge_pct</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">edge_df</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   Flagged_As_Edge Count Percentage</span></span>
-<span><span class="co">#&gt; 1           FALSE  4891      98.51</span></span>
-<span><span class="co">#&gt; 2            TRUE    74       1.49</span></span></code></pre></div>
-</details>
+<div class="section level4">
+<h4 id="final-classification-summary">Final Classification Summary<a class="anchor" aria-label="anchor" href="#final-classification-summary"></a>
+</h4>
+<table class="table">
+<caption>Classification Breakdown</caption>
+<thead><tr class="header">
+<th align="left">Classification</th>
+<th align="right">Count</th>
+<th align="left">Percentage</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">not_artifact</td>
+<td align="right">4887</td>
+<td align="left">98.43%</td>
+</tr>
+<tr class="even">
+<td align="left">small_edge_artifact</td>
+<td align="right">74</td>
+<td align="left">1.49%</td>
+</tr>
+<tr class="odd">
+<td align="left">small_interior_artifact</td>
+<td align="right">4</td>
+<td align="left">0.08%</td>
+</tr>
+</tbody>
+</table>
 </div>
-</section><section class="level2"><h3 id="quality-control-validation">Quality Control Validation<a class="anchor" aria-label="anchor" href="#quality-control-validation"></a>
+<div class="section level4">
+<h4 id="raw-edge-detection-summary">Raw Edge Detection Summary<a class="anchor" aria-label="anchor" href="#raw-edge-detection-summary"></a>
+</h4>
+<table class="table">
+<caption>Raw Detection Breakdown</caption>
+<thead><tr class="header">
+<th align="left">Flagged_As_Edge</th>
+<th align="right">Count</th>
+<th align="left">Percentage</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FALSE</td>
+<td align="right">4891</td>
+<td align="left">98.51%</td>
+</tr>
+<tr class="even">
+<td align="left">TRUE</td>
+<td align="right">74</td>
+<td align="left">1.49%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="quality-control-validation">Quality Control Validation<a class="anchor" aria-label="anchor" href="#quality-control-validation"></a>
 </h3>
-<p>Finally, let’s validate that flagged spots have lower quality metrics:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">in_tissue_data</span> <span class="op">&lt;-</span> <span class="va">spe_classified</span><span class="op">[</span>, <span class="va">spe_classified</span><span class="op">$</span><span class="va">in_tissue</span><span class="op">]</span></span>
-<span></span>
-<span><span class="va">qc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  sum_umi <span class="op">=</span> <span class="va">in_tissue_data</span><span class="op">$</span><span class="va">sum_umi</span>,</span>
-<span>  detected_genes <span class="op">=</span> <span class="va">in_tissue_data</span><span class="op">$</span><span class="va">detected</span>,</span>
-<span>  flagged <span class="op">=</span> <span class="va">in_tissue_data</span><span class="op">$</span><span class="va">edge_artifact_edge</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># --- Calculate Median Differences ---</span></span>
-<span><span class="va">flagged_umi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">median</a></span><span class="op">(</span><span class="va">qc_data</span><span class="op">$</span><span class="va">sum_umi</span><span class="op">[</span><span class="va">qc_data</span><span class="op">$</span><span class="va">flagged</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">nonflagged_umi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">median</a></span><span class="op">(</span><span class="va">qc_data</span><span class="op">$</span><span class="va">sum_umi</span><span class="op">[</span><span class="op">!</span><span class="va">qc_data</span><span class="op">$</span><span class="va">flagged</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">flagged_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">median</a></span><span class="op">(</span><span class="va">qc_data</span><span class="op">$</span><span class="va">detected_genes</span><span class="op">[</span><span class="va">qc_data</span><span class="op">$</span><span class="va">flagged</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">nonflagged_gene</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">median</a></span><span class="op">(</span><span class="va">qc_data</span><span class="op">$</span><span class="va">detected_genes</span><span class="op">[</span><span class="op">!</span><span class="va">qc_data</span><span class="op">$</span><span class="va">flagged</span><span class="op">]</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"QC Validation Results (comparing raw edge detection flag):\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; QC Validation Results (comparing raw edge detection flag):</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Flagged spots - Median UMI:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">flagged_umi</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Flagged spots - Median UMI: 120</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Non-flagged spots - Median UMI:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">nonflagged_umi</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Non-flagged spots - Median UMI: 1784</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"UMI difference:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">nonflagged_umi</span> <span class="op">-</span> <span class="va">flagged_umi</span><span class="op">)</span>, <span class="st">"\n\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; UMI difference: 1664</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Flagged spots - Median Detected Genes:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">flagged_gene</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Flagged spots - Median Detected Genes: 106</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Non-flagged spots - Median Detected Genes:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">nonflagged_gene</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Non-flagged spots - Median Detected Genes: 1019</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Gene difference:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="va">nonflagged_gene</span> <span class="op">-</span> <span class="va">flagged_gene</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Gene difference: 912</span></span>
-<span></span>
-<span><span class="va">qc_data</span><span class="op">$</span><span class="va">flag_status</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">qc_data</span><span class="op">$</span><span class="va">flagged</span>, <span class="st">"Flagged (Raw Edge)"</span>, <span class="st">"Non-Flagged"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">validation_plot</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">qc_data</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flag_status</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">sum_umi</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>, fill <span class="op">=</span> <span class="va">flag_status</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Flagged (Raw Edge)"</span> <span class="op">=</span> <span class="st">"lightcoral"</span>, <span class="st">"Non-Flagged"</span> <span class="op">=</span> <span class="st">"lightblue"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"QC Validation: UMI Counts in Raw Edge vs Non-Edge Spots"</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"Raw Edge Detection Status"</span>, y <span class="op">=</span> <span class="st">"log10(UMI Count + 1)"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_minimal</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">validation_plot</span><span class="op">)</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure><p><img src="hippocampus-edge-detection_files/figure-html/validation-1.png" width="672"></p>
-</figure>
+<p>Finally, let’s validate that flagged spots have lower quality
+metrics:</p>
+<table class="table">
+<caption>QC Validation: Flagged vs Non-flagged Spots</caption>
+<thead><tr class="header">
+<th align="left">Metric</th>
+<th align="right">Flagged (Edge)</th>
+<th align="right">Non-flagged</th>
+<th align="right">Difference</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Median UMI</td>
+<td align="right">120</td>
+<td align="right">1784</td>
+<td align="right">1664</td>
+</tr>
+<tr class="even">
+<td align="left">Median Detected Genes</td>
+<td align="right">106</td>
+<td align="right">1019</td>
+<td align="right">912</td>
+</tr>
+</tbody>
+</table>
+<p><img src="hippocampus-edge-detection_files/figure-html/validation-1.png" class="r-plt" alt="" width="700"></p>
 </div>
-</div>
-</div>
-</section><section class="level2"><h3 id="filtering-out-problematic-spots-optional">Filtering Out Problematic Spots (Optional)<a class="anchor" aria-label="anchor" href="#filtering-out-problematic-spots-optional"></a>
+<div class="section level3">
+<h3 id="filtering-out-problematic-spots-optional">Filtering Out Problematic Spots (Optional)<a class="anchor" aria-label="anchor" href="#filtering-out-problematic-spots-optional"></a>
 </h3>
-<p>Based on the new classifications, users can make informed decisions about filtering. For example, you might decide to remove all <strong>edge artifacts</strong> (both large and small) while keeping <strong>interior artifacts</strong> for further review.</p>
-<p>Here’s how you can filter the <code>SpatialExperiment</code> object to remove all spots classified as both <code>"large_edge_artifact"</code> or <code>"small_edge_artifact"</code>:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<p>Based on the new classifications, users can make informed decisions
+about filtering. For example, you might decide to remove all
+<strong>edge artifacts</strong> (both large and small) while keeping
+<strong>interior artifacts</strong> for further review.</p>
+<p>Here’s how you can filter the <code>SpatialExperiment</code> object
+to remove all spots classified as both
+<code>"large_edge_artifact"</code> or
+<code>"small_edge_artifact"</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="st">"edge_artifact_classification"</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">spots_to_keep</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span></span>
+<span>  <span class="va">spots_to_keep</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="va">spe_classified</span><span class="op">$</span><span class="va">edge_artifact_classification</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"large_edge_artifact"</span>, <span class="st">"small_edge_artifact"</span><span class="op">)</span></span>
 <span>  <span class="va">spe_filtered</span> <span class="op">&lt;-</span> <span class="va">spe_classified</span><span class="op">[</span>, <span class="va">spots_to_keep</span><span class="op">]</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Original number of spots:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Number of spots after filtering:"</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Original number of spots: "</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Number of spots after filtering: "</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Classification column not found. Filtering step skipped.\n"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Classification column not found. Filtering step skipped."</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Original number of spots: 4965 </span></span>
+<span><span class="co">#&gt; Original number of spots: 4965</span></span>
 <span><span class="co">#&gt; Number of spots after filtering: 4891</span></span></code></pre></div>
-</details>
-</div>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_data_before</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">coords_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span></span>
-<span><span class="va">plot_data_before</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">plot_data_before</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">coords_mat</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">plot_data_before</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">plot_data_before</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe_classified</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">plot_data_before_in_tissue</span> <span class="op">&lt;-</span> <span class="va">plot_data_before</span><span class="op">[</span><span class="va">plot_data_before</span><span class="op">$</span><span class="va">in_tissue</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="va">plot_data_after</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">coords_mat_after</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span></span>
-<span>  <span class="va">plot_data_after</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">coords_mat_after</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">plot_data_after</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment-methods.html" class="external-link">spatialCoords</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">base_theme</span> <span class="op">&lt;-</span> <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span></span>
-<span>    plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>    legend.position <span class="op">=</span> <span class="st">"right"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="va">p1_umi_before</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_before_in_tissue</span>, <span class="st">"sum_umi"</span>, \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">.</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (Before Filtering)"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1_umi_before</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_before_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">sum_umi</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (Before Filtering)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>  <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p3_class_before</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_before_in_tissue</span>, <span class="st">"edge_artifact_classification"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>, <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Final Class"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (Before Filtering)"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p2_umi_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">sum_umi</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (After Filtering)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">p2_umi_after</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="st">"sum_umi"</span>, \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">.</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">scale_color_viridis_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"log10(UMI)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (After Filtering)"</span><span class="op">)</span></span>
+<span>    </span>
+<span>  <span class="va">p4_class_after</span> <span class="op">&lt;-</span> <span class="fu">.plt</span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="st">"edge_artifact_classification"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>, <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>, <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>, <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>, <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Final Class"</span>, na.value <span class="op">=</span> <span class="st">"grey50"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (After Filtering)"</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p2_umi_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (After Filtering - No Spots)"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">p3_class_before</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_before_in_tissue</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>, color <span class="op">=</span> <span class="va">edge_artifact_classification</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>      <span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
-<span>      <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>      <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>,</span>
-<span>      <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>,</span>
-<span>      <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"Final Class"</span>,</span>
-<span>    na.value <span class="op">=</span> <span class="st">"grey50"</span>,</span>
-<span>    drop <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (Before Filtering)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>  <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">spe_filtered</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p4_class_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">plot_data_after</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">pxl_col_in_fullres</span>, y <span class="op">=</span> <span class="va">pxl_row_in_fullres</span>, color <span class="op">=</span> <span class="va">edge_artifact_classification</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>      values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"not_artifact"</span> <span class="op">=</span> <span class="st">"lightgray"</span>,</span>
-<span>        <span class="st">"large_edge_artifact"</span> <span class="op">=</span> <span class="st">"red"</span>,</span>
-<span>        <span class="st">"small_edge_artifact"</span> <span class="op">=</span> <span class="st">"orange"</span>,</span>
-<span>        <span class="st">"large_interior_artifact"</span> <span class="op">=</span> <span class="st">"blue"</span>,</span>
-<span>        <span class="st">"small_interior_artifact"</span> <span class="op">=</span> <span class="st">"cyan"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      name <span class="op">=</span> <span class="st">"Final Class"</span>,</span>
-<span>      na.value <span class="op">=</span> <span class="st">"grey50"</span>,</span>
-<span>      drop <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (After Filtering)"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="va">base_theme</span> <span class="op">+</span></span>
-<span>    <span class="fu">coord_fixed</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">p4_class_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (After Filtering - No Spots)"</span><span class="op">)</span></span>
+<span>  <span class="va">p2_umi_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"UMI Counts (After Filtering - No Spots)"</span><span class="op">)</span></span>
+<span>  <span class="va">p4_class_after</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Classification (After Filtering - No Spots)"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">combined_filtering_plot_2x2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">p1_umi_before</span> <span class="op">|</span> <span class="va">p2_umi_after</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">p3_class_before</span> <span class="op">|</span> <span class="va">p4_class_after</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">combined_filtering_plot_2x2</span><span class="op">)</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure><p><img src="hippocampus-edge-detection_files/figure-html/plotFiltering-1.png" width="1152"></p>
-</figure>
+<p><img src="hippocampus-edge-detection_files/figure-html/plotFiltering-1.png" class="r-plt" alt="" width="1152"></p>
 </div>
-</div>
-</div>
-</section><section class="level2"><h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+<div class="section level3">
+<h3 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h3>
-<p>This vignette demonstrated the <strong>SpatialArtifacts</strong> workflow across multiple spatial transcriptomics platforms. Specifically, it showed:</p>
+<p>This vignette demonstrated the <strong>SpatialArtifacts</strong>
+workflow across multiple spatial transcriptomics platforms.
+Specifically, it showed:</p>
 <ul>
 <li>
-<strong>Standard Visium workflow:</strong> Complete example using the included hippocampus dataset</li>
+<strong>Standard Visium workflow:</strong> Complete example using
+the included hippocampus dataset</li>
 <li>
-<strong>VisiumHD adaptation:</strong> How to properly scale parameters for 16µm and 8µm resolution data<br>
+<strong>VisiumHD adaptation:</strong> How to properly scale
+parameters for 16µm and 8µm resolution data<br>
 </li>
 <li>
-<strong>Platform-specific considerations:</strong> Grid arrangement, parameter scaling formulas, and typical artifact sizes</li>
+<strong>Platform-specific considerations:</strong> Grid arrangement,
+parameter scaling formulas, and typical artifact sizes</li>
 <li>
-<strong>Visualization:</strong> Display hierarchical classification results alongside QC metrics<br>
+<strong>Visualization:</strong> Display hierarchical classification
+results alongside QC metrics<br>
 </li>
 <li>
-<strong>Classification logic:</strong> Distinguish between edge vs. interior and large vs. small artifacts</li>
+<strong>Classification logic:</strong> Distinguish between edge
+vs. interior and large vs. small artifacts</li>
 <li>
-<strong>Validation:</strong> Flagged spots show significantly lower molecular capture</li>
+<strong>Validation:</strong> Flagged spots show significantly lower
+molecular capture</li>
 </ul>
 <p><strong>Key Takeaways for Multi-Platform Usage:</strong></p>
-<ol type="1">
-<li><p><strong>Grid Structure:</strong> Standard Visium uses hexagonal grids (<code>shifted = TRUE</code>), while VisiumHD uses square grids (<code>shifted = FALSE</code>)</p></li>
+<ol style="list-style-type: decimal">
+<li><p><strong>Grid Structure:</strong> Standard Visium uses hexagonal
+grids (shifted = FALSE by default), while VisiumHD uses square grids
+(shifted parameter not used)</p></li>
 <li>
-<p><strong>Critical Parameter Scaling:</strong> The <code>min_spots</code> threshold in <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code> must scale with spatial resolution:</p>
+<p><strong>Critical Parameter Scaling:</strong> The
+<code>min_spots</code> threshold in <code><a href="../reference/classifyEdgeArtifacts.html">classifyEdgeArtifacts()</a></code>
+must scale with spatial resolution:</p>
 <ul>
-<li>Use the formula: <code>min_spots_HD = min_spots_visium × (55 / bin_size)²</code>
+<li>Use the formula:
+<code>min_spots_HD = min_spots_visium × (55 / bin_size)²</code>
 </li>
-<li>Without scaling, artifacts will be incorrectly classified by size</li>
+<li>Without scaling, artifacts will be incorrectly classified by
+size</li>
 </ul>
 </li>
-<li><p><strong>Morphological Framework:</strong> The same detection logic works across platforms, automatically adapting to different grid arrangements</p></li>
-<li><p><strong>Physical Consistency:</strong> Scaled parameters ensure that “large” and “small” artifact classifications represent equivalent physical sizes regardless of platform</p></li>
+<li><p><strong>Morphological Framework:</strong> The same detection
+logic works across platforms, automatically adapting to different grid
+arrangements</p></li>
+<li><p><strong>Physical Consistency:</strong> Scaled parameters ensure
+that “large” and “small” artifact classifications represent equivalent
+physical sizes regardless of platform</p></li>
 </ol>
-<p>Overall, <strong>SpatialArtifacts</strong> provides a unified, platform-agnostic framework for detecting and classifying spatial artifacts, enabling consistent quality control across the evolving spatial transcriptomics technology landscape.</p>
-</section><section class="level2"><h3 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
+<p>Overall, <strong>SpatialArtifacts</strong> provides a unified,
+platform-agnostic framework for detecting and classifying spatial
+artifacts, enabling consistent quality control across the evolving
+spatial transcriptomics technology landscape.</p>
+</div>
+<div class="section level3">
+<h3 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h3>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
+<span><span class="co">#&gt; R version 4.5.3 (2026-03-11)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 24.04.3 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -1174,124 +1202,47 @@
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] dplyr_1.2.0                 patchwork_1.3.2            </span></span>
-<span><span class="co">#&gt;  [3] ggplot2_4.0.2               SpatialArtifacts_0.99.0    </span></span>
+<span><span class="co">#&gt;  [1] dplyr_1.2.1                 patchwork_1.3.2            </span></span>
+<span><span class="co">#&gt;  [3] ggplot2_4.0.2               SpatialArtifacts_0.99.10   </span></span>
 <span><span class="co">#&gt;  [5] SpatialExperiment_1.20.0    SingleCellExperiment_1.32.0</span></span>
 <span><span class="co">#&gt;  [7] SummarizedExperiment_1.40.0 Biobase_2.70.0             </span></span>
 <span><span class="co">#&gt;  [9] GenomicRanges_1.62.1        Seqinfo_1.0.0              </span></span>
-<span><span class="co">#&gt; [11] IRanges_2.44.0              S4Vectors_0.48.0           </span></span>
+<span><span class="co">#&gt; [11] IRanges_2.44.0              S4Vectors_0.48.1           </span></span>
 <span><span class="co">#&gt; [13] BiocGenerics_0.56.0         generics_0.1.4             </span></span>
 <span><span class="co">#&gt; [15] MatrixGenerics_1.22.0       matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [17] BiocStyle_2.38.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] SparseArray_1.10.8  scuttle_1.20.0      lattice_0.22-7     </span></span>
-<span><span class="co">#&gt;  [4] digest_0.6.39       magrittr_2.0.4      evaluate_1.0.5     </span></span>
-<span><span class="co">#&gt;  [7] grid_4.5.2          RColorBrewer_1.1-3  fastmap_1.2.0      </span></span>
-<span><span class="co">#&gt; [10] jsonlite_2.0.0      Matrix_1.7-4        viridisLite_0.4.3  </span></span>
-<span><span class="co">#&gt; [13] scales_1.4.0        codetools_0.2-20    abind_1.4-8        </span></span>
-<span><span class="co">#&gt; [16] cli_3.6.5           rlang_1.1.7         XVector_0.50.0     </span></span>
-<span><span class="co">#&gt; [19] withr_3.0.2         DelayedArray_0.36.0 yaml_2.3.12        </span></span>
-<span><span class="co">#&gt; [22] S4Arrays_1.10.1     tools_4.5.2         beachmat_2.26.0    </span></span>
-<span><span class="co">#&gt; [25] parallel_4.5.2      BiocParallel_1.44.0 vctrs_0.7.1        </span></span>
-<span><span class="co">#&gt; [28] R6_2.6.1            lifecycle_1.0.5     magick_2.9.1       </span></span>
-<span><span class="co">#&gt; [31] pkgconfig_2.0.3     terra_1.8-93        pillar_1.11.1      </span></span>
-<span><span class="co">#&gt; [34] gtable_0.3.6        glue_1.8.0          Rcpp_1.1.1         </span></span>
-<span><span class="co">#&gt; [37] xfun_0.56           tibble_3.3.1        tidyselect_1.2.1   </span></span>
-<span><span class="co">#&gt; [40] knitr_1.51          farver_2.1.2        rjson_0.2.23       </span></span>
-<span><span class="co">#&gt; [43] htmltools_0.5.9     labeling_0.4.3      rmarkdown_2.30     </span></span>
-<span><span class="co">#&gt; [46] compiler_4.5.2      S7_0.2.1</span></span></code></pre></div>
-</details>
+<span><span class="co">#&gt;  [1] gtable_0.3.6        rjson_0.2.23        xfun_0.57          </span></span>
+<span><span class="co">#&gt;  [4] bslib_0.10.0        lattice_0.22-9      vctrs_0.7.3        </span></span>
+<span><span class="co">#&gt;  [7] tools_4.5.3         parallel_4.5.3      tibble_3.3.1       </span></span>
+<span><span class="co">#&gt; [10] pkgconfig_2.0.3     Matrix_1.7-4        RColorBrewer_1.1-3 </span></span>
+<span><span class="co">#&gt; [13] S7_0.2.1-1          desc_1.4.3          lifecycle_1.0.5    </span></span>
+<span><span class="co">#&gt; [16] compiler_4.5.3      farver_2.1.2        textshaping_1.0.5  </span></span>
+<span><span class="co">#&gt; [19] terra_1.9-11        codetools_0.2-20    htmltools_0.5.9    </span></span>
+<span><span class="co">#&gt; [22] sass_0.4.10         yaml_2.3.12         pkgdown_2.2.0      </span></span>
+<span><span class="co">#&gt; [25] pillar_1.11.1       jquerylib_0.1.4     BiocParallel_1.44.0</span></span>
+<span><span class="co">#&gt; [28] DelayedArray_0.36.1 cachem_1.1.0        magick_2.9.1       </span></span>
+<span><span class="co">#&gt; [31] abind_1.4-8         tidyselect_1.2.1    digest_0.6.39      </span></span>
+<span><span class="co">#&gt; [34] bookdown_0.46       labeling_0.4.3      fastmap_1.2.0      </span></span>
+<span><span class="co">#&gt; [37] grid_4.5.3          cli_3.6.6           SparseArray_1.10.10</span></span>
+<span><span class="co">#&gt; [40] magrittr_2.0.5      S4Arrays_1.10.1     withr_3.0.2        </span></span>
+<span><span class="co">#&gt; [43] scales_1.4.0        rmarkdown_2.31      XVector_0.50.0     </span></span>
+<span><span class="co">#&gt; [46] ragg_1.5.2          beachmat_2.26.0     evaluate_1.0.5     </span></span>
+<span><span class="co">#&gt; [49] knitr_1.51          viridisLite_0.4.3   rlang_1.2.0        </span></span>
+<span><span class="co">#&gt; [52] Rcpp_1.1.1-1        glue_1.8.1          scuttle_1.20.0     </span></span>
+<span><span class="co">#&gt; [55] BiocManager_1.30.27 jsonlite_2.0.0      R6_2.6.1           </span></span>
+<span><span class="co">#&gt; [58] systemfonts_1.3.2   fs_2.1.0</span></span></code></pre></div>
 </div>
-</section></section><script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-        }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'light-border',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config);
-    }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
-            }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
-        });
-      }
-    }
-  });
-  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
+
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Jiali Harriet He, Jacqueline R. Thompson, Michael Totty, Stephanie C. Hicks.</p>
+  <p>Developed by Harriet Jiali He, Jacqueline R. Thompson, Michael Totty, Stephanie C. Hicks.</p>
 </div>
 
 <div class="pkgdown-footer-right">

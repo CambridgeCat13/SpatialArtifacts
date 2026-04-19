@@ -1,24 +1,51 @@
-# Mock SpatialExperiment for Vignettes
+# Example SpatialExperiment for Vignettes
 
-A minimal
+A lightweight
 [`SpatialExperiment`](https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment.html)
-object used for demonstrating the spatial artifact detection workflow.
+object derived from a human hippocampus Visium sample, used for
+demonstrating the `SpatialArtifacts` artifact detection workflow.
 
 ## Format
 
 A
 [`SpatialExperiment`](https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment.html)
-object.
+object with 12,971 genes and 4,965 spots, containing one sample
+(V11L05-335_C1). The `colData` includes precomputed QC metrics (e.g.,
+`sum`, `detected`) from
+[`addPerCellQC`](https://rdrr.io/pkg/scuttle/man/addPerCellQCMetrics.html).
 
 ## Source
 
-Internal simulation
+Derived from human hippocampus Visium data (sample V11L05-335_C1) from
+Thompson et al. (2025). The raw Space Ranger output was accessed
+internally via the spatialHPC project (LIBD4035) on the JHPCE cluster.
+The same dataset is publicly available via the `humanHippocampus2024`
+Bioconductor ExperimentHub package
+(<https://bioconductor.org/packages/humanHippocampus2024>). A script to
+reproduce this object is provided in `inst/scripts/make-data.R`.
 
 ## Value
 
 A
 [`SpatialExperiment`](https://rdrr.io/pkg/SpatialExperiment/man/SpatialExperiment.html)
 object.
+
+## Details
+
+The object was derived from human hippocampus Visium data (sample
+V11L05-335_C1) from the spatialHPC project (LIBD4035). To meet
+Bioconductor package size requirements (\<5 MB), the object was subset
+to highly variable genes using `scran::getTopHVGs()`, image data was
+removed, and the counts matrix was stored as a sparse matrix with XZ
+compression. QC metrics in `colData` were computed prior to gene
+subsetting and remain accurate for the full spot set.
+
+## References
+
+Thompson, J.R., Nelson, E.D., Tippani, M. et al. (2025). An integrated
+single-nucleus and spatial transcriptomics atlas reveals the molecular
+landscape of the human hippocampus. *Nature Neuroscience* 28, 1990–2004.
+[doi:10.1038/s41593-025-02022-0](https://doi.org/10.1038/s41593-025-02022-0)
 
 ## Examples
 

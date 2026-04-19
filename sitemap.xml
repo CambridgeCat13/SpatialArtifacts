@@ -1,11 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/404.html</loc></url>
-<url><loc>https://cambridgecat13.github.io/SpatialArtifacts/LICENSE-text.html</loc></url>
-<url><loc>https://cambridgecat13.github.io/SpatialArtifacts/LICENSE.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/articles/hippocampus-edge-detection.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/articles/index.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/authors.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/index.html</loc></url>
+<url><loc>https://cambridgecat13.github.io/SpatialArtifacts/news/index.html</loc></url>
+<url><loc>https://cambridgecat13.github.io/SpatialArtifacts/reference/SpatialArtifacts-package.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/reference/classifyEdgeArtifacts.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/reference/clumpEdges.html</loc></url>
 <url><loc>https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.html</loc></url>

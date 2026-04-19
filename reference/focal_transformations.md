@@ -43,7 +43,7 @@ The function applies four sequential morphological operations:
 
 ``` r
 library(terra)
-#> terra 1.8.93
+#> terra 1.9.11
 #> 
 #> Attaching package: ‘terra’
 #> The following objects are masked from ‘package:SummarizedExperiment’:

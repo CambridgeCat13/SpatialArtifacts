@@ -2,6 +2,9 @@
 
 ## All functions
 
+- [`SpatialArtifacts-package`](https://cambridgecat13.github.io/SpatialArtifacts/reference/SpatialArtifacts-package.md)
+  [`SpatialArtifacts`](https://cambridgecat13.github.io/SpatialArtifacts/reference/SpatialArtifacts-package.md)
+  : SpatialArtifacts: Detect and Classify Spatial Artifacts
 - [`classifyEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/classifyEdgeArtifacts.md)
   : Classify Edge Artifacts into Hierarchical Categories
 - [`clumpEdges()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/clumpEdges.md)
@@ -22,4 +25,4 @@
 - [`problemAreas_WithMorphology_terra()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/problemAreas_WithMorphology_terra.md)
   : Detect problem areas in VisiumHD data using morphological processing
 - [`spe_vignette`](https://cambridgecat13.github.io/SpatialArtifacts/reference/spe_vignette.md)
-  : Mock SpatialExperiment for Vignettes
+  : Example SpatialExperiment for Vignettes
