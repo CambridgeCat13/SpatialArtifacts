@@ -1,3 +1,7 @@
+# SpatialArtifacts 0.99.10
+
+* Lower R version requirement to >= 4.4.0 for broader platform compatibility
+
 # SpatialArtifacts 0.99.8
 
 * Bump version for Bioconductor devel build
