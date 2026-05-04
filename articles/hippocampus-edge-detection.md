@@ -13,7 +13,7 @@ mitochondrial ratio at tissue edges (**edge artifacts**) or in the
 interior (**interior artifacts**), can negatively impact downstream
 analyses. The methods are implemented as an R package within the
 Bioconductor framework, and is available via
-*[SpatialArtifacts](https://bioconductor.org/packages/3.22/SpatialArtifacts)*.
+*[SpatialArtifacts](https://bioconductor.org/packages/3.23/SpatialArtifacts)*.
 
 In the following, we provide an overview of the functionality in the
 package and we demonstrate how to apply the package on real-world
@@ -28,10 +28,12 @@ The latest development version can also be installed from the `devel`
 version of Bioconductor:
 
 ``` r
+
 BiocManager::install("SpatialArtifacts", version="devel")
 ```
 
 ``` r
+
 install.packages("BiocManager")
 BiocManager::install("SpatialArtifacts")
 ```
@@ -43,7 +45,7 @@ version of Bioconductor or from
 ## Input data format
 
 In the examples below, we assume the input data are provided as a
-*[SpatialExperiment](https://bioconductor.org/packages/3.22/SpatialExperiment)*
+*[SpatialExperiment](https://bioconductor.org/packages/3.23/SpatialExperiment)*
 Bioconductor object. In this case, the outputs are stored in the
 `rowData` of the `SpatialExperiment` object.
 
@@ -153,14 +155,15 @@ parameter in
 [`detectEdgeArtifacts()`](https://cambridgecat13.github.io/SpatialArtifacts/reference/detectEdgeArtifacts.md)
 function:
 
-| Platform            | Function Call                                                           | Required Parameters            |
-|---------------------|-------------------------------------------------------------------------|--------------------------------|
-| **Standard Visium** | `detectEdgeArtifacts(spe, platform="visium", ...)`                      | (none required)                |
-| **VisiumHD**        | `detectEdgeArtifacts(spe, platform="visiumhd", resolution="16um", ...)` | `resolution` (“8um” or “16um”) |
+| Platform | Function Call | Required Parameters |
+|----|----|----|
+| **Standard Visium** | `detectEdgeArtifacts(spe, platform="visium", ...)` | (none required) |
+| **VisiumHD** | `detectEdgeArtifacts(spe, platform="visiumhd", resolution="16um", ...)` | `resolution` (“8um” or “16um”) |
 
 ### Example use cases
 
 ``` r
+
 # Standard Visium (55µm hexagonal grid)
 spe <- detectEdgeArtifacts(spe, platform = "visium", ...)
 
@@ -325,11 +328,11 @@ appropriate parameter scaling.
   This parameter must be adjusted based on spatial resolution to
   represent equivalent **physical artifact sizes**:
 
-  | Platform                   | Recommended `min_spots` | Physical Area    | Scaling Factor |
-  |----------------------------|-------------------------|------------------|----------------|
-  | **Standard Visium (55µm)** | `20-40`                 | ~0.06-0.12 mm²   | Baseline (1×)  |
-  | **VisiumHD 16µm bins**     | `100-200`               | ~0.026-0.051 mm² | ~6-10× Visium  |
-  | **VisiumHD 8µm bins**      | `400-800`               | ~0.026-0.051 mm² | ~20-40× Visium |
+  | Platform | Recommended `min_spots` | Physical Area | Scaling Factor |
+  |----|----|----|----|
+  | **Standard Visium (55µm)** | `20-40` | ~0.06-0.12 mm² | Baseline (1×) |
+  | **VisiumHD 16µm bins** | `100-200` | ~0.026-0.051 mm² | ~6-10× Visium |
+  | **VisiumHD 8µm bins** | `400-800` | ~0.026-0.051 mm² | ~20-40× Visium |
 
   **Automatic Scaling Formula:**
 
@@ -366,15 +369,15 @@ appropriate parameter scaling.
 
 ### **Platform Comparison Summary**
 
-| Feature                            | Standard Visium                   | VisiumHD                            |
-|------------------------------------|-----------------------------------|-------------------------------------|
-| **Grid Type**                      | Hexagonal                         | Square                              |
-| **Requires `shifted`?**            | No (default FALSE)                | No (not used)                       |
-| **Resolution Parameter**           | Not applicable                    | **Required** (`"8um"` or `"16um"`)  |
-| **Edge Detection Method**          | Morphological + boundary coverage | Buffer zone + morphological         |
-| **Parameter Units**                | Spot counts                       | Physical units (µm, µm²)            |
-| **Default `min_spots` (classify)** | 20-40                             | 100-200 (16µm), 400-800 (8µm)       |
-| **Typical Dataset Size**           | ~5,000 spots                      | ~480k bins (16µm), ~1.9M bins (8µm) |
+| Feature | Standard Visium | VisiumHD |
+|----|----|----|
+| **Grid Type** | Hexagonal | Square |
+| **Requires `shifted`?** | No (default FALSE) | No (not used) |
+| **Resolution Parameter** | Not applicable | **Required** (`"8um"` or `"16um"`) |
+| **Edge Detection Method** | Morphological + boundary coverage | Buffer zone + morphological |
+| **Parameter Units** | Spot counts | Physical units (µm, µm²) |
+| **Default `min_spots` (classify)** | 20-40 | 100-200 (16µm), 400-800 (8µm) |
+| **Typical Dataset Size** | ~5,000 spots | ~480k bins (16µm), ~1.9M bins (8µm) |
 
 ### Understanding the output columns
 
@@ -412,6 +415,7 @@ must first convert the sparse `counts` assay in our `spe_vignette`
 object to a standard (dense) matrix.
 
 ``` r
+
 data(spe_vignette)
 # Loaded data dimensions:
 dim(spe_vignette)
@@ -474,6 +478,7 @@ VisiumHD:
 #### VisiumHD 16µm Resolution Example
 
 ``` r
+
 # This is a pseudo-example demonstrating VisiumHD 16µm workflow
 # Assumes you have loaded a VisiumHD SpatialExperiment object as 'spe_hd16'
 
@@ -512,6 +517,7 @@ table(spe_hd16_classified$edge_artifact_classification)
 #### VisiumHD 8µm Resolution Example
 
 ``` r
+
 # This is a pseudo-example demonstrating VisiumHD 8µm workflow
 # Assumes you have loaded a VisiumHD 8µm SpatialExperiment object as 'spe_hd8'
 
@@ -549,23 +555,23 @@ table(spe_hd8_classified$edge_artifact_classification)
 
 **Platform-Specific Function Calls:**
 
-| Platform            | Function Call                                                      | Required Parameters |
-|---------------------|--------------------------------------------------------------------|---------------------|
-| **Standard Visium** | `detectEdgeArtifacts(..., platform="visium")`                      | (none required)     |
-| **VisiumHD 16µm**   | `detectEdgeArtifacts(..., platform="visiumhd", resolution="16um")` | `resolution`        |
-| **VisiumHD 8µm**    | `detectEdgeArtifacts(..., platform="visiumhd", resolution="8um")`  | `resolution`        |
+| Platform | Function Call | Required Parameters |
+|----|----|----|
+| **Standard Visium** | `detectEdgeArtifacts(..., platform="visium")` | (none required) |
+| **VisiumHD 16µm** | `detectEdgeArtifacts(..., platform="visiumhd", resolution="16um")` | `resolution` |
+| **VisiumHD 8µm** | `detectEdgeArtifacts(..., platform="visiumhd", resolution="8um")` | `resolution` |
 
 **Parameter Recommendations by Platform:**
 
-| Parameter              | Standard Visium | VisiumHD 16µm            | VisiumHD 8µm    |
-|------------------------|-----------------|--------------------------|-----------------|
-| `platform`             | `"visium"`      | `"visiumhd"`             | `"visiumhd"`    |
-| `resolution`           | N/A (not used)  | `"16um"`                 | `"8um"`         |
-| `shifted`              | FALSE (default) | N/A (handled internally) | N/A             |
-| `buffer_width_um`      | N/A             | `100` (default)          | `100` (default) |
-| `mad_threshold`        | 1.5-3.0         | 2.0-3.0                  | 2.0-3.0         |
-| `min_spots` (classify) | 20-40           | 100-200                  | 400-800         |
-| Grid Type              | Hexagonal       | Square                   | Square          |
+| Parameter | Standard Visium | VisiumHD 16µm | VisiumHD 8µm |
+|----|----|----|----|
+| `platform` | `"visium"` | `"visiumhd"` | `"visiumhd"` |
+| `resolution` | N/A (not used) | `"16um"` | `"8um"` |
+| `shifted` | FALSE (default) | N/A (handled internally) | N/A |
+| `buffer_width_um` | N/A | `100` (default) | `100` (default) |
+| `mad_threshold` | 1.5-3.0 | 2.0-3.0 | 2.0-3.0 |
+| `min_spots` (classify) | 20-40 | 100-200 | 400-800 |
+| Grid Type | Hexagonal | Square | Square |
 
 ### Visualization: QC Metrics and Detection Results
 
@@ -573,6 +579,7 @@ We’ll create a comprehensive visualization showing QC metrics, detection
 results, and detailed cluster information:
 
 ``` r
+
 library(SpatialExperiment)
 library(patchwork)
 
@@ -631,7 +638,7 @@ Let’s examine the enhanced classification system:
 | small_edge_artifact     |    74 | 1.49%      |
 | small_interior_artifact |     4 | 0.08%      |
 
-Classification Breakdown
+Classification Breakdown {.table}
 
 #### Raw Edge Detection Summary
 
@@ -640,7 +647,7 @@ Classification Breakdown
 | FALSE           |  4891 | 98.51%     |
 | TRUE            |    74 | 1.49%      |
 
-Raw Detection Breakdown
+Raw Detection Breakdown {.table}
 
 ### Quality Control Validation
 
@@ -651,7 +658,7 @@ Finally, let’s validate that flagged spots have lower quality metrics:
 | Median UMI            |            120 |        1784 |       1664 |
 | Median Detected Genes |            106 |        1019 |        912 |
 
-QC Validation: Flagged vs Non-flagged Spots
+QC Validation: Flagged vs Non-flagged Spots {.table}
 
 ![](hippocampus-edge-detection_files/figure-html/validation-1.png)
 
@@ -667,6 +674,7 @@ spots classified as both `"large_edge_artifact"` or
 `"small_edge_artifact"`:
 
 ``` r
+
 if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
   spots_to_keep <- !spe_classified$edge_artifact_classification %in% 
     c("large_edge_artifact", "small_edge_artifact")
@@ -681,6 +689,7 @@ if ("edge_artifact_classification" %in% names(colData(spe_classified))) {
 ```
 
 ``` r
+
 plot_data_before <- as.data.frame(colData(spe_classified))
 plot_data_before <- cbind(plot_data_before, as.data.frame(spatialCoords(spe_classified)))
 plot_data_before_in_tissue <- plot_data_before[plot_data_before$in_tissue, ]
@@ -760,8 +769,9 @@ technology landscape.
 ### Session Information
 
 ``` r
+
 sessionInfo()
-#> R version 4.5.3 (2026-03-11)
+#> R version 4.6.0 (2026-04-24)
 #> Platform: x86_64-pc-linux-gnu
 #> Running under: Ubuntu 24.04.4 LTS
 #> 
@@ -784,34 +794,34 @@ sessionInfo()
 #> 
 #> other attached packages:
 #>  [1] dplyr_1.2.1                 patchwork_1.3.2            
-#>  [3] ggplot2_4.0.2               SpatialArtifacts_0.99.10   
-#>  [5] SpatialExperiment_1.20.0    SingleCellExperiment_1.32.0
-#>  [7] SummarizedExperiment_1.40.0 Biobase_2.70.0             
-#>  [9] GenomicRanges_1.62.1        Seqinfo_1.0.0              
-#> [11] IRanges_2.44.0              S4Vectors_0.48.1           
-#> [13] BiocGenerics_0.56.0         generics_0.1.4             
-#> [15] MatrixGenerics_1.22.0       matrixStats_1.5.0          
-#> [17] BiocStyle_2.38.0           
+#>  [3] ggplot2_4.0.3               SpatialArtifacts_1.1.0     
+#>  [5] SpatialExperiment_1.22.0    SingleCellExperiment_1.34.0
+#>  [7] SummarizedExperiment_1.42.0 Biobase_2.72.0             
+#>  [9] GenomicRanges_1.64.0        Seqinfo_1.2.0              
+#> [11] IRanges_2.46.0              S4Vectors_0.50.0           
+#> [13] BiocGenerics_0.58.0         generics_0.1.4             
+#> [15] MatrixGenerics_1.24.0       matrixStats_1.5.0          
+#> [17] BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] gtable_0.3.6        rjson_0.2.23        xfun_0.57          
 #>  [4] bslib_0.10.0        lattice_0.22-9      vctrs_0.7.3        
-#>  [7] tools_4.5.3         parallel_4.5.3      tibble_3.3.1       
-#> [10] pkgconfig_2.0.3     Matrix_1.7-4        RColorBrewer_1.1-3 
-#> [13] S7_0.2.1-1          desc_1.4.3          lifecycle_1.0.5    
-#> [16] compiler_4.5.3      farver_2.1.2        textshaping_1.0.5  
+#>  [7] tools_4.6.0         parallel_4.6.0      tibble_3.3.1       
+#> [10] pkgconfig_2.0.3     Matrix_1.7-5        RColorBrewer_1.1-3 
+#> [13] S7_0.2.2            desc_1.4.3          lifecycle_1.0.5    
+#> [16] compiler_4.6.0      farver_2.1.2        textshaping_1.0.5  
 #> [19] terra_1.9-11        codetools_0.2-20    htmltools_0.5.9    
 #> [22] sass_0.4.10         yaml_2.3.12         pkgdown_2.2.0      
-#> [25] pillar_1.11.1       jquerylib_0.1.4     BiocParallel_1.44.0
-#> [28] DelayedArray_0.36.1 cachem_1.1.0        magick_2.9.1       
+#> [25] pillar_1.11.1       jquerylib_0.1.4     BiocParallel_1.46.0
+#> [28] DelayedArray_0.38.1 cachem_1.1.0        magick_2.9.1       
 #> [31] abind_1.4-8         tidyselect_1.2.1    digest_0.6.39      
 #> [34] bookdown_0.46       labeling_0.4.3      fastmap_1.2.0      
-#> [37] grid_4.5.3          cli_3.6.6           SparseArray_1.10.10
-#> [40] magrittr_2.0.5      S4Arrays_1.10.1     withr_3.0.2        
-#> [43] scales_1.4.0        rmarkdown_2.31      XVector_0.50.0     
-#> [46] ragg_1.5.2          beachmat_2.26.0     evaluate_1.0.5     
+#> [37] grid_4.6.0          cli_3.6.6           SparseArray_1.12.2 
+#> [40] magrittr_2.0.5      S4Arrays_1.12.0     withr_3.0.2        
+#> [43] scales_1.4.0        rmarkdown_2.31      XVector_0.52.0     
+#> [46] ragg_1.5.2          beachmat_2.28.0     evaluate_1.0.5     
 #> [49] knitr_1.51          viridisLite_0.4.3   rlang_1.2.0        
-#> [52] Rcpp_1.1.1-1        glue_1.8.1          scuttle_1.20.0     
+#> [52] Rcpp_1.1.1-1.1      glue_1.8.1          scuttle_1.22.0     
 #> [55] BiocManager_1.30.27 jsonlite_2.0.0      R6_2.6.1           
 #> [58] systemfonts_1.3.2   fs_2.1.0
 ```

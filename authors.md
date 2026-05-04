@@ -19,13 +19,13 @@ Source:
 
 He H, Thompson J, Totty M, Hicks S (2026). *SpatialArtifacts:
 Identification and Classification of Spatial Artifacts in Visium and
-Visium HD Data*. R package version 0.99.10,
+Visium HD Data*. R package version 1.1.0,
 <https://github.com/CambridgeCat13/SpatialArtifacts>.
 
     @Manual{,
       title = {SpatialArtifacts: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data},
       author = {Harriet Jiali He and Jacqueline R. Thompson and Michael Totty and Stephanie C. Hicks},
       year = {2026},
-      note = {R package version 0.99.10},
+      note = {R package version 1.1.0},
       url = {https://github.com/CambridgeCat13/SpatialArtifacts},
     }

@@ -23,6 +23,7 @@ caused by incomplete reagent coverage.
 
 ## Typical Workflow
 
+
     # Step 1: Detect artifacts
     spe <- detectEdgeArtifacts(spe, platform = "visium", qc_metric = "sum_gene")
 

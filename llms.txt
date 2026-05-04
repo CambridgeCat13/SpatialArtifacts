@@ -31,6 +31,7 @@ You can install the latest version of `SpatialArtifacts` from
 Bioconductor with the following code:
 
 ``` r
+
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
@@ -42,6 +43,7 @@ You can install the development version of SpatialArtifacts from
 [GitHub](https://github.com/CambridgeCat13/SpatialArtifacts) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("CambridgeCat13/SpatialArtifacts")
 ```
@@ -51,6 +53,7 @@ pak::pak("CambridgeCat13/SpatialArtifacts")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
+
 library(SpatialArtifacts)
 library(SpatialExperiment)
 
