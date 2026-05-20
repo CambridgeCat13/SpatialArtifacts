@@ -1,0 +1,19 @@
+bibentry(
+  bibtype = "Article",
+  title = "SpatialArtifacts: a computational framework for tissue artifact detection in spatial transcriptomics data",
+  author = c(
+    person("Jiali", "He"),
+    person("Jacqueline R.", "Thompson"),
+    person("Michael S.", "Totty"),
+    person("Stephanie C.", "Hicks")
+  ),
+  year = "2026",
+  note = "Preprint",
+  doi = "10.64898/2026.05.15.725260",
+  url = "https://doi.org/10.64898/2026.05.15.725260",
+  textVersion = paste(
+    "He J, Thompson JR, Totty MS, Hicks SC (2026).",
+    "SpatialArtifacts: a computational framework for tissue artifact detection in spatial transcriptomics data.",
+    "https://doi.org/10.64898/2026.05.15.725260"
+  )
+)

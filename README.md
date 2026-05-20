@@ -2,6 +2,7 @@
 # Spatial Artifacts <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- badges: start -->
 
 [![Lifecycle:
@@ -40,7 +41,7 @@ Bioconductor with the following code:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
-    install.packages("BiocManager")
+  install.packages("BiocManager")
 }
 
 BiocManager::install("SpatialArtifacts")
@@ -85,6 +86,14 @@ A detailed tutorial is available in the package vignette from
 Bioconductor. A direct link to the tutorial / package vignette is
 available
 [here](https://cambridgecat13.github.io/SpatialArtifacts/articles/hippocampus-edge-detection.html).
+
+## Citation
+
+If you use `SpatialArtifacts` in your work, please cite:
+
+He J, Thompson JR, Totty MS, Hicks SC (2026). SpatialArtifacts: a
+computational framework for tissue artifact detection in spatial
+transcriptomics data. <https://doi.org/10.64898/2026.05.15.725260>
 
 ## Development tools
 
