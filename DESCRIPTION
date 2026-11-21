@@ -1,8 +1,8 @@
 Package: SpatialArtifacts
 Title: Identification and Classification of Spatial Artifacts in Visium and Visium HD Data
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: 
-    c(person("Harriet Jiali", "He", email = "jhe46@jh.edu", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
+    c(person("Harriet Jiali", "He", email = "harrietjialihh@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0009-0003-7827-2735")),
       person("Jacqueline R.", "Thompson", email = "jthom338@jh.edu", role = "aut"),
       person("Michael", "Totty", email = "mtotty2@jh.edu", role = "aut"),
       person("Stephanie C.", "Hicks", email = "shicks19@jhu.edu", role = c("aut", "fnd"), comment = c(ORCID = "0000-0002-7858-0231")))
